@@ -100,17 +100,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
      System.out.println(pot.get());
-     if (lift.getSensorCollection().isFwdLimitSwitchClosed())
-        System.out.println("Yes");
-      else
-      System.out.println("Other");
-      if (lift.getSensorCollection().isRevLimitSwitchClosed())
-      System.out.println("YesREV");
+    if (lift.getSensorCollection().isRevLimitSwitchClosed())
+      System.out.println("Down");
     else
-    System.out.println("OtherREV");
-
-     
-  }
+      System.out.println("Up");
+    }
 
   /**
    * This function is called periodically during test mode.
