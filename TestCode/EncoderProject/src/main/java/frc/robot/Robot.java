@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +29,14 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  private Joystick joystick;
+
+  private TalonSRX backRight;
+  private TalonSRX frontRight;
+  private TalonSRX backLeft;
+  private TalonSRX frontLeft;
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -33,6 +46,21 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    // initialize joystick
+    joystick = new Joystick(0);
+
+    // initialize talons
+    backRight = new TalonSRX(2);
+    frontRight = new TalonSRX(9);
+    backLeft = new TalonSRX(3);
+    frontLeft = new TalonSRX(1);
+
+    // they are in gearboxes
+    frontRight.follow(backRight);
+    frontLeft.follow(backLeft);
+
+    SensorCollection sc = backRight.getSensorCollection();
   }
 
   /**
@@ -86,6 +114,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    double throttle = joystick.getY();
+    int encoderpos = backRight.getSensorCollection().getQuadraturePosition();
+
+    backRight.set(ControlMode.PercentOutput, throttle);
+    backLeft.set(ControlMode.PercentOutput, throttle);
+
+    System.out.println("joystick throttle=" + throttle);
+    System.out.println("encoder position=" + encoderpos);
   }
 
   /**
