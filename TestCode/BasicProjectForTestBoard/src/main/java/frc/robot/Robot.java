@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +22,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  */
 public class Robot extends TimedRobot {
   AnalogInput input = new AnalogInput(0);
-  input.setAverageBits(2);
+  // input.setAverageBits(2);
 
   // Initializes an AnalogPotentiometer with the given AnalogInput
   // The full range of motion (in meaningful external units) is 0-180 (this could be degrees, for instance)
