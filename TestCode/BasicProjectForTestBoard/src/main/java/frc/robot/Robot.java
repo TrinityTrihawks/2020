@@ -99,6 +99,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    
+    // ?? use comments
+    
      System.out.println(pot.get());
      if (lift.getSensorCollection().isFwdLimitSwitchClosed())
         System.out.println("Yes");
