@@ -7,12 +7,14 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  * project.
  */
 public class Robot extends TimedRobot {
+  TalonSRX lift = new TalonSRX(10);
   AnalogInput input = new AnalogInput(0);
   // input.setAverageBits(2);
 
@@ -97,6 +100,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
      System.out.println(pot.get());
+     if (lift.getSensorCollection().isFwdLimitSwitchClosed())
+        System.out.println("Yes");
+      else
+      System.out.println("Other");
+      if (lift.getSensorCollection().isRevLimitSwitchClosed())
+      System.out.println("YesREV");
+    else
+    System.out.println("OtherREV");
+
+     
   }
 
   /**
