@@ -8,9 +8,9 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -59,8 +59,6 @@ public class Robot extends TimedRobot {
     // they are in gearboxes
     frontRight.follow(backRight);
     frontLeft.follow(backLeft);
-
-    SensorCollection sc = backRight.getSensorCollection();
   }
 
   /**
@@ -115,13 +113,15 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double throttle = joystick.getY();
-    int encoderpos = backRight.getSensorCollection().getQuadraturePosition();
+    int encodervel = backRight.getSensorCollection().getQuadratureVelocity();
 
     backRight.set(ControlMode.PercentOutput, throttle);
-    backLeft.set(ControlMode.PercentOutput, throttle);
+    backLeft.set(ControlMode.PercentOutput, -1 * throttle);
 
     System.out.println("joystick throttle=" + throttle);
-    System.out.println("encoder position=" + encoderpos);
+    System.out.println("encoder velocity=" + encodervel);
+
+    NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
   }
 
   /**
