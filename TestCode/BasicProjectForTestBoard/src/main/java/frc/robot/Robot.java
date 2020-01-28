@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
   TalonSRX lift = new TalonSRX(10);
   AnalogInput input = new AnalogInput(0);
+  DigitalInput megnet = new DigitalInput(0);
+
   // input.setAverageBits(2);
 
   // Initializes an AnalogPotentiometer with the given AnalogInput
@@ -101,8 +104,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     // ?? use comments
+    if (megnet.get()) // If the forward limit switch is pressed, we want to keep the values between -1 and 0
+    System.out.println("DownMEG");
+    else if(megnet.get()) // If the reversed limit switch is pressed, we want to keep the values between 0 and 1
+    System.out.println("upMAG");
+
     
-     System.out.println(pot.get());
     if (lift.getSensorCollection().isRevLimitSwitchClosed())
       System.out.println("Down");
     else
