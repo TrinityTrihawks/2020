@@ -10,9 +10,14 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.graalvm.compiler.hotspot.replacements.EncodedSymbolConstant;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -105,6 +110,26 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+    // ^??
+    
+    double userRpm                = joystick.getRawAxis(3);
+    double throttle               = joystick.getY();
+    ShuffleboardTab tab           = Shuffleboard.getTab("SmartDashboard");
+    NetworkTableEntry inputValNet = tab.add("InputVal", 1).getEntry();
+    double InputVal               = inputValNet.getDouble(0);
+    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
+
+    error = Math.abs(inputVal-encodervel);
+    
+    backRight.set(ControlMode.PercentOutput, ___);
+    backLeft.set(ControlMode.PercentOutput, -1 * ___);
+    
+    
+
+    SmartDashboard.putNumber("RcvedInputVal", inputVal);
+
+    
+
   }
 
   /**
@@ -113,7 +138,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double throttle = joystick.getY();
-    int encodervel = backRight.getSensorCollection().getQuadratureVelocity();
+    double userRpm  = joystick.getRawAxis(3);
+    int encodervel  = backRight.getSensorCollection().getQuadratureVelocity();
+    
+    
 
     backRight.set(ControlMode.PercentOutput, throttle);
     backLeft.set(ControlMode.PercentOutput, -1 * throttle);
@@ -121,7 +149,12 @@ public class Robot extends TimedRobot {
     System.out.println("joystick throttle=" + throttle);
     System.out.println("encoder velocity=" + encodervel);
 
+
+
     NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
+    NetworkTableInstance.getDefault().getEntry("User RPM").setDouble(userRpm);
+    SmartDashboard.putNumber("UserRPM", userRpm);
+    SmartDashboard.putNumber("Encoder Velocity", encodervel);
   }
 
   /**
