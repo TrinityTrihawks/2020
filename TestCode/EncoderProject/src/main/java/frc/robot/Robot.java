@@ -7,15 +7,17 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableEntry;
+//import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -110,26 +112,7 @@ public class Robot extends TimedRobot {
     }
     // ^??
     
-    double userRpm                = joystick.getRawAxis(3);
-    double throttle               = joystick.getY();
-    ShuffleboardTab tab           = Shuffleboard.getTab("SmartDashboard");
-    NetworkTableEntry inputValNet = tab.add("InputVal", 1).getEntry();
-    double inputVal               = inputValNet.getDouble(0);
-    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
-
-    double error = Math.abs(inputVal-encodervel);
-    System.out.println("EncVel: "+ encodervel+ "\tInputVal: " +  inputVal + "\tError: "+ error);
-
     
-    //backRight.set(ControlMode.PercentOutput, );
-    //backLeft.set(ControlMode.PercentOutput, -1 * );
-    
-    
-
-    SmartDashboard.putNumber("RcvedInputVal", inputVal);
-
-    
-
   }
 
   /**
@@ -137,11 +120,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    double throttle = joystick.getY();
-    double userRpm  = joystick.getRawAxis(3);
-    int encodervel  = backRight.getSensorCollection().getQuadratureVelocity();
-    
-    
+    double throttle               = joystick.getY();
+    double userRpm                = joystick.getRawAxis(3);
+    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
+    double inputVal               = userRpm;
 
     backRight.set(ControlMode.PercentOutput, throttle);
     backLeft.set(ControlMode.PercentOutput, -1 * throttle);
@@ -149,12 +131,21 @@ public class Robot extends TimedRobot {
     System.out.println("joystick throttle=" + throttle);
     System.out.println("encoder velocity=" + encodervel);
 
+    double error = Math.abs(inputVal*2000-encodervel);
 
+    System.out.println("EncVel: "+ encodervel+ "\tInputVal: " +  inputVal + "\tError: "+ error);
+
+    SmartDashboard.putNumber("EncVel", encodervel);
+    SmartDashboard.putNumber("InputVal", inputVal);
+    SmartDashboard.putNumber("Error", error);
+    SmartDashboard.putNumber("UserRPM", userRpm);
 
     NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
     NetworkTableInstance.getDefault().getEntry("User RPM").setDouble(userRpm);
-    SmartDashboard.putNumber("UserRPM", userRpm);
-    SmartDashboard.putNumber("Encoder Velocity", encodervel);
+    //backRight.set(ControlMode.PercentOutput, );
+    //backLeft.set(ControlMode.PercentOutput, -1 * );
+    
+
   }
 
   /**
