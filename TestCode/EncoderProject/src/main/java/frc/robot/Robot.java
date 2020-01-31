@@ -10,8 +10,6 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import org.graalvm.compiler.hotspot.replacements.EncodedSymbolConstant;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
@@ -116,13 +114,15 @@ public class Robot extends TimedRobot {
     double throttle               = joystick.getY();
     ShuffleboardTab tab           = Shuffleboard.getTab("SmartDashboard");
     NetworkTableEntry inputValNet = tab.add("InputVal", 1).getEntry();
-    double InputVal               = inputValNet.getDouble(0);
+    double inputVal               = inputValNet.getDouble(0);
     int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
 
-    error = Math.abs(inputVal-encodervel);
+    double error = Math.abs(inputVal-encodervel);
+    System.out.println("EncVel: "+ encodervel+ "\tInputVal: " +  inputVal + "\tError: "+ error);
+
     
-    backRight.set(ControlMode.PercentOutput, ___);
-    backLeft.set(ControlMode.PercentOutput, -1 * ___);
+    //backRight.set(ControlMode.PercentOutput, );
+    //backLeft.set(ControlMode.PercentOutput, -1 * );
     
     
 
