@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -121,9 +119,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double throttle               = joystick.getY();
-    double userRpm                = joystick.getRawAxis(3);
+    double targetEncVel           = joystick.getRawAxis(3);
     int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
-    double inputVal               = userRpm;
 
     backRight.set(ControlMode.PercentOutput, throttle);
     backLeft.set(ControlMode.PercentOutput, -1 * throttle);
@@ -131,17 +128,22 @@ public class Robot extends TimedRobot {
     System.out.println("joystick throttle=" + throttle);
     System.out.println("encoder velocity=" + encodervel);
 
-    double error = Math.abs(inputVal*2000-encodervel);
+    double error = Math.abs(targetEncVel*2000-encodervel);
 
-    System.out.println("EncVel: "+ encodervel+ "\tInputVal: " +  inputVal + "\tError: "+ error);
+    System.out.println(
+      "    Throttle: "+ throttle +
+      "    EncVel: "+ encodervel +
+      "    Target EncVel: " + targetEncVel +
+      "    Error: "+ error +
+      "**********" 
+      );
 
     SmartDashboard.putNumber("EncVel", encodervel);
-    SmartDashboard.putNumber("InputVal", inputVal);
+    SmartDashboard.putNumber("TargetEncVel", targetEncVel);
     SmartDashboard.putNumber("Error", error);
-    SmartDashboard.putNumber("UserRPM", userRpm);
 
     NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
-    NetworkTableInstance.getDefault().getEntry("User RPM").setDouble(userRpm);
+    NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
     //backRight.set(ControlMode.PercentOutput, );
     //backLeft.set(ControlMode.PercentOutput, -1 * );
     
