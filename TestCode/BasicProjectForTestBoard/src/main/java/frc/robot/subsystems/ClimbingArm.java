@@ -32,6 +32,11 @@ public class ClimbingArm extends SubsystemBase {
 
 
   }
+  
+  
+  public void ClimbArmUp(double Up, double Down) {
+
+  } 
 
   public void logToNetworkTables(){
 
