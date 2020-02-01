@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -59,9 +60,25 @@ public class Robot extends TimedRobot {
     backLeft = new TalonSRX(3);
     frontLeft = new TalonSRX(1);
 
+    backRight.configFactoryDefault();
+
+    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+
+    backRight.config_kF(0, 0);
+    backRight.config_kP(0, 0);
+    backRight.config_kI(0, 0);
+    backRight.config_kD(0, 0);
+
+
+
     // they are in gearboxes
     frontRight.follow(backRight);
-    frontLeft.follow(backLeft);
+    frontLeft.follow(backRight);
+    backLeft.follow(backRight);
+
+
+
+    // backRight.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
   }
 
   /**
@@ -119,14 +136,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double throttle               = joystick.getY();
-    double targetEncVel           = joystick.getRawAxis(3);
+    double targetEncVel           = joystick.getRawAxis(3); //little lever/throttle
     int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
 
-    backRight.set(ControlMode.PercentOutput, throttle);
-    backLeft.set(ControlMode.PercentOutput, -1 * throttle);
+    backRight.set(ControlMode.Velocity, targetEncVel);
+    backLeft.set(ControlMode.Velocity, -1 * targetEncVel);
 
-    System.out.println("joystick throttle=" + throttle);
-    System.out.println("encoder velocity=" + encodervel);
 
     double error = Math.abs(targetEncVel*2000-encodervel);
 
@@ -142,10 +157,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("TargetEncVel", targetEncVel);
     SmartDashboard.putNumber("Error", error);
 
-    NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
-    NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
-    //backRight.set(ControlMode.PercentOutput, );
-    //backLeft.set(ControlMode.PercentOutput, -1 * );
+    // NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
+    // NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
+
     
 
   }
