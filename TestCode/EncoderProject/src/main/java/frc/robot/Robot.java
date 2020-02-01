@@ -62,16 +62,22 @@ public class Robot extends TimedRobot {
 
     backRight.configFactoryDefault();
 
+    backRight.configNominalOutputForward(0);
+    backRight.configNominalOutputReverse(0);
+    backRight.configPeakOutputForward(1);
+    backRight.configPeakOutputReverse(-1);
+
     backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+    backRight.setSensorPhase(true);
 
-    backRight.config_kF(0, 0);
-    backRight.config_kP(0, 0);
-    backRight.config_kI(0, 0);
-    backRight.config_kD(0, 0);
+    SmartDashboard.putNumber("kF", 0.20);  // 1023.0/7200.0);
+    SmartDashboard.putNumber("kP", 0.34);  // 0.25);
+    SmartDashboard.putNumber("kI", 0.00);  // 0.001);
+    SmartDashboard.putNumber("kD" ,0.00);  // 20);
+    SmartDashboard.putNumber("TargetEncVel", 1023);
 
 
-
-    // they are in gearboxes
+    // all follow backRight
     frontRight.follow(backRight);
     frontLeft.follow(backRight);
     backLeft.follow(backRight);
@@ -91,6 +97,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    backRight.config_kF(0, SmartDashboard.getNumber("kF", 0.34)); //1023.0/7200.0));
+    backRight.config_kP(0, SmartDashboard.getNumber("kP", 0.20)); //0.25));
+    backRight.config_kI(0, SmartDashboard.getNumber("kI", 0.00)); //0.001));
+    backRight.config_kD(0, SmartDashboard.getNumber("kD", 0.00)); //20));
+
+    SmartDashboard.putNumber("MotorVoltage", backRight.getMotorOutputVoltage());
+
   }
 
   /**
@@ -136,26 +149,27 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double throttle               = joystick.getY();
-    double targetEncVel           = joystick.getRawAxis(3); //little lever/throttle
+    double targetEncVel           = SmartDashboard.getNumber("TargetEncVel", 0); //joystick.getRawAxis(3) * 1023; //little lever/throttle
     int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
 
     backRight.set(ControlMode.Velocity, targetEncVel);
-    backLeft.set(ControlMode.Velocity, -1 * targetEncVel);
+    //backLeft.set(ControlMode.Velocity, -1 * targetEncVel);
 
+    int talonErr = backRight.getClosedLoopError();
 
-    double error = Math.abs(targetEncVel*2000-encodervel);
+    //double error = Math.abs(targetEncVel-encodervel);
 
     System.out.println(
-      "    Throttle: "+ throttle +
-      "    EncVel: "+ encodervel +
-      "    Target EncVel: " + targetEncVel +
-      "    Error: "+ error +
-      "**********" 
+      "\n    Throttle: "+ throttle +
+      "\n    EncVel: "+ encodervel +
+      "\n    Target EncVel: " + targetEncVel +
+      "\n    Error: "+ talonErr +
+      "\n    **********" 
       );
 
     SmartDashboard.putNumber("EncVel", encodervel);
-    SmartDashboard.putNumber("TargetEncVel", targetEncVel);
-    SmartDashboard.putNumber("Error", error);
+    //SmartDashboard.putNumber("TargetEncVel", targetEncVel);
+    SmartDashboard.putNumber("Error", talonErr);
 
     // NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
     // NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
