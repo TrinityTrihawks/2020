@@ -8,14 +8,15 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableEntry;
+//import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -59,9 +60,31 @@ public class Robot extends TimedRobot {
     backLeft = new TalonSRX(3);
     frontLeft = new TalonSRX(1);
 
-    // they are in gearboxes
+    backRight.configFactoryDefault();
+
+    backRight.configNominalOutputForward(0);
+    backRight.configNominalOutputReverse(0);
+    backRight.configPeakOutputForward(1);
+    backRight.configPeakOutputReverse(-1);
+
+    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+    backRight.setSensorPhase(true);
+
+    SmartDashboard.putNumber("kF", 0.20);  // 1023.0/7200.0);
+    SmartDashboard.putNumber("kP", 0.34);  // 0.25);
+    SmartDashboard.putNumber("kI", 0.00);  // 0.001);
+    SmartDashboard.putNumber("kD" ,0.00);  // 20);
+    SmartDashboard.putNumber("TargetEncVel", 1023);
+
+
+    // all follow backRight
     frontRight.follow(backRight);
-    frontLeft.follow(backLeft);
+    frontLeft.follow(backRight);
+    backLeft.follow(backRight);
+
+
+
+    // backRight.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
   }
 
   /**
@@ -74,6 +97,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    backRight.config_kF(0, SmartDashboard.getNumber("kF", 0.34)); //1023.0/7200.0));
+    backRight.config_kP(0, SmartDashboard.getNumber("kP", 0.20)); //0.25));
+    backRight.config_kI(0, SmartDashboard.getNumber("kI", 0.00)); //0.001));
+    backRight.config_kD(0, SmartDashboard.getNumber("kD", 0.00)); //20));
+
+    SmartDashboard.putNumber("MotorVoltage", backRight.getMotorOutputVoltage());
+
   }
 
   /**
@@ -110,26 +140,7 @@ public class Robot extends TimedRobot {
     }
     // ^??
     
-    double userRpm                = joystick.getRawAxis(3);
-    double throttle               = joystick.getY();
-    ShuffleboardTab tab           = Shuffleboard.getTab("SmartDashboard");
-    NetworkTableEntry inputValNet = tab.add("InputVal", 1).getEntry();
-    double inputVal               = inputValNet.getDouble(0);
-    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
-
-    double error = Math.abs(inputVal-encodervel);
-    System.out.println("EncVel: "+ encodervel+ "\tInputVal: " +  inputVal + "\tError: "+ error);
-
     
-    //backRight.set(ControlMode.PercentOutput, );
-    //backLeft.set(ControlMode.PercentOutput, -1 * );
-    
-    
-
-    SmartDashboard.putNumber("RcvedInputVal", inputVal);
-
-    
-
   }
 
   /**
@@ -137,24 +148,34 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    double throttle = joystick.getY();
-    double userRpm  = joystick.getRawAxis(3);
-    int encodervel  = backRight.getSensorCollection().getQuadratureVelocity();
+    double throttle               = joystick.getY();
+    double targetEncVel           = SmartDashboard.getNumber("TargetEncVel", 0); //joystick.getRawAxis(3) * 1023; //little lever/throttle
+    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
+
+    backRight.set(ControlMode.Velocity, targetEncVel);
+    //backLeft.set(ControlMode.Velocity, -1 * targetEncVel);
+
+    int talonErr = backRight.getClosedLoopError();
+
+    //double error = Math.abs(targetEncVel-encodervel);
+
+    System.out.println(
+      "\n    Throttle: "+ throttle +
+      "\n    EncVel: "+ encodervel +
+      "\n    Target EncVel: " + targetEncVel +
+      "\n    Error: "+ talonErr +
+      "\n    **********" 
+      );
+
+    SmartDashboard.putNumber("EncVel", encodervel);
+    //SmartDashboard.putNumber("TargetEncVel", targetEncVel);
+    SmartDashboard.putNumber("Error", talonErr);
+
+    // NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
+    // NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
+
     
-    
 
-    backRight.set(ControlMode.PercentOutput, throttle);
-    backLeft.set(ControlMode.PercentOutput, -1 * throttle);
-
-    System.out.println("joystick throttle=" + throttle);
-    System.out.println("encoder velocity=" + encodervel);
-
-
-
-    NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
-    NetworkTableInstance.getDefault().getEntry("User RPM").setDouble(userRpm);
-    SmartDashboard.putNumber("UserRPM", userRpm);
-    SmartDashboard.putNumber("Encoder Velocity", encodervel);
   }
 
   /**
