@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -38,8 +39,10 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(new JoystickDrive(
       drivetrain,
-      () -> mainController.getThrottle(),
-      () -> mainController.getTwist()
+      () -> mainController.getY(),
+      () -> mainController.getTwist(),
+      () -> mainController.getRawButton(3),
+      () -> mainController.getRawButton(4)
     ));
 
     autoCommand = new StartEndCommand(
@@ -63,6 +66,15 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+  }
+
+  public void logData() {
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    inst.getEntry("RobotContainer/MainController/Throttle").setDouble(mainController.getThrottle());
+    inst.getEntry("RobotContainer/MainController/Twist").setDouble(mainController.getTwist());
+    inst.getEntry("RobotContainer/MainController/Y").setDouble(mainController.getY());
+
+
   }
 
 

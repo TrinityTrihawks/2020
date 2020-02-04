@@ -65,6 +65,8 @@ public class Drivetrain extends SubsystemBase {
     talons.get("backLeft").follow( talons.get("frontLeft") );
     talons.get("backRight").follow( talons.get("frontRight") );
 
+    talons.get("backRight").setInverted(true);
+    talons.get("frontRight").setInverted(true);
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("drivetrain");

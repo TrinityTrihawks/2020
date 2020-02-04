@@ -19,9 +19,9 @@ public final class Constants {
 
     public static final class DriveConstants {
         public static final int kFrontLeftId = 1;
-        public static final int kFrontRightId = 2;
+        public static final int kFrontRightId = 9;
         public static final int kBackLeftId = 3;
-        public static final int kBackRightId = 4;
+        public static final int kBackRightId = 2;
 
     }
 

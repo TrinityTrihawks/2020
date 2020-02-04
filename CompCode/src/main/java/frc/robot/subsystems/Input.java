@@ -10,24 +10,24 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Joystick; //is this necessary?
-import edu.wpi.first.wpilibj.VictorSP; //i dont know if this is the motors we'll use, but its there
+// import edu.wpi.first.wpilibj.Joystick; //is this necessary?
+// import edu.wpi.first.wpilibj.VictorSP; //i dont know if this is the motors we'll use, but its there
 
 
 
 public class Input extends SubsystemBase {
 
-@Override  //is this right?
-public void teleopPeriodic() {
+  // @Override  //is this right?
+  // public void teleopPeriodic() {
 
-    Joystick joystick; //is this necessary?
-    VictorSP victor1;
+  //     Joystick joystick; //is this necessary?
+  //     VictorSP victor1;
 
-    if(joystick.getRawButton( )) {
-        victor1.set(1);
-      } else if(joystick.getRawButton( )) { //dont think we need an elseif statement, dont need to go backwards
-        victor1.set(-1);
-      } 
-  
-}
+  //     if(joystick.getRawButton( )) {
+  //         victor1.set(1);
+  //       } else if(joystick.getRawButton( )) { //dont think we need an elseif statement, dont need to go backwards
+  //         victor1.set(-1);
+  //       } 
+    
+  // }
 }
