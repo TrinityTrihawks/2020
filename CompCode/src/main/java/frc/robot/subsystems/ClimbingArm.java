@@ -1,7 +1,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -12,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ClimbingArm extends SubsystemBase {
 
   int idk = 1;
-  final HashMap<String,TalonSRX> talons;
+  final TalonSRX telescope;
+  final TalonSRX winch;
   static ClimbingArm subsystemInst = null;
 
   /**
@@ -31,50 +31,30 @@ public class ClimbingArm extends SubsystemBase {
 
 
   /**
-   * Creates a new Drivetrain.
+   * Creates a new ClimbingArm.
    */
   private ClimbingArm() {
-    talons = new HashMap<>();
-    talons.put("CMU", new TalonSRX(0));
-    talons.put("CMD", new TalonSRX(1));
-    talons.put("WU", new TalonSRX(2));
-    talons.put("WD", new TalonSRX(3));
+    telescope = new TalonSRX(0);
+    winch = new TalonSRX(0);
   }
  
-  public void ClimbingArmCommand(double number)
+
+  public void moveUp()
   {
-    if (number == 0)
-    {
-      talons.get("CMU").set(ControlMode.PercentOutput, idk);
-    }
-    if (number == 1)
-    {
-      talons.get("CMU").set(ControlMode.PercentOutput, idk);
-    }
-    if (number == 2)
-    {
-      talons.get("CMU").set(ControlMode.PercentOutput, idk);
-    }
+    telescope.set(ControlMode.PercentOutput, idk);
+    winch.set(ControlMode.PercentOutput, idk);
   }
 
-  public void ClimbingArmMannuallyUp()
+  public void moveDown()
   {
-    talons.get("CMU").set(ControlMode.PercentOutput, idk);
+    telescope.set(ControlMode.PercentOutput, idk);
+    winch.set(ControlMode.PercentOutput, idk);
   }
 
-  public void ClimbingArmMannuallyDown()
+  public void stop()
   {
-    talons.get("CMD").set(ControlMode.PercentOutput, idk);
-  }
-  
-  public void WintchUp()
-  {
-    ClimbingArmMannuallyUp();
-  }
-
-  public void WintchDown()
-  {
-    ClimbingArmMannuallyDown();
+    telescope.set(ControlMode.PercentOutput, 0);
+    winch.set(ControlMode.PercentOutput, 0);
   }
 
   public void logToNetworkTables(){
