@@ -36,7 +36,10 @@ public final class Constants {
     public static final class ShooterConstants {
 
     }
-
+    public static final class NetworkConstants {
+        public static final String kCameraIPAddress = "10.42.15.11";
+        public static final String KLimelightIPAddress = "10.42.15.XX";
+    }
 
     public static final class OIConstants {
         public static final int kMainControllerPort = 0;
