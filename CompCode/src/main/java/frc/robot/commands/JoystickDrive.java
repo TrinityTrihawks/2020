@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.Constants.JoystickConstants;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -20,17 +22,20 @@ public class JoystickDrive extends CommandBase {
  
   private final DoubleSupplier forwardSource;
   private final DoubleSupplier rotationSource;
-  private final BooleanSupplier leftQuickTurn;
-  private final BooleanSupplier rightQuickTurn;
+  private final BooleanSupplier leftSlowTurn;
+  private final BooleanSupplier rightSlowTurn;
+  private final IntSupplier povAngle;
+
 
   // Creates a new JoystickDrive command
   public JoystickDrive(Drivetrain drivetrain, DoubleSupplier forward, DoubleSupplier rotation,
-                        BooleanSupplier leftQuickTurn, BooleanSupplier rightQuickTurn) {
+                        BooleanSupplier leftSlowTurn, BooleanSupplier rightSlowTurn, IntSupplier povAngle) {
     this.drivetrain = drivetrain;
     this.forwardSource = forward;
     this.rotationSource = rotation;
-    this.leftQuickTurn = leftQuickTurn;
-    this.rightQuickTurn = rightQuickTurn;
+    this.leftSlowTurn = leftSlowTurn;
+    this.rightSlowTurn = rightSlowTurn;
+    this.povAngle = povAngle;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -56,23 +61,43 @@ public class JoystickDrive extends CommandBase {
 
     System.out.println("Forward: "+ forward);
     System.out.println("Rotation: "+ rotation);
+    System.out.println("POV Angle "+povAngle.getAsInt());
+    System.out.println("RS Btn: "+rightSlowTurn.getAsBoolean()+ "\nLS Btn"+ leftSlowTurn.getAsBoolean());
 
     double leftDrive = 0;
     double rightDrive = 0;
 
-    if (Math.abs(forward) < 0.1) {
-      if(Math.abs(rotation) > 0.3) {
-        leftDrive = rotation;
-        rightDrive = -rotation;
+    if (Math.abs(forward) < JoystickConstants.kSlowTurnThreshold) {
+      if(Math.abs(rotation) > JoystickConstants.kDeadZoneThreshold) {
+        leftDrive = rotation * JoystickConstants.kRotationScalar;
+        rightDrive = -rotation * JoystickConstants.kRotationScalar;
       }
+       if (povAngle.getAsInt() != -1) {
+        switch(povAngle.getAsInt()){
+          case 0: // Forward
+            leftDrive  = JoystickConstants.kSlowValue;
+            rightDrive = JoystickConstants.kSlowValue;
+          break;
+          case 90: // Right
+            leftDrive  = JoystickConstants.kSlowValue * JoystickConstants.kQuickRotationScalar;
+            rightDrive = JoystickConstants.kSlowValue;
+          break;
+          case 180: // Back
+            leftDrive  = -JoystickConstants.kSlowValue;
+            rightDrive = -JoystickConstants.kSlowValue;
+          break;
+          case 270: // Left
+            leftDrive  = JoystickConstants.kSlowValue;
+            rightDrive = JoystickConstants.kSlowValue * JoystickConstants.kQuickRotationScalar;
+          break;
+        }
+      } else if(leftSlowTurn.getAsBoolean() == true) {
+        leftDrive = -(JoystickConstants.kSlowValue);
+        rightDrive = JoystickConstants.kSlowValue;
 
-      if(leftQuickTurn.getAsBoolean() == true) {
-        leftDrive = -0.2;
-        rightDrive = 0.2;
-
-      } else if (rightQuickTurn.getAsBoolean() == true) {
-        leftDrive = 0.2;
-        rightDrive = -0.2;
+      } else if (rightSlowTurn.getAsBoolean() == true) {
+        leftDrive = JoystickConstants.kSlowValue;
+        rightDrive = -(JoystickConstants.kSlowValue);
 
       }
 

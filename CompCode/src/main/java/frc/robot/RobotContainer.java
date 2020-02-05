@@ -29,7 +29,7 @@ public class RobotContainer {
   private final Command autoCommand;
 
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
-
+  
 
 
   /**
@@ -42,7 +42,8 @@ public class RobotContainer {
       () -> mainController.getY(),
       () -> mainController.getTwist(),
       () -> mainController.getRawButton(3),
-      () -> mainController.getRawButton(4)
+      () -> mainController.getRawButton(4),
+      () -> mainController.getPOV(0)
     ));
 
     autoCommand = new StartEndCommand(
