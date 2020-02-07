@@ -5,6 +5,6 @@
 # 2020 Code
 FRC Team 4215 competition code for 2020 season
 ****
-Competiton Code: [CompCode](./CompCode)
+Competiton Code: [CompCode](https://github.com/TrinityTrihawks/2020/tree/master/CompCode)
 
-Testing Code: [TestCode](./TestCode)
+Testing Code: [TestCode](https://github.com/TrinityTrihawks/2020/tree/master/TestCode)
