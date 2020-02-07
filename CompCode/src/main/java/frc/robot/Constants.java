@@ -23,6 +23,7 @@ public final class Constants {
         public static final int kBackLeftId = 3;
         public static final int kBackRightId = 2;
     }
+
     public static final class JoystickConstants {
         public static final double kSlowValue = 0.16;
         public static final double kRotationScalar = 0.5;
@@ -37,6 +38,14 @@ public final class Constants {
     public static final class ShooterConstants {
 
     }
+
+    public static final class ClimbingConstants {
+        public static final int kClimbingArmUpId = 0;
+        public static final int kClimbingArmDownId = 0;
+        public static final int kWinchUpId = 0;
+        public static final int kWinchDownId = 0;
+    }
+
     public static final class NetworkConstants {
         public static final String kCameraIPAddress = "10.42.15.11";
         public static final String KLimelightIPAddress = "10.42.15.XX";
