@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -81,6 +82,8 @@ public class Drivetrain extends SubsystemBase {
     //feed the values to the talons
     talons.get("frontLeft").set(ControlMode.PercentOutput, leftPercent);
     talons.get("frontRight").set(ControlMode.PercentOutput, rightPercent);
+    SmartDashboard.putNumber("Left Motor Voltage", talons.get("frontLeft").getMotorOutputVoltage());
+    SmartDashboard.putNumber("Right Motor Voltage", talons.get("frontRight").getMotorOutputVoltage());
   }
 
   public void driveClosedLoop() {

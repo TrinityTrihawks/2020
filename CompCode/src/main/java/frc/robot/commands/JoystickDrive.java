@@ -7,6 +7,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -55,22 +56,30 @@ public class JoystickDrive extends CommandBase {
     double forward = -1 * forwardSource.getAsDouble();
     forward = Math.pow(forward, 2) * Math.signum(forward);
 
+
     // read rotation from source and scale by throttle
     // so it represents arc-length
     double rotation = rotationSource.getAsDouble();
 
-    System.out.println("Forward: "+ forward);
-    System.out.println("Rotation: "+ rotation);
-    System.out.println("POV Angle "+povAngle.getAsInt());
-    System.out.println("RS Btn: "+rightSlowTurn.getAsBoolean()+ "\nLS Btn"+ leftSlowTurn.getAsBoolean());
 
+    System.out.println("Forward: "+ Math.abs(forward));
+    System.out.println("Rotation: "+ rotation);
+    System.out.println("POV Angle: "+povAngle.getAsInt());
+    System.out.println("RS Btn: "+rightSlowTurn.getAsBoolean()+ "\nLS Btn: "+ leftSlowTurn.getAsBoolean());
+    
+    SmartDashboard.putNumber("Throttle", forward);
+    SmartDashboard.putNumber("Rotation", rotation);
+    SmartDashboard.putNumber("POV Angle", povAngle.getAsInt());
+    SmartDashboard.putBoolean("Right Slow Turn", rightSlowTurn.getAsBoolean());
+    SmartDashboard.putBoolean("Left Slow Turn", leftSlowTurn.getAsBoolean());
+    
     double leftDrive = 0;
     double rightDrive = 0;
 
     if (Math.abs(forward) < JoystickConstants.kSlowTurnThreshold) {
       if(Math.abs(rotation) > JoystickConstants.kDeadZoneThreshold) {
-        leftDrive = rotation * JoystickConstants.kRotationScalar;
-        rightDrive = -rotation * JoystickConstants.kRotationScalar;
+        leftDrive = rotation * JoystickConstants.kSlowRotationScalar;
+        rightDrive = -rotation * JoystickConstants.kSlowRotationScalar;
       }
        if (povAngle.getAsInt() != -1) {
         switch(povAngle.getAsInt()){
@@ -102,7 +111,7 @@ public class JoystickDrive extends CommandBase {
       }
 
     } else {
-      rotation = rotation * Math.abs(forward) * 0.4;
+      rotation = rotation * Math.abs(forward) * 0.2;
 
       // compute drivetrain values for the left and right sides
       leftDrive = forward + rotation;
