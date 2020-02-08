@@ -41,8 +41,10 @@ public class JoystickIntake extends CommandBase {
 
     if(shouldIntake.getAsBoolean()) {
       intake.vacuum();
+
     } else if(shouldSpit.getAsBoolean()) {
       intake.spit();
+      
     } else {
       intake.off();
     }
