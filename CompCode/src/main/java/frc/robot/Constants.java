@@ -28,6 +28,10 @@ public final class Constants {
         public static final int kMotorId = 2;
     }
 
+    public static final class StorageConstants {
+        public static final int kMotorId = 3;
+    }
+
     public static final class JoystickConstants {
         public static final double kSlowValue = 0.16;
         public static final double kRotationScalar = 0.5;
