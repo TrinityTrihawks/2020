@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("kP", 1.80);  // 0.25);
     SmartDashboard.putNumber("kI", 0.00);  // 0.001);
     SmartDashboard.putNumber("kD" ,0.00);  // 20);
-    SmartDashboard.putNumber("TargetEncVel", 1023);
+    SmartDashboard.putNumber("TargetEncVel", 515);
 
 
     // all follow backRight
