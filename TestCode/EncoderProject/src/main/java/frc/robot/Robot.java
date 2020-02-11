@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -35,7 +36,6 @@ public class Robot extends TimedRobot {
   private TalonSRX frontRight;
   private TalonSRX backLeft;
   private TalonSRX frontLeft;
-
 
   /**
    * This function is run when the robot is first started up and should be
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
     backRight.configPeakOutputReverse(-1);
 
     backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    backRight.setSensorPhase(true);
+    backRight.setSensorPhase(false);
 
     SmartDashboard.putNumber("kF", 0.20);  // 1023.0/7200.0);
     SmartDashboard.putNumber("kP", 0.34);  // 0.25);
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double throttle               = joystick.getY();
     double targetEncVel           = SmartDashboard.getNumber("TargetEncVel", 0); //joystick.getRawAxis(3) * 1023; //little lever/throttle
-    int encodervel                = backRight.getSensorCollection().getQuadratureVelocity();
+    int encodervel                = backRight.getSelectedSensorVelocity();
 
     backRight.set(ControlMode.Velocity, targetEncVel);
     //backLeft.set(ControlMode.Velocity, -1 * targetEncVel);
@@ -164,13 +164,11 @@ public class Robot extends TimedRobot {
       );
 
     SmartDashboard.putNumber("EncVel", encodervel);
-    //SmartDashboard.putNumber("EncVel", targetEncVel);
     SmartDashboard.putNumber("Error", talonErr);
-
-    // NetworkTableInstance.getDefault().getEntry("Encoder velocity").setDouble(encodervel);
-    // NetworkTableInstance.getDefault().getEntry("Target Encoder Velocity").setDouble(targetEncVel);
-
-    
+    //SmartDashboard.putNumber("TalonEncVel", talonEncVel);
+    //NetworkTableInstance.getDefault().getEntry("EncVel").setDouble(encodervel);
+    //NetworkTableInstance.getDefault().getEntry("TargetEncVel").setDouble(targetEncVel);
+   
 
   }
 
