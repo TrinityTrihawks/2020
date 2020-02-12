@@ -66,10 +66,10 @@ public class Robot extends TimedRobot {
     backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     backRight.setSensorPhase(true);
 
-    SmartDashboard.putNumber("kF", 1.00);  // 1023.0/7200.0);
-    SmartDashboard.putNumber("kP", 1.80);  // 0.25);
-    SmartDashboard.putNumber("kI", 0.00);  // 0.001);
-    SmartDashboard.putNumber("kD" ,0.00);  // 20);
+    SmartDashboard.putNumber("kF", 0.100);  // 1023.0/7200.0);
+    SmartDashboard.putNumber("kP", 0.800);  // 0.25);
+    SmartDashboard.putNumber("kI", 0.003);  // 0.001);
+    SmartDashboard.putNumber("kD" ,0.000);  // 20);
     SmartDashboard.putNumber("TargetEncVel", 515);
 
 
