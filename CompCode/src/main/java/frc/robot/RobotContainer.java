@@ -8,7 +8,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -39,15 +41,19 @@ public class RobotContainer {
       () -> mainController.getPOV(0)
     ));
 
-    autoCommand = new StartEndCommand(
-      // Start driving forward when this command starts
-      () -> drivetrain.driveOpenLoop(.3, .3),
-      // Stop driving when this command ends
-      () -> drivetrain.driveOpenLoop(0,0),
-      // This command requires the drivetrain
-      drivetrain
+    Command driveOffInitLine = new SequentialCommandGroup(
+      // Run these commands one after another:
+      // 1. Drive backwards
+      new InstantCommand(() -> drivetrain.driveOpenLoop(-.3, -.3), drivetrain),
+      // 2. Wait 3 seconds
+      new WaitCommand(3),
+      // 3. Stop driving
+      new InstantCommand(() -> drivetrain.driveOpenLoop(0,0), drivetrain)
     );
 
+
+
+    autoCommand = driveOffInitLine;
 
     // Configure the button bindings
     configureButtonBindings();
