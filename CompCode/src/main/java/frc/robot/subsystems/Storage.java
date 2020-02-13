@@ -45,9 +45,25 @@ public class Storage extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0.3);
   }
 
+  public void forwardSlow() {
+    motor.set(ControlMode.PercentOutput, 0.15);
+  }
+
   public void reverse() {
     motor.set(ControlMode.PercentOutput, -0.3);
   }
+
+  public void resetPosition() {
+    motor.setSelectedSensorPosition(0);
+  }
+
+  /**
+   * Get position change since last reset in encoder raw units
+   */
+  public int getPositionChange() {
+    return motor.getSelectedSensorPosition();
+  }
+
 
 
   @Override
@@ -63,6 +79,9 @@ public class Storage extends SubsystemBase {
 
     // Log motor current over network tables
     subtable.getEntry("current").setDouble(motor.getStatorCurrent());
+
+    //Log encoder val
+    subtable.getEntry("encoderPosition").setDouble(getPositionChange());
 
   }
 
