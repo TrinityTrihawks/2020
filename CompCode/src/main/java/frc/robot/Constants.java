@@ -42,10 +42,8 @@ public final class Constants {
     }
 
     public static final class ClimbingConstants {
-        public static final int kClimbingArmUpId = 0;
-        public static final int kClimbingArmDownId = 0;
-        public static final int kWinchUpId = 0;
-        public static final int kWinchDownId = 0;
+        public static final int TelescopeID = 0;
+        public static final int WinchId = 0;
     }
 
     public static final class NetworkConstants {

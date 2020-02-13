@@ -3,16 +3,17 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 
 public class ClimbingArm extends SubsystemBase {
 
   int idk = 1;
-  final TalonSRX telescope;
-  final TalonSRX winch;
+  final VictorSPX telescope;
+  final VictorSPX winch;
   static ClimbingArm subsystemInst = null;
 
   /**
@@ -34,21 +35,20 @@ public class ClimbingArm extends SubsystemBase {
    * Creates a new ClimbingArm.
    */
   private ClimbingArm() {
-    telescope = new TalonSRX(0);
-    winch = new TalonSRX(0);
+    telescope = new VictorSPX(Constants.ClimbingConstants.TelescopeID);
+    winch = new VictorSPX(Constants.ClimbingConstants.WinchId);
   }
  
 
   public void moveUp()
   {
-    telescope.set(ControlMode.PercentOutput, idk);
-    winch.set(ControlMode.PercentOutput, idk);
+    telescope.set(ControlMode.PercentOutput, 0.3);
   }
 
   public void moveDown()
   {
-    telescope.set(ControlMode.PercentOutput, idk);
-    winch.set(ControlMode.PercentOutput, idk);
+    telescope.set(ControlMode.PercentOutput, -0.3);
+    winch.set(ControlMode.PercentOutput, 0.3);
   }
 
   public void stop()
