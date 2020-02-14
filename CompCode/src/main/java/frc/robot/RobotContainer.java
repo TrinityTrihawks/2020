@@ -26,6 +26,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final ClimbingArm climbingArm = ClimbingArm.getInstance();
   private final Command autoCommand;
+  private final Command climbingArmUp;
+  private final Command climbingArmDown;
 
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
@@ -58,7 +60,7 @@ public class RobotContainer {
       new InstantCommand(() -> drivetrain.driveOpenLoop(0,0), drivetrain)
     );
 
-    Command climbingArmUp = new StartEndCommand(
+    climbingArmUp = new StartEndCommand(
       // start of command
       () -> climbingArm.moveUp(),
       // end of command
@@ -67,7 +69,7 @@ public class RobotContainer {
       climbingArm
     );
 
-    Command climbingArmDown = new StartEndCommand(
+    climbingArmDown = new StartEndCommand(
       // start of command
       () -> climbingArm.moveDown(),
       // end of command
@@ -89,6 +91,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    climbUpButton.whileHeld(climbingArmUp);
+    climbDownButton.whileHeld(climbingArmDown);
   }
 
   public void logData() {
