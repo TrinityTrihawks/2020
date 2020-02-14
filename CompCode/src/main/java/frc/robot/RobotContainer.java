@@ -6,11 +6,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,10 +24,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final ClimbingArm climbingArm = ClimbingArm.getInstance();
   private final Command autoCommand;
 
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
-  
+  private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
+  private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
+  private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, 0);
+
 
 
   /**
@@ -51,7 +58,23 @@ public class RobotContainer {
       new InstantCommand(() -> drivetrain.driveOpenLoop(0,0), drivetrain)
     );
 
+    Command climbingArmUp = new StartEndCommand(
+      // start of command
+      () -> climbingArm.moveUp(),
+      // end of command
+      () -> climbingArm.stop(),
+      // requires subsystem
+      climbingArm
+    );
 
+    Command climbingArmDown = new StartEndCommand(
+      // start of command
+      () -> climbingArm.moveDown(),
+      // end of command
+      () -> climbingArm.stop(),
+      // requires subsystem
+      climbingArm
+    );
 
     autoCommand = driveOffInitLine;
 
