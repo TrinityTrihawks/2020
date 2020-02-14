@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import static frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
@@ -24,18 +24,19 @@ public class Shooter extends SubsystemBase {
    * Shooter class is a singleton, aka, that only one Shooter object ever gets
    * created
    * 
-   * @return
+   * @return the Shooter instance
    */
   public static Shooter getInstance() {
     if (subsystemInst == null) {
-      return new Shooter();
+      return subsystemInst = new Shooter(); // assigns AND returns the shooter instance: 
+                                           //  the expression value of the '=' operator is the value assigned
     } else {
       return subsystemInst;
     }
   }
 
   private Shooter() {
-    left = new TalonSRX(ShooterConstants.kLeftTalonId);
+    left  = new TalonSRX(ShooterConstants.kLeftTalonId);
     right = new TalonSRX(ShooterConstants.kRightTalonId);
 
 
@@ -46,7 +47,7 @@ public class Shooter extends SubsystemBase {
     
     left.configNominalOutputForward(0);
     left.configNominalOutputReverse(0);
-    left.configPeakOutputForward(1);
+    left.configPeakOutputForward( 1);
     left.configPeakOutputReverse(-1);
     
     left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
@@ -64,11 +65,8 @@ public class Shooter extends SubsystemBase {
     
     right.configNominalOutputForward(0);
     right.configNominalOutputReverse(0);
-    right.configPeakOutputForward(1);
+    right.configPeakOutputForward( 1);
     right.configPeakOutputReverse(-1);
-    
-    right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    right.setSensorPhase(true);
     
     right.config_kP(0, ShooterConstants.kP);
     right.config_kI(0, ShooterConstants.kI);
@@ -78,21 +76,41 @@ public class Shooter extends SubsystemBase {
     right.setInverted(true);
      
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
 
   }
 
-  public boolean shoot(double targetEncoderVelocity) {
+  /**
+   * runs the shooter at the specified targetEncoderVelocity
+   */
+  public void shoot(double targetEncoderVelocity) {
 
+    
     targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
 
-    left.set(ControlMode.Velocity, targetEncoderVelocity);
-    right.set(ControlMode.Velocity, -targetEncoderVelocity);
+    left .set(ControlMode.Velocity, targetEncoderVelocity);
+    right.set(ControlMode.Velocity, targetEncoderVelocity);
 
-    return true;
   }
-  public double limitEncoderValue(double encoderVelocity) {
+
+  /** 
+   * @return int array of {left, right} encoder velocities
+   */
+  public int[] getEncoderValues() {
+    
+
+    int leftEncVel  = left .getSelectedSensorVelocity();
+    int rightEncVel = right.getSelectedSensorVelocity();
+    return new int[] {leftEncVel, rightEncVel};
+  
+  }
+
+  /**
+   * @return the limited encoder value
+   */
+  public double limitEncoderValue(final double encoderVelocity) {
+    
     return Math.max(-1023, Math.min(encoderVelocity, 1023));
   }
 }
