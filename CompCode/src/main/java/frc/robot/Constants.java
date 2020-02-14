@@ -61,8 +61,11 @@ public final class Constants {
         public static final int kMainControllerPort = 0;
         public static final int kAuxiliaryControllerPort = 1;
 
-        public static final int kClimbUpButtonId = 1;
-        public static final int kClimbDownButtonId = 1;
+        public static final int kClimbUpButtonId = 4;
+        public static final int kClimbDownButtonId = 2;
+        public static final int kShootAndStorageUpButtonId = 8;
+        public static final int kIntakeRunButtonId = 7;
+        public static final int kStorageRunButtonId = 6;
 
     }
 }
