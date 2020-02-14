@@ -32,7 +32,7 @@ public class RobotContainer {
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
   private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
-  private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, 0);
+  private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, OIConstants.kClimbDownButtonId);
 
 
 

@@ -62,6 +62,7 @@ public final class Constants {
         public static final int kAuxiliaryControllerPort = 1;
 
         public static final int kClimbUpButtonId = 1;
+        public static final int kClimbDownButtonId = 1;
 
     }
 }
