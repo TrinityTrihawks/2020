@@ -11,18 +11,18 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants {
-        public static final int kFrontLeftId = 1;
+        public static final int kFrontLeftId = 4;
         public static final int kFrontRightId = 9;
-        public static final int kBackLeftId = 3;
-        public static final int kBackRightId = 2;
+        public static final int kBackLeftId = 7;
+        public static final int kBackRightId = 3;
     }
 
     public static final class IntakeConstants {
-        public static final int kMotorId = 2;
+        public static final int kMotorId = 1;
     }
 
     public static final class StorageConstants {
-        public static final int kMotorId = 3;
+        public static final int kMotorId = 5;
     }
 
     public static final class JoystickConstants {
@@ -37,8 +37,8 @@ public final class Constants {
 
 
     public static final class ShooterConstants {
-        public static final int kLeftTalonId = 0;
-        public static final int kRightTalonId = 0;
+        public static final int kLeftTalonId = 2;
+        public static final int kRightTalonId = 6;
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -48,8 +48,8 @@ public final class Constants {
     }
 
     public static final class ClimbingConstants {
-        public static final int TelescopeID = 0;
-        public static final int WinchId = 0;
+        public static final int TelescopeID = 2;
+        public static final int WinchId = 8;
     }
 
     public static final class NetworkConstants {
