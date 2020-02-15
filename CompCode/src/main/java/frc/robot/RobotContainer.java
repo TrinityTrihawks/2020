@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
-import frc.robot.commands.JoystickIntake;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
@@ -35,7 +34,7 @@ public class RobotContainer {
   private final Command autoCommand;
   private final Command climbingArmUp;
   private final Command climbingArmDown;
-  private final Command shootAndStorageUp;
+  private final Command reverseStorage;
   private final Command intakeForward;
   private final Command intakeReverse;
   private final Command storageRun;
@@ -49,10 +48,11 @@ public class RobotContainer {
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
   private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
   private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, OIConstants.kClimbDownButtonId);
-  private final JoystickButton shootAndStorageUpButton = new JoystickButton(auxiliaryController, OIConstants.kShootAndStorageUpButtonId);
+  private final JoystickButton shooterButton = new JoystickButton(auxiliaryController, OIConstants.kShooterButtonId);
   private final JoystickButton intakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
   private final JoystickButton storageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeReverseButtonId);
+  private final JoystickButton storageReverseButton = new JoystickButton(auxiliaryController, OIConstants.KStorageReverseButtonId);
 
 
 
@@ -118,12 +118,12 @@ public class RobotContainer {
     );
 
     intakeReverse = new StartEndCommand(
-            // start of command
-            () -> intake.spit(),
-                        // end of command
-            () -> intake.off(),
-            // requires subsystem
-            intake
+       // start of command
+       () -> intake.spit(),
+       // end of command
+       () -> intake.off(),
+       // requires subsystem
+       intake
     );
 
     storageRun = new StartEndCommand(
@@ -135,17 +135,13 @@ public class RobotContainer {
       storage
     );
 
-    shootAndStorageUp = new StartEndCommand(
+    reverseStorage = new StartEndCommand(
     // start of command
-      () -> {shooter.shootOpenLoop(.7);
-            storage.forwardSlow();
-          },
+     () -> storage.reverse(),
       // end of command
-      () -> {shooter.stopShoot();
-            storage.off();
-          },
+      () -> storage.off(),
       // requires subsystem
-      shooter,storage
+      storage
     );
 
     shooterAdjust = new StartEndCommand(
@@ -174,10 +170,8 @@ public class RobotContainer {
     intakeRunButton.whenHeld(intakeForward);
     intakeReverseButton.whenHeld(intakeReverse);
     storageRunButton.whenHeld(storageRun);
-
-    // ***PICK ONE***
-    // shootAndStorageUpButton.whenHeld(shootAndStorageUp); 
-    shootAndStorageUpButton.whileHeld(shooterAdjust);
+    storageReverseButton.whenHeld(reverseStorage); 
+    shooterButton.whileHeld(shooterAdjust);
 
 
     
