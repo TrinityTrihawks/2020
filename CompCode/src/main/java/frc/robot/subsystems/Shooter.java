@@ -34,7 +34,7 @@ public class Shooter extends SubsystemBase {
       return subsystemInst;
     }
   }
-
+ 
   private Shooter() {
     left  = new TalonSRX(ShooterConstants.kLeftTalonId);
     right = new TalonSRX(ShooterConstants.kRightTalonId);
@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
     // Left Talon Config
     left.configFactoryDefault();
     
-    left.setNeutralMode(NeutralMode.Coast);
+    left.setNeutralMode(NeutralMode.Brake);
     
     left.configNominalOutputForward(0);
     left.configNominalOutputReverse(0);
@@ -61,7 +61,7 @@ public class Shooter extends SubsystemBase {
     // Right Talon config
     right.configFactoryDefault();
 
-    right.setNeutralMode(NeutralMode.Coast);
+    right.setNeutralMode(NeutralMode.Brake);
     
     right.configNominalOutputForward(0);
     right.configNominalOutputReverse(0);
@@ -90,13 +90,10 @@ public class Shooter extends SubsystemBase {
    * ***closed feedback loop ONLY***
    */
   public void shootClosedLoop(double targetEncoderVelocity) {
-
-    
     targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
 
     left .set(ControlMode.Velocity, targetEncoderVelocity);
     right.set(ControlMode.Velocity, targetEncoderVelocity);
-
   }
 
   /**
@@ -117,7 +114,6 @@ public class Shooter extends SubsystemBase {
    */
 
   public void stopShoot() {
-    
     left .set(ControlMode.PercentOutput, 0);
     right.set(ControlMode.PercentOutput, 0);
 

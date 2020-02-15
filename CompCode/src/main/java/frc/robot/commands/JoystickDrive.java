@@ -77,11 +77,14 @@ public class JoystickDrive extends CommandBase {
     double rightDrive = 0;
 
     if (Math.abs(forward) < JoystickConstants.kSlowTurnThreshold) {
+      // Not much throttle: deadzone
       if(Math.abs(rotation) > JoystickConstants.kDeadZoneThreshold) {
         leftDrive = rotation * JoystickConstants.kSlowRotationScalar;
         rightDrive = -rotation * JoystickConstants.kSlowRotationScalar;
       }
        if (povAngle.getAsInt() != -1) {
+        // Thumb little joystick thing
+
         switch(povAngle.getAsInt()){
           case 0: // Forward
             leftDrive  = JoystickConstants.kSlowValue;
@@ -111,6 +114,7 @@ public class JoystickDrive extends CommandBase {
       }
 
     } else {
+      // Throttling forward
       rotation = rotation * Math.abs(forward) * 0.2;
 
       // compute drivetrain values for the left and right sides

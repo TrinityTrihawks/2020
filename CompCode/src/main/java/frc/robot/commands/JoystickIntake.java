@@ -1,10 +1,9 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.Intake;
-
-import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 
 /**
  * The default command for driving with joysticks.
@@ -17,15 +16,12 @@ public class JoystickIntake extends CommandBase {
 
   private final Intake intake;
  
-  private final BooleanSupplier shouldIntake;
-  private final BooleanSupplier shouldSpit;
+  private DoubleSupplier power;
 
   // Creates a new JoystickDrive command
-  public JoystickIntake(Intake intake, BooleanSupplier shouldIntake, BooleanSupplier shouldSpit) {
+  public JoystickIntake(Intake intake, DoubleSupplier power) {
     this.intake = intake;
-    this.shouldIntake = shouldIntake;
-    this.shouldSpit = shouldSpit;
-
+    this.power = power;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -38,17 +34,7 @@ public class JoystickIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if(shouldIntake.getAsBoolean()) {
-      intake.vacuum();
-
-    } else if(shouldSpit.getAsBoolean()) {
-      intake.spit();
-      
-    } else {
-      intake.off();
-    }
-
+    intake.intakeByPower(power.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
