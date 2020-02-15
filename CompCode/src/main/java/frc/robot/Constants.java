@@ -39,6 +39,7 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int kLeftTalonId = 2;
         public static final int kRightTalonId = 6;
+        // TODO set feedback constants
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;

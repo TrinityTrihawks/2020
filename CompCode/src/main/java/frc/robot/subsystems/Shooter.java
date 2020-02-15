@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -49,13 +50,13 @@ public class Shooter extends SubsystemBase {
     left.configPeakOutputForward( 1);
     left.configPeakOutputReverse(-1);
     
-    // left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    // left.setSensorPhase(true);
+    left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+    left.setSensorPhase(true);
     
-    // left.config_kP(0, ShooterConstants.kP);
-    // left.config_kI(0, ShooterConstants.kI);
-    // left.config_kD(0, ShooterConstants.kD);
-    // left.config_kF(0, ShooterConstants.kF);
+    left.config_kP(0, ShooterConstants.kP);
+    left.config_kI(0, ShooterConstants.kI);
+    left.config_kD(0, ShooterConstants.kD);
+    left.config_kF(0, ShooterConstants.kF);
 
     // Right Talon config
     right.configFactoryDefault();
@@ -67,13 +68,13 @@ public class Shooter extends SubsystemBase {
     right.configPeakOutputForward( 1);
     right.configPeakOutputReverse(-1);
     
-    // right.config_kP(0, ShooterConstants.kP);
-    // right.config_kI(0, ShooterConstants.kI);
-    // right.config_kD(0, ShooterConstants.kD);
-    // right.config_kF(0, ShooterConstants.kF);
+    right.config_kP(0, ShooterConstants.kP);
+    right.config_kI(0, ShooterConstants.kI);
+    right.config_kD(0, ShooterConstants.kD);
+    right.config_kF(0, ShooterConstants.kF);
 
-    // right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    // right.setSensorPhase(true);
+    right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+    right.setSensorPhase(true);
 
 
     right.setInverted(true);
@@ -85,7 +86,9 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter at the specified targetEncoderVelocity
+   * runs the shooter at the specified targetEncoderVelocity<br>
+   * ***closed feedback loop ONLY***<br>
+   * [-1023, 1023]
    */
   public void shootClosedLoop(double targetEncoderVelocity) {
     targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
@@ -94,10 +97,23 @@ public class Shooter extends SubsystemBase {
     right.set(ControlMode.Velocity, targetEncoderVelocity);
   }
 
-  public void shootOpenLoop(double power) {
-    left.set(ControlMode.PercentOutput, power);
-    right.set(ControlMode.PercentOutput, power);
+  /**
+   * runs the shooter at the specified target<br>
+   * ***NO feedback loop***<br>
+   * [-1, 1]
+   */
+  public void shootOpenLoop(double target) {
+    
+    target = target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target);
+
+    left .set(ControlMode.PercentOutput, target);
+    right.set(ControlMode.PercentOutput, target);
   }
+
+  /**
+   * stops the shooter <br>
+   * works for BOTH closed <br>feedback AND open control
+   */
 
   public void stopShoot() {
     left .set(ControlMode.PercentOutput, 0);
@@ -122,6 +138,7 @@ public class Shooter extends SubsystemBase {
     logToNetworkTables();
 
   }
+
   /**
    * @return the limited encoder value
    */

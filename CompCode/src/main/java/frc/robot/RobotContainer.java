@@ -39,6 +39,7 @@ public class RobotContainer {
   private final Command intakeReverse;
   private final Command storageRun;
   private final Command shooterAdjust;
+  private final Command shooterAdjustAndStorageUp;
 
 
   // Main drivetrain joystick
@@ -137,18 +138,36 @@ public class RobotContainer {
 
     reverseStorage = new StartEndCommand(
     // start of command
-     () -> storage.reverse(),
+      () -> {shooter.shootOpenLoop(.7);
+             storage.forwardSlow();
+          },
       // end of command
-      () -> storage.off(),
+      () -> {shooter.stopShoot();
+             storage.off();
+          },
       // requires subsystem
       storage
     );
 
     shooterAdjust = new StartEndCommand(
-      () -> shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle()),
-      // throttle is [-1, 1]
+      // TODO: should this be on the XBOX controller?
+      () -> shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle()), 
+      // throttle is [-1, 1] **Only for open loop** ([-1023, 1023] for closed loop)
       () -> shooter.stopShoot(),
       shooter
+    );
+
+    shooterAdjustAndStorageUp = new StartEndCommand(
+      // TODO: should this be on the XBOX controller?
+      () -> {shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle());
+             storage.forwardSlow();
+      },
+      
+      () -> {shooter.stopShoot();
+             storage.off();
+      },
+
+      shooter, storage
     );
 
 
@@ -170,9 +189,11 @@ public class RobotContainer {
     intakeRunButton.whenHeld(intakeForward);
     intakeReverseButton.whenHeld(intakeReverse);
     storageRunButton.whenHeld(storageRun);
-    storageReverseButton.whenHeld(reverseStorage); 
-    shooterButton.whileHeld(shooterAdjust);
 
+    // ***PICK ONE***
+    // shooterButton.whenHeld(shootAndStorageUp); 
+    // shooterButton.whileHeld(shooterAdjust);
+    shooterButton.whileHeld(shooterAdjustAndStorageUp);
 
     
   }
