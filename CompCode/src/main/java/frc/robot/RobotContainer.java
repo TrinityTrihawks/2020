@@ -38,13 +38,16 @@ public class RobotContainer {
   private final Command intakeRun;
   private final Command storageRun;
 
+  // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
+  
+  // Auxiliary arm joystick
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
   private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
   private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, OIConstants.kClimbDownButtonId);
-  private final JoystickButton ShootAndStorageUpButton = new JoystickButton(auxiliaryController, OIConstants.kShootAndStorageUpButtonId);
-  private final JoystickButton IntakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
-  private final JoystickButton StorageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
+  private final JoystickButton shootAndStorageUpButton = new JoystickButton(auxiliaryController, OIConstants.kShootAndStorageUpButtonId);
+  private final JoystickButton intakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
+  private final JoystickButton storageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
 
 
 
@@ -112,9 +115,13 @@ public class RobotContainer {
     shootAndStorageUp = new StartEndCommand(
     // TODO : validate anon function scope  
     // start of command
-      () -> {shooter.shoot(1); storage.forwardSlow();},
+      () -> {shooter.shoot(1);
+            storage.forwardSlow();
+          },
       // end of command
-      () -> {shooter.stopShoot(); storage.off();},
+      () -> {shooter.stopShoot();
+            storage.off();
+          },
       // requires subsystem
       shooter,storage
     );
@@ -133,11 +140,11 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    climbUpButton.whileHeld(climbingArmUp);
-    climbDownButton.whileHeld(climbingArmDown);
-    ShootAndStorageUpButton.whileHeld(shootAndStorageUp);
-    IntakeRunButton.whileHeld(intakeRun);
-    StorageRunButton.whileHeld(storageRun);
+    climbUpButton.whenHeld(climbingArmUp);
+    climbDownButton.whenHeld(climbingArmDown);
+    shootAndStorageUpButton.whenHeld(shootAndStorageUp);
+    intakeRunButton.whenHeld(intakeRun);
+    storageRunButton.whenHeld(storageRun);
 
     
   }

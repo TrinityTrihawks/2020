@@ -42,14 +42,14 @@ public class ClimbingArm extends SubsystemBase {
 
   public void moveUp()
   {
-    telescope.set(ControlMode.PercentOutput, 0.3);
+    telescope.set(ControlMode.PercentOutput, -0.3);
   }
 
   public void moveDown()
   {
-    telescope.set(ControlMode.PercentOutput, -0.3);
-    winch.set(ControlMode.PercentOutput, 0.3);
-  }
+    telescope.set(ControlMode.PercentOutput, 0.3);
+    winch.set(ControlMode.PercentOutput, 1);
+  } 
 
   public void stop()
   {

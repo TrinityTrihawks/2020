@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -34,7 +33,7 @@ public class Shooter extends SubsystemBase {
       return subsystemInst;
     }
   }
-
+ 
   private Shooter() {
     left  = new TalonSRX(ShooterConstants.kLeftTalonId);
     right = new TalonSRX(ShooterConstants.kRightTalonId);
