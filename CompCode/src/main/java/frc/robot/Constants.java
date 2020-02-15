@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final class DriveConstants {
         public static final int kFrontLeftId = 4;
-        public static final int kFrontRightId = 9;
+        public static final int kFrontRightId = 1;
         public static final int kBackLeftId = 7;
         public static final int kBackRightId = 3;
     }
