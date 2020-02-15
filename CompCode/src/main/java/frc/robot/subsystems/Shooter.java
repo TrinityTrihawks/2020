@@ -87,20 +87,21 @@ public class Shooter extends SubsystemBase {
   /**
    * runs the shooter at the specified targetEncoderVelocity
    */
-  public void shoot(double targetEncoderVelocity) {
-
-    
+  public void shootClosedLoop(double targetEncoderVelocity) {
     targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
 
     left .set(ControlMode.Velocity, targetEncoderVelocity);
     right.set(ControlMode.Velocity, targetEncoderVelocity);
+  }
 
+  public void shootOpenLoop(double power) {
+    left.set(ControlMode.PercentOutput, power);
+    right.set(ControlMode.PercentOutput, power);
   }
 
   public void stopShoot() {
-    
-    left .set(ControlMode.Velocity, 0);
-    right.set(ControlMode.Velocity, 0);
+    left .set(ControlMode.PercentOutput, 0);
+    right.set(ControlMode.PercentOutput, 0);
 
   }
 

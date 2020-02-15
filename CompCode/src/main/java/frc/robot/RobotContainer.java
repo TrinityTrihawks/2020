@@ -113,9 +113,8 @@ public class RobotContainer {
     );
 
     shootAndStorageUp = new StartEndCommand(
-    // TODO : validate anon function scope  
     // start of command
-      () -> {shooter.shoot(1);
+      () -> {shooter.shootOpenLoop(.9);
             storage.forwardSlow();
           },
       // end of command
