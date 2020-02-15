@@ -86,8 +86,9 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter at the specified targetEncoderVelocity
-   * ***closed feedback loop ONLY***
+   * runs the shooter at the specified targetEncoderVelocity<br>
+   * ***closed feedback loop ONLY***<br>
+   * [-1023, 1023]
    */
   public void shootClosedLoop(double targetEncoderVelocity) {
     targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
@@ -97,8 +98,9 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter at the specified target
-   * ***NO feedback loop ONLY***
+   * runs the shooter at the specified target<br>
+   * ***NO feedback loop***<br>
+   * [-1, 1]
    */
   public void shootOpenLoop(double target) {
     
@@ -109,8 +111,8 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * stops the shooter 
-   * ***works for BOTH closed feedback AND open control***
+   * stops the shooter <br>
+   * works for BOTH closed <br>feedback AND open control
    */
 
   public void stopShoot() {
