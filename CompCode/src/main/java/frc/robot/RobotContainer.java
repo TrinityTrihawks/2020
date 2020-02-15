@@ -189,11 +189,12 @@ public class RobotContainer {
     intakeRunButton.whenHeld(intakeForward);
     intakeReverseButton.whenHeld(intakeReverse);
     storageRunButton.whenHeld(storageRun);
+    storageReverseButton.whileHeld(reverseStorage);
 
     // ***PICK ONE***
     // shooterButton.whenHeld(shootAndStorageUp); 
-    // shooterButton.whileHeld(shooterAdjust);
-    shooterButton.whileHeld(shooterAdjustAndStorageUp);
+     shooterButton.whileHeld(shooterAdjust);
+    //shooterButton.whileHeld(shooterAdjustAndStorageUp);
 
     
   }
