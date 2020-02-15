@@ -98,6 +98,13 @@ public class Shooter extends SubsystemBase {
 
   }
 
+  public void stopShoot() {
+    
+    left .set(ControlMode.Velocity, 0);
+    right.set(ControlMode.Velocity, 0);
+
+  }
+
   /** 
    * @return int array of {left, right} encoder velocities
    */

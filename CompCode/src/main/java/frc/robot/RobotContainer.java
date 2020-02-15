@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.subsystems.ClimbingArm;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,14 +28,24 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final ClimbingArm climbingArm = ClimbingArm.getInstance();
+  private final Shooter shooter = Shooter.getInstance();
+  private final Intake intake = Intake.getInstance();
+  private final Storage storage = Storage.getInstance();
   private final Command autoCommand;
   private final Command climbingArmUp;
   private final Command climbingArmDown;
+  private final Command shootAndStorageUp;
+  private final Command intakeRun;
+  private final Command storageRun;
 
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
   private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
   private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, OIConstants.kClimbDownButtonId);
+  private final JoystickButton ShootAndStorageUpButton = new JoystickButton(auxiliaryController, OIConstants.kShootAndStorageUpButtonId);
+  private final JoystickButton IntakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
+  private final JoystickButton StorageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
+
 
 
 
@@ -78,6 +91,35 @@ public class RobotContainer {
       climbingArm
     );
 
+    intakeRun = new StartEndCommand(
+      // start of command
+      () -> intake.vacuum(),
+      // end of command
+      () -> intake.off(),
+      // requires subsystem
+      intake
+    );
+
+    storageRun = new StartEndCommand(
+      // start of command
+      () -> storage.forward(),
+      // end of command
+      () -> storage.off(),
+      // requires subsystem
+      storage
+    );
+
+    shootAndStorageUp = new StartEndCommand(
+    // TODO : validate anon function scope  
+    // start of command
+      () -> {shooter.shoot(1); storage.forwardSlow();},
+      // end of command
+      () -> {shooter.stopShoot(); storage.off();},
+      // requires subsystem
+      shooter,storage
+    );
+
+
     autoCommand = driveOffInitLine;
 
     // Configure the button bindings
@@ -93,6 +135,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
     climbUpButton.whileHeld(climbingArmUp);
     climbDownButton.whileHeld(climbingArmDown);
+    ShootAndStorageUpButton.whileHeld(shootAndStorageUp);
+    IntakeRunButton.whileHeld(intakeRun);
+    StorageRunButton.whileHeld(storageRun);
+
+    
   }
 
   public void logData() {
