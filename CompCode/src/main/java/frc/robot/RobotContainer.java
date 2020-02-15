@@ -69,9 +69,9 @@ public class RobotContainer {
     Command driveOffInitLine = new SequentialCommandGroup(
       // Run these commands one after another:
       // 1. Drive backwards
-      new InstantCommand(() -> drivetrain.driveOpenLoop(-.3, -.3), drivetrain),
+      new InstantCommand(() -> drivetrain.driveOpenLoop(.3, .3), drivetrain),
       // 2. Wait 3 seconds
-      new WaitCommand(3),
+      new WaitCommand(2),
       // 3. Stop driving
       new InstantCommand(() -> drivetrain.driveOpenLoop(0,0), drivetrain)
     );

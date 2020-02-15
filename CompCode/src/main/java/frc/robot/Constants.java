@@ -28,7 +28,7 @@ public final class Constants {
     public static final class JoystickConstants {
         public static final double kSlowValue = 0.16;
         public static final double kRotationScalar = 0.5;
-        public static final double kSlowRotationScalar = 0.3;
+        public static final double kSlowRotationScalar = 0.5;
         public static final double kDeadZoneThreshold = 0.3;
         public static final double kSlowTurnThreshold = 0.1;
         public static final double kQuickRotationScalar = 1.4;
