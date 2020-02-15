@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.JoystickIntake;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
@@ -35,8 +36,11 @@ public class RobotContainer {
   private final Command climbingArmUp;
   private final Command climbingArmDown;
   private final Command shootAndStorageUp;
-  private final Command intakeRun;
+  private final Command intakeForward;
+  private final Command intakeReverse;
   private final Command storageRun;
+  private final Command shooterAdjust;
+
 
   // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
@@ -48,6 +52,7 @@ public class RobotContainer {
   private final JoystickButton shootAndStorageUpButton = new JoystickButton(auxiliaryController, OIConstants.kShootAndStorageUpButtonId);
   private final JoystickButton intakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
   private final JoystickButton storageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
+  private final JoystickButton intakeReverseButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeReverseButtonId);
 
 
 
@@ -65,6 +70,15 @@ public class RobotContainer {
       () -> mainController.getRawButton(4),
       () -> mainController.getPOV(0)
     ));
+
+    // intake.setDefaultCommand(new JoystickIntake(
+    //   intake,
+    //   () -> auxiliaryController.getY()
+    // ));
+
+    //intake.setDefaultCommand(new StartEndCommand() {
+
+    //})
 
     Command driveOffInitLine = new SequentialCommandGroup(
       // Run these commands one after another:
@@ -90,17 +104,26 @@ public class RobotContainer {
       () -> climbingArm.moveDown(),
       // end of command
       () -> climbingArm.stop(),
-      // requires subsystem
+      // requires subsytem
       climbingArm
     );
 
-    intakeRun = new StartEndCommand(
+    intakeForward = new StartEndCommand(
       // start of command
       () -> intake.vacuum(),
       // end of command
       () -> intake.off(),
       // requires subsystem
       intake
+    );
+
+    intakeReverse = new StartEndCommand(
+            // start of command
+            () -> intake.spit(),
+                        // end of command
+            () -> intake.off(),
+            // requires subsystem
+            intake
     );
 
     storageRun = new StartEndCommand(
@@ -114,7 +137,7 @@ public class RobotContainer {
 
     shootAndStorageUp = new StartEndCommand(
     // start of command
-      () -> {shooter.shootOpenLoop(.9);
+      () -> {shooter.shootOpenLoop(.7);
             storage.forwardSlow();
           },
       // end of command
@@ -123,6 +146,13 @@ public class RobotContainer {
           },
       // requires subsystem
       shooter,storage
+    );
+
+    shooterAdjust = new StartEndCommand(
+      () -> shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle()),
+      // throttle is [-1, 1]
+      () -> shooter.stopShoot(),
+      shooter
     );
 
 
@@ -141,9 +171,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     climbUpButton.whenHeld(climbingArmUp);
     climbDownButton.whenHeld(climbingArmDown);
-    shootAndStorageUpButton.whenHeld(shootAndStorageUp);
-    intakeRunButton.whenHeld(intakeRun);
+    intakeRunButton.whenHeld(intakeForward);
+    intakeReverseButton.whenHeld(intakeReverse);
     storageRunButton.whenHeld(storageRun);
+
+    // ***PICK ONE***
+    // shootAndStorageUpButton.whenHeld(shootAndStorageUp); 
+    shootAndStorageUpButton.whileHeld(shooterAdjust);
+
 
     
   }

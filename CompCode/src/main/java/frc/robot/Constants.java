@@ -65,6 +65,7 @@ public final class Constants {
         public static final int kClimbDownButtonId = 2;
         public static final int kShootAndStorageUpButtonId = 8;
         public static final int kIntakeRunButtonId = 7;
+        public static final int kIntakeReverseButtonId = 5;
         public static final int kStorageRunButtonId = 6;
 
     }

@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
     // Left Talon Config
     left.configFactoryDefault();
     
-    left.setNeutralMode(NeutralMode.Coast);
+    left.setNeutralMode(NeutralMode.Brake);
     
     left.configNominalOutputForward(0);
     left.configNominalOutputReverse(0);
@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase {
     // Right Talon config
     right.configFactoryDefault();
 
-    right.setNeutralMode(NeutralMode.Coast);
+    right.setNeutralMode(NeutralMode.Brake);
     
     right.configNominalOutputForward(0);
     right.configNominalOutputReverse(0);
