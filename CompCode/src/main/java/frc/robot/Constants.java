@@ -39,7 +39,7 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int kLeftTalonId = 2;
         public static final int kRightTalonId = 6;
-        // TODO set feedback constants
+        // TODO: set feedback constants
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -54,8 +54,8 @@ public final class Constants {
     }
 
     public static final class NetworkConstants {
-        public static final String kCameraIPAddress = "10.42.15.11";
-        public static final String KLimelightIPAddress = "10.42.15.XX";
+        public static final String kIntakeCameraIPAddress = "10.42.15.11";
+        public static final String KTargetingCameraIPAddress = "10.42.15.XX";
     }
 
     public static final class OIConstants {

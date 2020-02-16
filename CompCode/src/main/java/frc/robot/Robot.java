@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    camera = CameraServer.getInstance().addAxisCamera("Camera 1", NetworkConstants.kCameraIPAddress);
+    camera = CameraServer.getInstance().addAxisCamera("Intake Camera", NetworkConstants.kIntakeCameraIPAddress);
     SmartDashboard.putBoolean("Cam Success", camera.setFPS(5));
   }
 
