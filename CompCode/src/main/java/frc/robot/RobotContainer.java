@@ -47,13 +47,15 @@ public class RobotContainer {
   
   // Auxiliary arm joystick
   private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
+  // Joystick buttons
+
   private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
   private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController, OIConstants.kClimbDownButtonId);
   private final JoystickButton shooterButton = new JoystickButton(auxiliaryController, OIConstants.kShooterButtonId);
   private final JoystickButton intakeRunButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeRunButtonId);
   private final JoystickButton storageRunButton = new JoystickButton(auxiliaryController, OIConstants.kStorageRunButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxiliaryController, OIConstants.kIntakeReverseButtonId);
-  private final JoystickButton storageReverseButton = new JoystickButton(auxiliaryController, OIConstants.KStorageReverseButtonId);
+  private final JoystickButton storageReverseButton = new JoystickButton(auxiliaryController, OIConstants.kStorageReverseButtonId);
 
 
 
@@ -204,7 +206,6 @@ public class RobotContainer {
     inst.getEntry("RobotContainer/MainController/Throttle").setDouble(mainController.getThrottle());
     inst.getEntry("RobotContainer/MainController/Twist").setDouble(mainController.getTwist());
     inst.getEntry("RobotContainer/MainController/Y").setDouble(mainController.getY());
-
 
   }
 

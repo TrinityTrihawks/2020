@@ -68,7 +68,7 @@ public final class Constants {
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
         public static final int kStorageRunButtonId = 6;
-        public static final int KStorageReverseButtonId = 3;
+        public static final int kStorageReverseButtonId = 3;
 
     }
 }
