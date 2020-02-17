@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -31,6 +32,9 @@ public class Storage extends SubsystemBase {
 
   private Storage() {
     motor = new TalonSRX(StorageConstants.kMotorId);
+
+    motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+    motor.setSensorPhase(true);
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("storage");
