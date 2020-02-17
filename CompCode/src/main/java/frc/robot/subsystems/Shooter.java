@@ -84,13 +84,25 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter at the specified targetEncoderVelocity<br>
+   * runs the shooter at the specified target<br>
    * ***closed feedback loop ONLY***<br>
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
     shootLeftClosedLoop(target);
     shootRightClosedLoop(target);
+  }
+
+  /**
+   * runs the shooter wheels at the specified targets
+   * ***closed feedback loop ONLY***
+   * 
+   * @param left -1, 1
+   * @param right -1, 1
+   */
+  public void shootClosedLoop(double left, double right) {
+    shootLeftClosedLoop(left);
+    shootRightClosedLoop(right);
   }
 
   /**
@@ -101,6 +113,18 @@ public class Shooter extends SubsystemBase {
   public void shootOpenLoop(double target) {
     shootLeftOpenLoop(target);
     shootRightOpenLoop(target);
+  }
+
+  /**
+   * runs the shooter wheels at the specified targets
+   * ***NO feedback loop***
+   * 
+   * @param left -1, 1
+   * @param right -1, 1
+   */
+  public void shootOpenLoop(double left, double right) {
+    shootLeftOpenLoop(left);
+    shootRightOpenLoop(right);
   }
 
   /**

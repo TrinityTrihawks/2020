@@ -114,7 +114,7 @@ public class RobotContainer {
     Command combinedAuto = new SequentialCommandGroup(
       // FIRST
       pIDSetupCommand,
-
+      unlatchIntake,
       // LAST
       driveOffInitLine
     );
@@ -190,9 +190,7 @@ public class RobotContainer {
       () -> {shooter.stopShoot(false);
              storage.off();
       },
-
-
-        shooter, storage);
+    shooter, storage);
 
     
 
