@@ -160,6 +160,15 @@ public class RobotContainer {
       storage
     );
 
+    storageReverse = new StartEndCommand(
+      // start of command
+      () -> storage.reverse(),
+      // end of command
+      () -> storage.off(),
+      // requires subsystem
+      storage
+    );
+
     shootAndStorageUp = new StartEndCommand(
     // start of command
       () -> {shooter.shootOpenLoop(.7);
