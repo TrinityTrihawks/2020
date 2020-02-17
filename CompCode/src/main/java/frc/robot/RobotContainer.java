@@ -176,7 +176,8 @@ public class RobotContainer {
 
     incrementStorage = new SequentialCommandGroup(
       new InstantCommand(() -> storage.forwardSlow()),
-      new WaitUntilCommand(() -> storage.getPositionChange() > StorageConstants.beltToBallRatio * StorageConstants.encUnitsPer1Rev),
+      new WaitUntilCommand(() -> storage.getPositionChange() >= StorageConstants.beltToBallRatio
+                                                                   * StorageConstants.encUnitsPer1Rev),
       new InstantCommand(() -> storage.off())
     );
 
