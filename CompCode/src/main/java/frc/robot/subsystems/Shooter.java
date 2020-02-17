@@ -89,11 +89,7 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
-    target = 1023 * limitOutputValue(target);
-    left.set(ControlMode.Velocity, target);
-    
-    target = 1023 * limitOutputValue(target);
-    right.set(ControlMode.Velocity, target);
+    shootOpenLoop(target, target);
   }
 
   /**
@@ -117,13 +113,8 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootOpenLoop(double target) {
-    target = limitOutputValue(target);
-    left.set(ControlMode.PercentOutput, target);
-
-    target = limitOutputValue(target);
-    right.set(ControlMode.PercentOutput, target);
+    shootOpenLoop(target, target);
   }
-
   /**
    * runs the shooter wheels at the specified targets
    * ***NO feedback loop***
