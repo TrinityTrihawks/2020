@@ -51,17 +51,19 @@ public class JoystickDrive extends CommandBase {
 
     // read forward-backward throttle from source
     // and modify sensitivity by squaring value
-    double forward = -1 * forwardSource.getAsDouble();
+    double forward = forwardSource.getAsDouble();
     forward = Math.pow(forward, 2) * Math.signum(forward);
 
     // read rotation from source and scale by throttle
     // so it represents arc-length
     double rotation = rotationSource.getAsDouble();
 
-    System.out.println("Forward: " + Math.abs(forward));
-    System.out.println("Rotation: " + rotation);
-    System.out.println("POV Angle: " + povAngle.getAsInt());
-    System.out.println("RS Btn: " + rightSlowTurn.getAsBoolean() + "\nLS Btn: " + leftSlowTurn.getAsBoolean());
+    System.out.println("Forward: " + Math.abs(forward)
+                      + "\nRotation: " + rotation
+                      + "\nPOV Angle: " + povAngle.getAsInt()
+                      + "\nRS Btn: " + rightSlowTurn.getAsBoolean()
+                      + "\nLS Btn: " + leftSlowTurn.getAsBoolean()
+    );
 
     SmartDashboard.putNumber("Throttle", forward);
     SmartDashboard.putNumber("Rotation", rotation);
@@ -75,6 +77,7 @@ public class JoystickDrive extends CommandBase {
     if (Math.abs(forward) < JoystickConstants.kSlowTurnThreshold) {
       // Not much throttle: deadzone
       if (Math.abs(rotation) > JoystickConstants.kDeadZoneThreshold) {
+        // Rotate in place
         leftDrive = rotation * JoystickConstants.kSlowRotationScalar;
         rightDrive = -rotation * JoystickConstants.kSlowRotationScalar;
       }
@@ -100,10 +103,12 @@ public class JoystickDrive extends CommandBase {
           break;
         }
       } else if (leftSlowTurn.getAsBoolean() == true) {
+        // Slow left turn in place
         leftDrive = -(JoystickConstants.kSlowValue);
         rightDrive = JoystickConstants.kSlowValue;
 
       } else if (rightSlowTurn.getAsBoolean() == true) {
+        // Slow right turn in place
         leftDrive = JoystickConstants.kSlowValue;
         rightDrive = -(JoystickConstants.kSlowValue);
 

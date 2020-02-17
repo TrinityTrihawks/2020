@@ -66,6 +66,7 @@ public class Drivetrain extends SubsystemBase {
     talons.get("backLeft").follow(talons.get("frontLeft"));
     talons.get("backRight").follow(talons.get("frontRight"));
 
+    // invert right motors
     talons.get("backRight").setInverted(true);
     talons.get("frontRight").setInverted(true);
 
@@ -82,8 +83,6 @@ public class Drivetrain extends SubsystemBase {
     // feed the values to the talons
     talons.get("frontLeft").set(ControlMode.PercentOutput, leftPercent);
     talons.get("frontRight").set(ControlMode.PercentOutput, rightPercent);
-    SmartDashboard.putNumber("Left Motor Voltage", talons.get("frontLeft").getMotorOutputVoltage());
-    SmartDashboard.putNumber("Right Motor Voltage", talons.get("frontRight").getMotorOutputVoltage());
   }
 
   public void driveClosedLoop() {
