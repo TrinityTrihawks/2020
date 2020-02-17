@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -88,37 +89,76 @@ public class Shooter extends SubsystemBase {
   /**
    * runs the shooter at the specified targetEncoderVelocity<br>
    * ***closed feedback loop ONLY***<br>
-   * [-1023, 1023]
+   * @param target -1, 1
    */
-  public void shootClosedLoop(double targetEncoderVelocity) {
-    targetEncoderVelocity = limitEncoderValue(targetEncoderVelocity);
-
-    left .set(ControlMode.Velocity, targetEncoderVelocity);
-    right.set(ControlMode.Velocity, targetEncoderVelocity);
+  public void shootClosedLoop(double target) {
+    shootLeftClosedLoop(target);
+    shootRightClosedLoop(target);
   }
 
   /**
    * runs the shooter at the specified target<br>
    * ***NO feedback loop***<br>
-   * [-1, 1]
+   * @param target -1, 1
    */
   public void shootOpenLoop(double target) {
-    
+    shootLeftOpenLoop(target);
+    shootRightOpenLoop(target);
+  }
+
+  /**
+   * shoots the left wheel w/ feedback loop
+   * 
+   * @param target -1, 1
+   */
+  public void shootLeftClosedLoop(double target) {
+    target = 1023 * (target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target));
+
+    left.set(ControlMode.Velocity, target);
+  }
+
+  /**
+   * shoots the left wheel w/o feedback loop
+   * 
+   * @param target -1, 1
+   */
+  public void shootLeftOpenLoop(double target) {
     target = target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target);
 
-    left .set(ControlMode.PercentOutput, target);
+    left.set(ControlMode.PercentOutput, target);
+  }
+
+  /**
+   * shoots the right wheel w/ feedback loop
+   * 
+   * @param target -1, 1
+   */
+  public void shootRightClosedLoop(double target) {
+    target = 1023 * (target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target));
+
+    right.set(ControlMode.Velocity, target);
+  }
+
+  /**
+   * shoots the right wheel w/o feedback loop
+   * 
+   * @param target -1, 1
+   */
+  public void shootRightOpenLoop(double target) {
+    target = target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target);
+
     right.set(ControlMode.PercentOutput, target);
   }
 
   /**
    * stops the shooter <br>
    * works for BOTH closed <br>feedback AND open control
+   * 
+   * @param closed bool true=closed loop false=open loop 
    */
-
-  public void stopShoot() {
-    left .set(ControlMode.PercentOutput, 0);
-    right.set(ControlMode.PercentOutput, 0);
-
+  public void stopShoot(boolean closed) {
+    if(closed)  shootClosedLoop(0); 
+    else        shootOpenLoop(0); 
   }
 
   /** 
@@ -132,6 +172,13 @@ public class Shooter extends SubsystemBase {
     return new int[] {leftEncVel, rightEncVel};
   }
 
+  public void updatePIDConstants() {
+    ShooterConstants.kP = SmartDashboard.getNumber("kP", 0);
+    ShooterConstants.kD = SmartDashboard.getNumber("kD", 0);
+    ShooterConstants.kF = SmartDashboard.getNumber("kF", 0);
+    ShooterConstants.kI = SmartDashboard.getNumber("kI", 0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -141,11 +188,14 @@ public class Shooter extends SubsystemBase {
 
   /**
    * @return the limited encoder value
+   * @deprecated
    */
   public double limitEncoderValue(final double encoderVelocity) {
     
     return Math.max(-1023, Math.min(encoderVelocity, 1023));
   }
+
+
   public void logToNetworkTables(){
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);

@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.subsystems.ClimbingArm;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import static frc.robot.Constants.ShooterConstants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -40,6 +42,7 @@ public class RobotContainer {
   private final Command storageRun;
   private final Command shooterAdjust;
   private final Command shooterAdjustAndStorageUp;
+  private final Command shootAndStorageUp;
 
 
   // Main drivetrain joystick
@@ -91,6 +94,25 @@ public class RobotContainer {
       new InstantCommand(() -> drivetrain.driveOpenLoop(0,0), drivetrain)
     );
 
+    Command pIDSetupCommand = new StartEndCommand(
+      () -> {
+        SmartDashboard.putNumber("kP", ShooterConstants.kP);
+        SmartDashboard.putNumber("kF", ShooterConstants.kF);
+        SmartDashboard.putNumber("kI", ShooterConstants.kI);
+        SmartDashboard.putNumber("kD", ShooterConstants.kD);
+      },
+
+      () -> {}
+    );
+
+    Command combinedAuto = new SequentialCommandGroup(
+      // FIRST
+      pIDSetupCommand,
+
+      // LAST
+      driveOffInitLine
+    );
+
     climbingArmUp = new StartEndCommand(
       // start of command
       () -> climbingArm.moveUp(),
@@ -136,13 +158,13 @@ public class RobotContainer {
       storage
     );
 
-    reverseStorage = new StartEndCommand(
+    shootAndStorageUp = new StartEndCommand(
     // start of command
       () -> {shooter.shootOpenLoop(.7);
              storage.forwardSlow();
           },
       // end of command
-      () -> {shooter.stopShoot();
+      () -> {shooter.stopShoot(false);
              storage.off();
           },
       // requires subsystem
@@ -152,8 +174,8 @@ public class RobotContainer {
     shooterAdjust = new StartEndCommand(
       // TODO: should this be on the XBOX controller?
       () -> shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle()), 
-      // throttle is [-1, 1] **Only for open loop** ([-1023, 1023] for closed loop)
-      () -> shooter.stopShoot(),
+      // throttle is [-1, 1]  for BOTH
+      () -> shooter.stopShoot(false),
       shooter
     );
 
@@ -163,7 +185,7 @@ public class RobotContainer {
              storage.forwardSlow();
       },
       
-      () -> {shooter.stopShoot();
+      () -> {shooter.stopShoot(false);
              storage.off();
       },
 
@@ -171,7 +193,9 @@ public class RobotContainer {
     );
 
 
-    autoCommand = driveOffInitLine;
+    
+
+    autoCommand = combinedAuto;
 
     // Configure the button bindings
     configureButtonBindings();
