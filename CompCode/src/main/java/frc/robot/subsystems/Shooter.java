@@ -29,31 +29,30 @@ public class Shooter extends SubsystemBase {
    */
   public static Shooter getInstance() {
     if (subsystemInst == null) {
-      return subsystemInst = new Shooter(); // assigns AND returns the shooter instance: 
-                                           //  the expression value of the '=' operator is the value assigned
+      return subsystemInst = new Shooter(); // assigns AND returns the shooter instance:
+                                            // the expression value of the '=' operator is the value assigned
     } else {
       return subsystemInst;
     }
   }
- 
-  private Shooter() {
-    left  = new TalonSRX(ShooterConstants.kLeftTalonId);
-    right = new TalonSRX(ShooterConstants.kRightTalonId);
 
+  private Shooter() {
+    left = new TalonSRX(ShooterConstants.kLeftTalonId);
+    right = new TalonSRX(ShooterConstants.kRightTalonId);
 
     // Left Talon Config
     left.configFactoryDefault();
-    
+
     left.setNeutralMode(NeutralMode.Brake);
-    
+
     left.configNominalOutputForward(0);
     left.configNominalOutputReverse(0);
-    left.configPeakOutputForward( 1);
+    left.configPeakOutputForward(1);
     left.configPeakOutputReverse(-1);
-    
+
     left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     left.setSensorPhase(true);
-    
+
     left.config_kP(0, ShooterConstants.kP);
     left.config_kI(0, ShooterConstants.kI);
     left.config_kD(0, ShooterConstants.kD);
@@ -63,12 +62,12 @@ public class Shooter extends SubsystemBase {
     right.configFactoryDefault();
 
     right.setNeutralMode(NeutralMode.Brake);
-    
+
     right.configNominalOutputForward(0);
     right.configNominalOutputReverse(0);
-    right.configPeakOutputForward( 1);
+    right.configPeakOutputForward(1);
     right.configPeakOutputReverse(-1);
-    
+
     right.config_kP(0, ShooterConstants.kP);
     right.config_kI(0, ShooterConstants.kI);
     right.config_kD(0, ShooterConstants.kD);
@@ -77,9 +76,7 @@ public class Shooter extends SubsystemBase {
     right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     right.setSensorPhase(true);
 
-
     right.setInverted(true);
-     
 
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
@@ -161,15 +158,15 @@ public class Shooter extends SubsystemBase {
     else        shootOpenLoop(0); 
   }
 
-  /** 
+  /**
    * @return int array of {left, right} encoder velocities
    */
   public int[] getEncoderValues() {
 
-    int leftEncVel  = left .getSelectedSensorVelocity();
+    int leftEncVel = left.getSelectedSensorVelocity();
     int rightEncVel = right.getSelectedSensorVelocity();
 
-    return new int[] {leftEncVel, rightEncVel};
+    return new int[] { leftEncVel, rightEncVel };
   }
 
   public void updatePIDConstants() {
@@ -191,7 +188,7 @@ public class Shooter extends SubsystemBase {
    * @deprecated
    */
   public double limitEncoderValue(final double encoderVelocity) {
-    
+
     return Math.max(-1023, Math.min(encoderVelocity, 1023));
   }
 

@@ -17,20 +17,21 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.DriveConstants;
 
 public class Drivetrain extends SubsystemBase {
 
-  final HashMap<String,TalonSRX> talons;
+  final HashMap<String, TalonSRX> talons;
 
   final NetworkTable subtable;
 
   static Drivetrain subsystemInst = null;
 
   /**
-   * Use this method to create a drivetrain instance. This method
-   * ensures that the drivetrain class is a singleton, aka, that
-   * only one drivetrain object ever gets created
+   * Use this method to create a drivetrain instance. This method ensures that the
+   * drivetrain class is a singleton, aka, that only one drivetrain object ever
+   * gets created
+   * 
    * @return
    */
   public static Drivetrain getInstance() {
@@ -40,7 +41,6 @@ public class Drivetrain extends SubsystemBase {
       return subsystemInst;
     }
   }
-
 
   /**
    * Creates a new Drivetrain.
@@ -55,16 +55,16 @@ public class Drivetrain extends SubsystemBase {
     talons.put("backLeft", new TalonSRX(DriveConstants.kBackLeftId));
     talons.put("backRight", new TalonSRX(DriveConstants.kBackRightId));
 
-    //reset all Talon config settings to avoid accidental settings carry-over
+    // reset all Talon config settings to avoid accidental settings carry-over
     talons.forEach((name, talon) -> talon.configFactoryDefault());
-    
-    //coast motors when no voltage applied
+
+    // coast motors when no voltage applied
     talons.forEach((name, talon) -> talon.setNeutralMode(NeutralMode.Coast));
-    
-    //control the drivetrain by setting the front talons, and have
-    //the back talons automatically follow
-    talons.get("backLeft").follow( talons.get("frontLeft") );
-    talons.get("backRight").follow( talons.get("frontRight") );
+
+    // control the drivetrain by setting the front talons, and have
+    // the back talons automatically follow
+    talons.get("backLeft").follow(talons.get("frontLeft"));
+    talons.get("backRight").follow(talons.get("frontRight"));
 
     talons.get("backRight").setInverted(true);
     talons.get("frontRight").setInverted(true);
@@ -79,7 +79,7 @@ public class Drivetrain extends SubsystemBase {
     leftPercent = limitRange(leftPercent);
     rightPercent = limitRange(rightPercent);
 
-    //feed the values to the talons
+    // feed the values to the talons
     talons.get("frontLeft").set(ControlMode.PercentOutput, leftPercent);
     talons.get("frontRight").set(ControlMode.PercentOutput, rightPercent);
     SmartDashboard.putNumber("Left Motor Voltage", talons.get("frontLeft").getMotorOutputVoltage());
@@ -90,8 +90,6 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -99,20 +97,14 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-
   private void logToNetworkTables() {
     // Log motor voltages over network tables
-    talons.forEach((name, talon) ->
-      subtable.getEntry(name+"_voltage").setDouble(talon.getMotorOutputVoltage())
-    );
+    talons.forEach((name, talon) -> subtable.getEntry(name + "_voltage").setDouble(talon.getMotorOutputVoltage()));
 
     // Log motor currents over network tables
-    talons.forEach((name, talon) ->
-      subtable.getEntry(name+"_current").setDouble(talon.getStatorCurrent())
-    );
+    talons.forEach((name, talon) -> subtable.getEntry(name + "_current").setDouble(talon.getStatorCurrent()));
 
   }
-
 
   /**
    * Limit number between -1 and 1
@@ -122,4 +114,3 @@ public class Drivetrain extends SubsystemBase {
   }
 
 }
-

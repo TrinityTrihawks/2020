@@ -6,21 +6,20 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-
+import frc.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
 
   static Storage subsystemInst = null;
 
   final NetworkTable subtable;
-  
+
   final TalonSRX motor;
 
   /**
-   * Use this method to create a Storage instance. This method
-   * ensures that the Storage class is a singleton, aka, that
-   * only one Storage object ever gets created
+   * Use this method to create a Storage instance. This method ensures that the
+   * Storage class is a singleton, aka, that only one Storage object ever gets
+   * created
    */
   public static Storage getInstance() {
     if (subsystemInst == null) {
@@ -31,7 +30,7 @@ public class Storage extends SubsystemBase {
   }
 
   private Storage() {
-    motor = new TalonSRX(Constants.StorageConstants.kMotorId);
+    motor = new TalonSRX(StorageConstants.kMotorId);
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("storage");
@@ -64,8 +63,6 @@ public class Storage extends SubsystemBase {
     return motor.getSelectedSensorPosition();
   }
 
-
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -80,7 +77,7 @@ public class Storage extends SubsystemBase {
     // Log motor current over network tables
     subtable.getEntry("current").setDouble(motor.getStatorCurrent());
 
-    //Log encoder val
+    // Log encoder val
     subtable.getEntry("encoderPosition").setDouble(getPositionChange());
 
   }
