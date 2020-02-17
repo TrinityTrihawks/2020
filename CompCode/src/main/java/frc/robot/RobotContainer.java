@@ -44,6 +44,7 @@ public class RobotContainer {
   private final Command shooterAdjust;
   private final Command shooterAdjustAndStorageUp;
   private final Command shootAndStorageUp;
+  private final Command closedShooterAdjustAndStorageUp;
 
   // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
@@ -199,7 +200,20 @@ public class RobotContainer {
       () -> {shooter.stopShoot(false);
              storage.off();
       },
-    shooter, storage);
+      shooter, storage
+    );
+
+
+    closedShooterAdjustAndStorageUp = new StartEndCommand(
+      () -> {shooter.updatePIDConstants();
+             shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle());
+             storage.forwardSlow();
+      },
+      () -> {shooter.stopShoot(true);
+             storage.off();
+      },
+      shooter, storage
+    );
 
     
 
@@ -226,8 +240,8 @@ public class RobotContainer {
     // ***PICK ONE***
     // shooterButton.whenHeld(shootAndStorageUp);
     // shooterButton.whileHeld(shooterAdjust);
-    shooterButton.whileHeld(shooterAdjustAndStorageUp);
-
+    // shooterButton.whileHeld(shooterAdjustAndStorageUp);
+    shooterButton.whileHeld(closedShooterAdjustAndStorageUp);
   }
 
   public void logData() {
