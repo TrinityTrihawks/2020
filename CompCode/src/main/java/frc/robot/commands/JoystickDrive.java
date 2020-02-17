@@ -58,12 +58,9 @@ public class JoystickDrive extends CommandBase {
     // so it represents arc-length
     double rotation = rotationSource.getAsDouble();
 
-    System.out.println("Forward: " + Math.abs(forward)
-                      + "\nRotation: " + rotation
-                      + "\nPOV Angle: " + povAngle.getAsInt()
-                      + "\nRS Btn: " + rightSlowTurn.getAsBoolean()
-                      + "\nLS Btn: " + leftSlowTurn.getAsBoolean()
-    );
+    System.out
+        .println("Forward: " + Math.abs(forward) + "\nRotation: " + rotation + "\nPOV Angle: " + povAngle.getAsInt()
+            + "\nRS Btn: " + rightSlowTurn.getAsBoolean() + "\nLS Btn: " + leftSlowTurn.getAsBoolean());
 
     SmartDashboard.putNumber("Throttle", forward);
     SmartDashboard.putNumber("Rotation", rotation);
@@ -138,7 +135,6 @@ public class JoystickDrive extends CommandBase {
 
     // feed the drivetrain values to the drivetrain subsystem
     drivetrain.driveOpenLoop(leftDrive, rightDrive);
-
 
     //
 

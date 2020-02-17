@@ -102,27 +102,24 @@ public class RobotContainer {
         new InstantCommand(() -> storage.reverse(), storage),
         // 2. Let run for 1 second. The intake arm should unlatch during this time.
         new WaitCommand(1),
-        //3. Stop belt
+        // 3. Stop belt
         new InstantCommand(() -> storage.off(), storage));
 
-    Command pIDSetupCommand = new StartEndCommand(
-      () -> {
-        SmartDashboard.putNumber("kP", ShooterConstants.kP);
-        SmartDashboard.putNumber("kF", ShooterConstants.kF);
-        SmartDashboard.putNumber("kI", ShooterConstants.kI);
-        SmartDashboard.putNumber("kD", ShooterConstants.kD);
-      },
+    Command pIDSetupCommand = new StartEndCommand(() -> {
+      SmartDashboard.putNumber("kP", ShooterConstants.kP);
+      SmartDashboard.putNumber("kF", ShooterConstants.kF);
+      SmartDashboard.putNumber("kI", ShooterConstants.kI);
+      SmartDashboard.putNumber("kD", ShooterConstants.kD);
+    },
 
-      () -> {}
-    );
+        () -> {
+        });
 
     Command combinedAuto = new SequentialCommandGroup(
-      // FIRST
-      pIDSetupCommand,
-      unlatchIntake,
-      // LAST
-      driveOffInitLine
-    );
+        // FIRST
+        pIDSetupCommand, unlatchIntake,
+        // LAST
+        driveOffInitLine);
 
     climbingArmUp = new StartEndCommand(
         // start of command
@@ -157,79 +154,64 @@ public class RobotContainer {
         intake);
 
     storageRun = new StartEndCommand(
-      // start of command
-      () -> storage.forward(),
-      // end of command
-      () -> storage.off(),
-      // requires subsystem
-      storage
-    );
+        // start of command
+        () -> storage.forward(),
+        // end of command
+        () -> storage.off(),
+        // requires subsystem
+        storage);
 
     storageReverse = new StartEndCommand(
-      // start of command
-      () -> storage.reverse(),
-      // end of command
-      () -> storage.off(),
-      // requires subsystem
-      storage
-    );
+        // start of command
+        () -> storage.reverse(),
+        // end of command
+        () -> storage.off(),
+        // requires subsystem
+        storage);
 
-    incrementStorage = new SequentialCommandGroup(
-      new InstantCommand(() -> storage.forwardSlow()),
-      new WaitUntilCommand(() -> storage.getPositionChange() >= StorageConstants.beltToBallRatio
-                                                                   * StorageConstants.encUnitsPer1Rev),
-      new InstantCommand(() -> storage.off())
-    );
+    incrementStorage = new SequentialCommandGroup(new InstantCommand(() -> storage.forwardSlow()),
+        new WaitUntilCommand(
+            () -> storage.getPositionChange() >= StorageConstants.beltToBallRatio * StorageConstants.encUnitsPer1Rev),
+        new InstantCommand(() -> storage.off()));
 
     shootAndStorageUp = new StartEndCommand(
-    // start of command
-      () -> {
-        shooter.shootOpenLoop(.7);
-        storage.forwardSlow();
-          },
-      // end of command
-      () -> {
-        shooter.stopShoot(false);
-        storage.off();
-          },
-      // requires subsystem
-      storage
-    );
+        // start of command
+        () -> {
+          shooter.shootOpenLoop(.7);
+          storage.forwardSlow();
+        },
+        // end of command
+        () -> {
+          shooter.stopShoot(false);
+          storage.off();
+        },
+        // requires subsystem
+        storage);
 
     shooterAdjust = new StartEndCommand(
-      // TODO: should this be on the XBOX controller?
-      () -> shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle()), 
-      // throttle is [-1, 1]  for BOTH
-      () -> shooter.stopShoot(false),
-      shooter
-    );
+        // TODO: should this be on the XBOX controller?
+        () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
+        // throttle is [-1, 1] for BOTH
+        () -> shooter.stopShoot(false), shooter);
 
     shooterAdjustAndStorageUp = new StartEndCommand(
-      // TODO: should this be on the XBOX controller?
-      () -> {
-        shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle());
-        storage.forwardSlow();
-      },
-      
-      () -> {
-        shooter.stopShoot(false);
-        storage.off();
-      },
-      shooter, storage
-    );
+        // TODO: should this be on the XBOX controller?
+        () -> {
+          shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle());
+          storage.forwardSlow();
+        },
 
-    closedShooterAdjust = new StartEndCommand(
-      () -> shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle()),
-      () -> shooter.stopShoot(true)
-    );
+        () -> {
+          shooter.stopShoot(false);
+          storage.off();
+        }, shooter, storage);
+
+    closedShooterAdjust = new StartEndCommand(() -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
+        () -> shooter.stopShoot(true));
 
     closedShooterAdjustAndStorageUp = new SequentialCommandGroup(
-      new InstantCommand(() -> shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle())),
-      incrementStorage,
-      new InstantCommand(() -> shooter.stopShoot(true))
-    );
-
-    
+        new InstantCommand(() -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle())), incrementStorage,
+        new InstantCommand(() -> shooter.stopShoot(true)));
 
     autoCommand = combinedAuto;
 

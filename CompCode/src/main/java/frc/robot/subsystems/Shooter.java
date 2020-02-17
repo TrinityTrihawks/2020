@@ -86,6 +86,7 @@ public class Shooter extends SubsystemBase {
   /**
    * runs the shooter at the specified target<br>
    * ***closed feedback loop ONLY***<br>
+   * 
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
@@ -93,10 +94,10 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter wheels at the specified targets
-   * ***closed feedback loop ONLY***
+   * runs the shooter wheels at the specified targets ***closed feedback loop
+   * ONLY***
    * 
-   * @param left -1, 1
+   * @param left  -1, 1
    * @param right -1, 1
    */
   public void shootClosedLoop(double left, double right) {
@@ -110,16 +111,17 @@ public class Shooter extends SubsystemBase {
   /**
    * runs the shooter at the specified target<br>
    * ***NO feedback loop***<br>
+   * 
    * @param target -1, 1
    */
   public void shootOpenLoop(double target) {
     shootOpenLoop(target, target);
   }
+
   /**
-   * runs the shooter wheels at the specified targets
-   * ***NO feedback loop***
+   * runs the shooter wheels at the specified targets ***NO feedback loop***
    * 
-   * @param left -1, 1
+   * @param left  -1, 1
    * @param right -1, 1
    */
   public void shootOpenLoop(double left, double right) {
@@ -132,13 +134,16 @@ public class Shooter extends SubsystemBase {
 
   /**
    * stops the shooter <br>
-   * works for BOTH closed <br>feedback AND open control
+   * works for BOTH closed <br>
+   * feedback AND open control
    * 
-   * @param closed bool true=closed loop false=open loop 
+   * @param closed bool true=closed loop false=open loop
    */
   public void stopShoot(boolean closed) {
-    if(closed)  shootClosedLoop(0); 
-    else        shootOpenLoop(0); 
+    if (closed)
+      shootClosedLoop(0);
+    else
+      shootOpenLoop(0);
   }
 
   /**
@@ -175,8 +180,7 @@ public class Shooter extends SubsystemBase {
     return encoderVelocity > 1.0 ? 1.0 : (encoderVelocity < -1.0 ? -1.0 : encoderVelocity);
   }
 
-
-  public void logToNetworkTables(){
+  public void logToNetworkTables() {
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
   }
