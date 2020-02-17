@@ -33,6 +33,11 @@ public final class Constants {
      */
     public static final class StorageConstants {
         public static final int kMotorId = 5;
+        
+        /**
+         * probably wrong, please correct
+         */
+        public static final int encUnitsPer1Rev = 1023; // TODO: this constant is probably wrong
     }
 
     /**

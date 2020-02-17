@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.StorageConstants;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -45,6 +47,8 @@ public class RobotContainer {
   private final Command shooterAdjustAndStorageUp;
   private final Command shootAndStorageUp;
   private final Command closedShooterAdjustAndStorageUp;
+  private final Command incrementStorage;
+  private final Command closedShooterAdjust;
 
   // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
@@ -170,14 +174,22 @@ public class RobotContainer {
       storage
     );
 
+    incrementStorage = new SequentialCommandGroup(
+      new InstantCommand(() -> storage.forwardSlow()),
+      new WaitUntilCommand(() -> storage.getPositionChange() > 2.8 * StorageConstants.encUnitsPer1Rev),
+      new InstantCommand(() -> storage.off())
+    );
+
     shootAndStorageUp = new StartEndCommand(
     // start of command
-      () -> {shooter.shootOpenLoop(.7);
-             storage.forwardSlow();
+      () -> {
+        shooter.shootOpenLoop(.7);
+        storage.forwardSlow();
           },
       // end of command
-      () -> {shooter.stopShoot(false);
-             storage.off();
+      () -> {
+        shooter.stopShoot(false);
+        storage.off();
           },
       // requires subsystem
       storage
@@ -193,26 +205,27 @@ public class RobotContainer {
 
     shooterAdjustAndStorageUp = new StartEndCommand(
       // TODO: should this be on the XBOX controller?
-      () -> {shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle());
-             storage.forwardSlow();
+      () -> {
+        shooter.shootOpenLoop(.5 + 1/2 * mainController.getThrottle());
+        storage.forwardSlow();
       },
       
-      () -> {shooter.stopShoot(false);
-             storage.off();
+      () -> {
+        shooter.stopShoot(false);
+        storage.off();
       },
       shooter, storage
     );
 
+    closedShooterAdjust = new StartEndCommand(
+      () -> shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle()),
+      () -> shooter.stopShoot(true)
+    );
 
-    closedShooterAdjustAndStorageUp = new StartEndCommand(
-      () -> {shooter.updatePIDConstants();
-             shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle());
-             storage.forwardSlow();
-      },
-      () -> {shooter.stopShoot(true);
-             storage.off();
-      },
-      shooter, storage
+    closedShooterAdjustAndStorageUp = new SequentialCommandGroup(
+      new InstantCommand(() -> shooter.shootClosedLoop(.5 + 1/2 * mainController.getThrottle())),
+      incrementStorage,
+      new InstantCommand(() -> shooter.stopShoot(true))
     );
 
     
