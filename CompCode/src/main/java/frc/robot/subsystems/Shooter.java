@@ -89,8 +89,11 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
-    shootLeftClosedLoop(target);
-    shootRightClosedLoop(target);
+    target = 1023 * limitOutputValue(target);
+    left.set(ControlMode.Velocity, target);
+    
+    target = 1023 * limitOutputValue(target);
+    right.set(ControlMode.Velocity, target);
   }
 
   /**
@@ -101,8 +104,11 @@ public class Shooter extends SubsystemBase {
    * @param right -1, 1
    */
   public void shootClosedLoop(double left, double right) {
-    shootLeftClosedLoop(left);
-    shootRightClosedLoop(right);
+    left = 1023 * limitOutputValue(left);
+    this.left.set(ControlMode.Velocity, left);
+
+    right = 1023 * limitOutputValue(right);
+    this.right.set(ControlMode.Velocity, right);
   }
 
   /**
@@ -111,8 +117,11 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootOpenLoop(double target) {
-    shootLeftOpenLoop(target);
-    shootRightOpenLoop(target);
+    target = limitOutputValue(target);
+    left.set(ControlMode.PercentOutput, target);
+
+    target = limitOutputValue(target);
+    right.set(ControlMode.PercentOutput, target);
   }
 
   /**
@@ -123,52 +132,11 @@ public class Shooter extends SubsystemBase {
    * @param right -1, 1
    */
   public void shootOpenLoop(double left, double right) {
-    shootLeftOpenLoop(left);
-    shootRightOpenLoop(right);
-  }
+    left = limitOutputValue(left);
+    this.left.set(ControlMode.PercentOutput, left);
 
-  /**
-   * shoots the left wheel w/ feedback loop
-   * 
-   * @param target -1, 1
-   */
-  public void shootLeftClosedLoop(double target) {
-    target = 1023 * (target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target));
-
-    left.set(ControlMode.Velocity, target);
-  }
-
-  /**
-   * shoots the left wheel w/o feedback loop
-   * 
-   * @param target -1, 1
-   */
-  public void shootLeftOpenLoop(double target) {
-    target = target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target);
-
-    left.set(ControlMode.PercentOutput, target);
-  }
-
-  /**
-   * shoots the right wheel w/ feedback loop
-   * 
-   * @param target -1, 1
-   */
-  public void shootRightClosedLoop(double target) {
-    target = 1023 * (target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target));
-
-    right.set(ControlMode.Velocity, target);
-  }
-
-  /**
-   * shoots the right wheel w/o feedback loop
-   * 
-   * @param target -1, 1
-   */
-  public void shootRightOpenLoop(double target) {
-    target = target > 1.0 ? 1.0 : (target < -1.0 ? -1.0 : target);
-
-    right.set(ControlMode.PercentOutput, target);
+    right = limitOutputValue(right);
+    this.right.set(ControlMode.PercentOutput, right);
   }
 
   /**
@@ -209,11 +177,11 @@ public class Shooter extends SubsystemBase {
 
   /**
    * @return the limited encoder value
-   * @deprecated
+   * 
    */
-  public double limitEncoderValue(final double encoderVelocity) {
+  public double limitOutputValue(final double encoderVelocity) {
 
-    return Math.max(-1023, Math.min(encoderVelocity, 1023));
+    return encoderVelocity > 1.0 ? 1.0 : (encoderVelocity < -1.0 ? -1.0 : encoderVelocity);
   }
 
 
