@@ -89,6 +89,14 @@ public class RobotContainer {
         // 3. Stop driving
         new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain));
 
+    Command unlatchIntake = new SequentialCommandGroup(
+        // 1. Reverse storage belt
+        new InstantCommand(() -> storage.reverse(), storage),
+        // 2. Let run for 1 second. The intake arm should unlatch during this time.
+        new WaitCommand(1),
+        //3. Stop belt
+        new InstantCommand(() -> storage.off(), storage));
+
     climbingArmUp = new StartEndCommand(
         // start of command
         () -> climbingArm.moveUp(),
