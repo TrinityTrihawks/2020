@@ -13,8 +13,8 @@ import static frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
-  final TalonSRX left;
-  final TalonSRX right;
+  private final TalonSRX left;
+  private final TalonSRX right;
 
   final NetworkTable subtable;
 
