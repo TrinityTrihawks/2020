@@ -29,16 +29,16 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final ClimbingArm climbingArm = ClimbingArm.getInstance();
-  private final Shooter shooter = Shooter.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Storage storage = Storage.getInstance();
+  private final Shooter shooter = Shooter.getInstance();
   private final Command autoCommand;
   private final Command climbingArmUp;
   private final Command climbingArmDown;
-  private final Command reverseStorage;
   private final Command intakeForward;
   private final Command intakeReverse;
   private final Command storageRun;
+  private final Command storageReverse;
   private final Command shooterAdjust;
   private final Command shooterAdjustAndStorageUp;
 
@@ -129,17 +129,11 @@ public class RobotContainer {
         // requires subsystem
         storage);
 
-    reverseStorage = new StartEndCommand(
+    storageReverse = new StartEndCommand(
         // start of command
-        () -> {
-          shooter.shootOpenLoop(.7);
-          storage.forwardSlow();
-        },
+        () -> storage.reverse(),
         // end of command
-        () -> {
-          shooter.stopShoot();
-          storage.off();
-        },
+        () -> storage.off(),
         // requires subsystem
         storage);
 
@@ -181,7 +175,7 @@ public class RobotContainer {
     intakeRunButton.whenHeld(intakeForward);
     intakeReverseButton.whenHeld(intakeReverse);
     storageRunButton.whenHeld(storageRun);
-    storageReverseButton.whileHeld(reverseStorage);
+    storageReverseButton.whileHeld(storageReverse);
 
     // ***PICK ONE***
     // shooterButton.whenHeld(shootAndStorageUp);
