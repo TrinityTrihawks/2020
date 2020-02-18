@@ -82,7 +82,7 @@ public final class Constants {
     public static final class NetworkConstants {
         public static final String kIntakeCameraIPAddress = "10.42.15.11";
         // TODO: set targeting cam (limelight) IP address
-        public static final String kTargetingCameraIPAddress = "10.42.15.XX";
+        public static final String kLimelightIPAddress = "10.42.15.XX";
     }
 
     /**
