@@ -5,6 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+//import com.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
+//import com.trinityriverridge.athletics.robotics.students.CharlesNykamp;
+//import com.trinityriverridge.athletics.robotics.students.HunterMarble;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,6 +62,8 @@ public class Shooter extends SubsystemBase {
     left.config_kD(0, ShooterConstants.kD);
     left.config_kF(0, ShooterConstants.kF);
 
+    left.setInverted(true);
+
     // Right Talon config
     right.configFactoryDefault();
 
@@ -76,7 +82,8 @@ public class Shooter extends SubsystemBase {
     right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     right.setSensorPhase(true);
 
-    right.setInverted(true);
+    right.setInverted(false);
+
 
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
@@ -90,7 +97,7 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
-    shootOpenLoop(target, target);
+    shootClosedLoop(target, target);
   }
 
   /**

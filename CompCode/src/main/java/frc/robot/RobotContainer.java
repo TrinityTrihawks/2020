@@ -184,7 +184,7 @@ public class RobotContainer {
     storageRunButton.whenHeld(storageForward);
     storageReverseButton.whileHeld(storageReverse);
 
-    shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.7));
+    shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.45));
 
   }
 

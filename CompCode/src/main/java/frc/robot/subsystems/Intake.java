@@ -9,19 +9,18 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-
 public class Intake extends SubsystemBase {
 
   static Intake subsystemInst = null;
 
   final NetworkTable subtable;
-  
+
   final VictorSPX motor;
 
   /**
-   * Use this method to create a intake instance. This method
-   * ensures that the intake class is a singleton, aka, that
-   * only one intake object ever gets created
+   * Use this method to create a intake instance. This method ensures that the
+   * intake class is a singleton, aka, that only one intake object ever gets
+   * created
    */
   public static Intake getInstance() {
     if (subsystemInst == null) {
@@ -56,12 +55,11 @@ public class Intake extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0.5);
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     logToNetworkTables();
-    System.out.println("Intake voltaage: " + motor.getMotorOutputVoltage());
+    System.out.println("Intake voltage: " + motor.getMotorOutputVoltage());
 
   }
 
