@@ -38,6 +38,7 @@ public final class Constants {
          * probably wrong, please correct
          */
         public static final int encUnitsPer1Rev = 4096; // TODO: confirm this constant
+        public static final int gearboxRatio = 1 / 36;
         public static final double beltToBallRatio = 2.5;
     }
 
@@ -99,7 +100,7 @@ public final class Constants {
         public static final int kShooterButtonId = 1; //X, change
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
-        public static final int kStorageRunButtonId = 6;
+        public static final int kStorageForwardButtonId = 6;
         public static final int kStorageReverseButtonId = 3;
 
     }

@@ -9,6 +9,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootClosedLoop;
+import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
@@ -59,7 +60,7 @@ public class RobotContainer {
   private final JoystickButton climbDownButton = new JoystickButton(auxGamepad, OIConstants.kClimbDownButtonId);
   private final JoystickButton shooterButton = new JoystickButton(auxGamepad, OIConstants.kShooterButtonId);
   private final JoystickButton intakeRunButton = new JoystickButton(auxGamepad, OIConstants.kIntakeRunButtonId);
-  private final JoystickButton storageRunButton = new JoystickButton(auxGamepad, OIConstants.kStorageRunButtonId);
+  private final JoystickButton storageForwardButton = new JoystickButton(auxGamepad, OIConstants.kStorageForwardButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
   private final JoystickButton storageReverseButton = new JoystickButton(auxGamepad,OIConstants.kStorageReverseButtonId);
 
@@ -77,6 +78,7 @@ public class RobotContainer {
         () -> mainController.getRawButton(4),
         () -> mainController.getPOV(0)
     ));
+
 
 
     // Intake
@@ -162,9 +164,11 @@ public class RobotContainer {
 
 
 
-
-
     autoCommand = combinedAuto;
+
+
+    shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -182,7 +186,7 @@ public class RobotContainer {
     climbDownButton.whenHeld(climbingArmDown);
     intakeRunButton.whenHeld(new IntakeForward(intake));
     intakeReverseButton.whenHeld(intakeReverse);
-    storageRunButton.whenHeld(storageForward);
+    storageForwardButton.whenHeld(storageForward);
     storageReverseButton.whileHeld(storageReverse);
 
     shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.45));
