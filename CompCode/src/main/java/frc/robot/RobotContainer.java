@@ -6,8 +6,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.StorageConstants;
+import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.ShootClosedLoop;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -30,90 +30,128 @@ import static frc.robot.Constants.ShooterConstants;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // Subsystems
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final ClimbingArm climbingArm = ClimbingArm.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Storage storage = Storage.getInstance();
   private final Shooter shooter = Shooter.getInstance();
+
+
+  // Commands
   private final Command autoCommand;
   private final Command climbingArmUp;
   private final Command climbingArmDown;
-  private final Command intakeForward;
   private final Command intakeReverse;
-  private final Command storageRun;
+  private final Command storageForward;
   private final Command storageReverse;
   private final Command shooterAdjust;
-  private final Command shooterAdjustAndStorageUp;
-  private final Command shootAndStorageUp;
-  private final Command closedShooterAdjustAndStorageUp;
-  private final Command incrementStorage;
   private final Command closedShooterAdjust;
+
 
   // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
 
-  // Auxiliary arm joystick
-  private final Joystick auxiliaryController = new Joystick(OIConstants.kAuxiliaryControllerPort);
-  // Joystick buttons
-
-  private final JoystickButton climbUpButton = new JoystickButton(auxiliaryController, OIConstants.kClimbUpButtonId);
-  private final JoystickButton climbDownButton = new JoystickButton(auxiliaryController,
-      OIConstants.kClimbDownButtonId);
-  private final JoystickButton shooterButton = new JoystickButton(auxiliaryController, OIConstants.kShooterButtonId);
-  private final JoystickButton intakeRunButton = new JoystickButton(auxiliaryController,
-      OIConstants.kIntakeRunButtonId);
-  private final JoystickButton storageRunButton = new JoystickButton(auxiliaryController,
-      OIConstants.kStorageRunButtonId);
-  private final JoystickButton intakeReverseButton = new JoystickButton(auxiliaryController,
-      OIConstants.kIntakeReverseButtonId);
-  private final JoystickButton storageReverseButton = new JoystickButton(auxiliaryController,
-      OIConstants.kStorageReverseButtonId);
+  // Auxiliary arm joystick and buttons
+  private final Joystick auxGamepad = new Joystick(OIConstants.kAuxiliaryControllerPort);
+ 
+  private final JoystickButton climbUpButton = new JoystickButton(auxGamepad, OIConstants.kClimbUpButtonId);
+  private final JoystickButton climbDownButton = new JoystickButton(auxGamepad, OIConstants.kClimbDownButtonId);
+  private final JoystickButton shooterButton = new JoystickButton(auxGamepad, OIConstants.kShooterButtonId);
+  private final JoystickButton intakeRunButton = new JoystickButton(auxGamepad, OIConstants.kIntakeRunButtonId);
+  private final JoystickButton storageRunButton = new JoystickButton(auxGamepad, OIConstants.kStorageRunButtonId);
+  private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
+  private final JoystickButton storageReverseButton = new JoystickButton(auxGamepad,OIConstants.kStorageReverseButtonId);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
 
-    drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, () -> mainController.getY(),
-        () -> mainController.getTwist(), () -> mainController.getRawButton(3), () -> mainController.getRawButton(4),
-        () -> mainController.getPOV(0)));
+    // Drivetrain Command
+    drivetrain.setDefaultCommand(new JoystickDrive(
+        drivetrain,
+        () -> mainController.getY(),
+        () -> mainController.getTwist(),
+        () -> mainController.getRawButton(3),
+        () -> mainController.getRawButton(4),
+        () -> mainController.getPOV(0)
+    ));
 
-    // intake.setDefaultCommand(new JoystickIntake(
-    // intake,
-    // () -> auxiliaryController.getY()
-    // ));
 
-    // intake.setDefaultCommand(new StartEndCommand() {
+    // Intake
+    intakeReverse = new StartEndCommand(
+      () -> intake.spit(),
+      () -> intake.off(),
+      intake
+    );
 
-    // })
+    //Storage
+    storageForward = new StartEndCommand(
+      () -> storage.forward(),
+      () -> storage.off(),
+      storage
+    );
+
+    storageReverse = new StartEndCommand(
+      () -> storage.reverse(),
+      () -> storage.off(),
+      storage
+    );
+
+    // Climbing
+    climbingArmUp = new StartEndCommand(
+      () -> climbingArm.moveUp(),
+      () -> climbingArm.stop(),
+      climbingArm
+    );
+
+    climbingArmDown = new StartEndCommand(
+      () -> climbingArm.moveDown(),
+      () -> climbingArm.stop(),
+      climbingArm
+    );
+
+
+    // Shooter
+    shooterAdjust = new StartEndCommand(
+      // TODO: should this be on the XBOX controller?
+      () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
+      // throttle is [-1, 1] for BOTH
+      () -> shooter.stopShoot(false), shooter
+    );
+
+
+    closedShooterAdjust = new StartEndCommand(
+      () -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
+      () -> shooter.stopShoot(true)
+    );
+
+
+
+
+    // *** Autonomous Commands ***
 
     Command driveOffInitLine = new SequentialCommandGroup(
-        // Run these commands one after another:
-        // 1. Drive backwards
-        new InstantCommand(() -> drivetrain.driveOpenLoop(.3, .3), drivetrain),
-        // 2. Wait 3 seconds
-        new WaitCommand(2),
-        // 3. Stop driving
-        new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain));
+      // Drive backwards for 2 seconds
+      new InstantCommand(() -> drivetrain.driveOpenLoop(.3, .3), drivetrain),
+      new WaitCommand(2),
+      new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain)
+    );
 
     Command unlatchIntake = new SequentialCommandGroup(
-        // 1. Reverse storage belt
-        new InstantCommand(() -> storage.reverse(), storage),
-        // 2. Let run for 1 second. The intake arm should unlatch during this time.
-        new WaitCommand(1),
-        // 3. Stop belt
-        new InstantCommand(() -> storage.off(), storage));
+      // Reverse storage belt for 1 second
+      new InstantCommand(() -> storage.reverse(), storage),
+      new WaitCommand(1),
+      new InstantCommand(() -> storage.off(), storage)
+    );
 
-    Command pIDSetupCommand = new StartEndCommand(() -> {
+    Command pIDSetupCommand = new InstantCommand(() -> {
       SmartDashboard.putNumber("kP", ShooterConstants.kP);
       SmartDashboard.putNumber("kF", ShooterConstants.kF);
       SmartDashboard.putNumber("kI", ShooterConstants.kI);
       SmartDashboard.putNumber("kD", ShooterConstants.kD);
-    },
-
-        () -> {
-        });
+    });
 
     Command combinedAuto = new SequentialCommandGroup(
         // FIRST
@@ -121,97 +159,9 @@ public class RobotContainer {
         // LAST
         driveOffInitLine);
 
-    climbingArmUp = new StartEndCommand(
-        // start of command
-        () -> climbingArm.moveUp(),
-        // end of command
-        () -> climbingArm.stop(),
-        // requires subsystem
-        climbingArm);
 
-    climbingArmDown = new StartEndCommand(
-        // start of command
-        () -> climbingArm.moveDown(),
-        // end of command
-        () -> climbingArm.stop(),
-        // requires subsytem
-        climbingArm);
 
-    intakeForward = new StartEndCommand(
-        // start of command
-        () -> intake.vacuum(),
-        // end of command
-        () -> intake.off(),
-        // requires subsystem
-        intake);
 
-    intakeReverse = new StartEndCommand(
-        // start of command
-        () -> intake.spit(),
-        // end of command
-        () -> intake.off(),
-        // requires subsystem
-        intake);
-
-    storageRun = new StartEndCommand(
-        // start of command
-        () -> storage.forward(),
-        // end of command
-        () -> storage.off(),
-        // requires subsystem
-        storage);
-
-    storageReverse = new StartEndCommand(
-        // start of command
-        () -> storage.reverse(),
-        // end of command
-        () -> storage.off(),
-        // requires subsystem
-        storage);
-
-    incrementStorage = new SequentialCommandGroup(new InstantCommand(() -> storage.forwardSlow()),
-        new WaitUntilCommand(
-            () -> storage.getPositionChange() >= StorageConstants.beltToBallRatio * StorageConstants.encUnitsPer1Rev),
-        new InstantCommand(() -> storage.off()));
-
-    shootAndStorageUp = new StartEndCommand(
-        // start of command
-        () -> {
-          shooter.shootOpenLoop(.7);
-          storage.forwardSlow();
-        },
-        // end of command
-        () -> {
-          shooter.stopShoot(false);
-          storage.off();
-        },
-        // requires subsystem
-        storage);
-
-    shooterAdjust = new StartEndCommand(
-        // TODO: should this be on the XBOX controller?
-        () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
-        // throttle is [-1, 1] for BOTH
-        () -> shooter.stopShoot(false), shooter);
-
-    shooterAdjustAndStorageUp = new StartEndCommand(
-        // TODO: should this be on the XBOX controller?
-        () -> {
-          shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle());
-          storage.forwardSlow();
-        },
-
-        () -> {
-          shooter.stopShoot(false);
-          storage.off();
-        }, shooter, storage);
-
-    closedShooterAdjust = new StartEndCommand(() -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
-        () -> shooter.stopShoot(true));
-
-    closedShooterAdjustAndStorageUp = new SequentialCommandGroup(
-        new InstantCommand(() -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle())), incrementStorage,
-        new InstantCommand(() -> shooter.stopShoot(true)));
 
     autoCommand = combinedAuto;
 
@@ -226,18 +176,16 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
     climbUpButton.whenHeld(climbingArmUp);
     climbDownButton.whenHeld(climbingArmDown);
-    intakeRunButton.whenHeld(intakeForward);
+    intakeRunButton.whenHeld(new IntakeForward(intake));
     intakeReverseButton.whenHeld(intakeReverse);
-    storageRunButton.whenHeld(storageRun);
+    storageRunButton.whenHeld(storageForward);
     storageReverseButton.whileHeld(storageReverse);
 
-    // ***PICK ONE***
-    // shooterButton.whenHeld(shootAndStorageUp);
-    // shooterButton.whileHeld(shooterAdjust);
-    // shooterButton.whileHeld(shooterAdjustAndStorageUp);
-    shooterButton.whileHeld(closedShooterAdjustAndStorageUp);
+    shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.45));
+
   }
 
   public void logData() {
