@@ -177,7 +177,7 @@ public class RobotContainer {
     shootAndStorageUp = new StartEndCommand(
         // start of command
         () -> {
-          shooter.shootOpenLoop(.7);
+          shooter.shootOpenLoop(.65);
           storage.forwardSlow();
         },
         // end of command
@@ -237,7 +237,7 @@ public class RobotContainer {
     // shooterButton.whenHeld(shootAndStorageUp);
     // shooterButton.whileHeld(shooterAdjust);
     // shooterButton.whileHeld(shooterAdjustAndStorageUp);
-    shooterButton.whileHeld(closedShooterAdjustAndStorageUp);
+    shooterButton.whileHeld(shootAndStorageUp);
   }
 
   public void logData() {

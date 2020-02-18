@@ -94,7 +94,7 @@ public final class Constants {
 
         public static final int kClimbUpButtonId = 4;
         public static final int kClimbDownButtonId = 2;
-        public static final int kShooterButtonId = 8;
+        public static final int kShooterButtonId = 1; //X, change
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
         public static final int kStorageRunButtonId = 6;

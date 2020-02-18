@@ -94,7 +94,7 @@ public class Shooter extends SubsystemBase {
    * @param target -1, 1
    */
   public void shootClosedLoop(double target) {
-    shootOpenLoop(target, target);
+    shootClosedLoop(target, target);
   }
 
   /**
