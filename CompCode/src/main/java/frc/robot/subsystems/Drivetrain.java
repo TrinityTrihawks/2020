@@ -73,6 +73,7 @@ public class Drivetrain extends SubsystemBase {
 
     //setup gyro
     gyro = new PigeonIMU(talons.get("frontLeft"));
+    resetGyro();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("drivetrain");

@@ -143,17 +143,11 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * stops the shooter <br>
-   * works for BOTH closed <br>
-   * feedback AND open control
-   * 
-   * @param closed bool true=closed loop false=open loop
-   */
-  public void stopShoot(boolean closed) {
-    if (closed)
-      shootClosedLoop(0);
-    else
-      shootOpenLoop(0);
+   * stops the shooter
+   */ 
+  public void off() {
+    left.set(ControlMode.PercentOutput, 0);
+    right.set(ControlMode.PercentOutput, 0);
   }
 
   /**

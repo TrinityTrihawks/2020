@@ -118,13 +118,14 @@ public class RobotContainer {
       // TODO: should this be on the XBOX controller?
       () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
       // throttle is [-1, 1] for BOTH
-      () -> shooter.stopShoot(false), shooter
+      () -> shooter.off(),
+      shooter
     );
 
 
     closedShooterAdjust = new StartEndCommand(
       () -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
-      () -> shooter.stopShoot(true)
+      () -> shooter.off()
     );
 
 
