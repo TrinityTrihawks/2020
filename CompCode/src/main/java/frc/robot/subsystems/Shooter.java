@@ -180,8 +180,22 @@ public class Shooter extends SubsystemBase {
     return encoderVelocity > 1.0 ? 1.0 : (encoderVelocity < -1.0 ? -1.0 : encoderVelocity);
   }
 
+  
   public void logToNetworkTables() {
+    // Voltage
+    subtable.getEntry("left_voltage").setDouble(left.getMotorOutputVoltage());
+    subtable.getEntry("right_voltage").setDouble(right.getMotorOutputVoltage());
+
+    // Encoder Velocity
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
+
+    // Control Mode
+    subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
+    subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
+
+    // Target Velocity
+    subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
+    subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
   }
 }

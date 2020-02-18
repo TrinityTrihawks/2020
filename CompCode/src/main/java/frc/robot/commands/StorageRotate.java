@@ -14,10 +14,10 @@ public class StorageRotate extends CommandBase {
 
   private final Storage storage;
  
-  private Double amount;
+  private double amount;
 
   // Creates a new StorageRotate command
-  public StorageRotate(Storage storage, Double amount) {
+  public StorageRotate(Storage storage, double amount) {
     this.storage = storage;
     this.amount = amount;
     // Use addRequirements() here to declare subsystem dependencies.
