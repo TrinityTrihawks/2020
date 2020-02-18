@@ -1,20 +1,22 @@
 
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
 public class ClimbingArm extends SubsystemBase {
 
-  int idk = 1;
   final VictorSPX telescope;
   final VictorSPX winch;
   static ClimbingArm subsystemInst = null;
+
+  NetworkTable subtable;
 
   /**
    * Use this method to create a drivetrain instance. This method
@@ -37,6 +39,8 @@ public class ClimbingArm extends SubsystemBase {
   private ClimbingArm() {
     telescope = new VictorSPX(Constants.ClimbingConstants.TelescopeID);
     winch = new VictorSPX(Constants.ClimbingConstants.WinchId);
+
+    subtable = NetworkTableInstance.getDefault().getTable("climbing");
   }
  
 
@@ -58,11 +62,9 @@ public class ClimbingArm extends SubsystemBase {
   }
 
   public void logToNetworkTables(){
-
-
-
+    subtable.getEntry("telescope_voltage").setDouble(telescope.getMotorOutputVoltage());
+    subtable.getEntry("winch_voltage").setDouble(winch.getMotorOutputVoltage());
   }
-
 
   @Override
   public void periodic() {

@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -47,7 +46,7 @@ public class Shooter extends SubsystemBase {
     // Left Talon Config
     left.configFactoryDefault();
 
-    left.setNeutralMode(NeutralMode.Brake);
+    left.setNeutralMode(NeutralMode.Coast);
 
     left.configNominalOutputForward(0);
     left.configNominalOutputReverse(0);
@@ -57,27 +56,18 @@ public class Shooter extends SubsystemBase {
     left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     left.setSensorPhase(true);
 
-    left.config_kP(0, ShooterConstants.kP);
-    left.config_kI(0, ShooterConstants.kI);
-    left.config_kD(0, ShooterConstants.kD);
-    left.config_kF(0, ShooterConstants.kF);
 
     left.setInverted(true);
 
     // Right Talon config
     right.configFactoryDefault();
 
-    right.setNeutralMode(NeutralMode.Brake);
+    right.setNeutralMode(NeutralMode.Coast);
 
     right.configNominalOutputForward(0);
     right.configNominalOutputReverse(0);
     right.configPeakOutputForward(1);
     right.configPeakOutputReverse(-1);
-
-    right.config_kP(0, ShooterConstants.kP);
-    right.config_kI(0, ShooterConstants.kI);
-    right.config_kD(0, ShooterConstants.kD);
-    right.config_kF(0, ShooterConstants.kF);
 
     right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     right.setSensorPhase(true);
@@ -85,6 +75,14 @@ public class Shooter extends SubsystemBase {
     right.setInverted(false);
 
 
+    // Initial PID constants
+    updatePIDConstants(ShooterConstants.kP,
+                      ShooterConstants.kI,
+                      ShooterConstants.kD,
+                      ShooterConstants.kF
+    );
+
+    // Setup NetworkTables subtable
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
 
@@ -108,10 +106,15 @@ public class Shooter extends SubsystemBase {
    * @param right -1, 1
    */
   public void shootClosedLoop(double left, double right) {
-    left = 1023 * limitOutputValue(left);
+
+    left = ShooterConstants.encUnitsPer1Rev
+        * ShooterConstants.gearboxRatio
+        * limitOutputValue(left);
     this.left.set(ControlMode.Velocity, left);
 
-    right = 1023 * limitOutputValue(right);
+    right = ShooterConstants.encUnitsPer1Rev
+        * ShooterConstants.gearboxRatio
+        * limitOutputValue(right);
     this.right.set(ControlMode.Velocity, right);
   }
 
@@ -119,7 +122,7 @@ public class Shooter extends SubsystemBase {
    * runs the shooter at the specified target<br>
    * ***NO feedback loop***<br>
    * 
-   * @param target -1, 1
+   * @param target [-1, 1]
    */
   public void shootOpenLoop(double target) {
     shootOpenLoop(target, target);
@@ -128,8 +131,8 @@ public class Shooter extends SubsystemBase {
   /**
    * runs the shooter wheels at the specified targets ***NO feedback loop***
    * 
-   * @param left  -1, 1
-   * @param right -1, 1
+   * @param left  [-1, 1]
+   * @param right [-1, 1]
    */
   public void shootOpenLoop(double left, double right) {
     left = limitOutputValue(left);
@@ -164,11 +167,16 @@ public class Shooter extends SubsystemBase {
     return new int[] { leftEncVel, rightEncVel };
   }
 
-  public void updatePIDConstants() {
-    ShooterConstants.kP = SmartDashboard.getNumber("kP", 0);
-    ShooterConstants.kD = SmartDashboard.getNumber("kD", 0);
-    ShooterConstants.kF = SmartDashboard.getNumber("kF", 0);
-    ShooterConstants.kI = SmartDashboard.getNumber("kI", 0);
+  public void updatePIDConstants(double p, double i, double d, double f) {
+    left.config_kP(0, p);
+    left.config_kI(0, i);
+    left.config_kD(0, d);
+    left.config_kF(0, f);
+
+    right.config_kP(0, p);
+    right.config_kI(0, i);
+    right.config_kD(0, d);
+    right.config_kF(0, f);
   }
 
   @Override
@@ -187,7 +195,7 @@ public class Shooter extends SubsystemBase {
     return encoderVelocity > 1.0 ? 1.0 : (encoderVelocity < -1.0 ? -1.0 : encoderVelocity);
   }
 
-  
+
   public void logToNetworkTables() {
     // Voltage
     subtable.getEntry("left_voltage").setDouble(left.getMotorOutputVoltage());

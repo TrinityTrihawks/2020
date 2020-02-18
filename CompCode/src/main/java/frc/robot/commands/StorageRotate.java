@@ -43,7 +43,7 @@ public class StorageRotate extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    double absolutePosition = Math.abs(storage.getPositionChange());
+    double absolutePosition = Math.abs(storage.getPosition());
     double absoluteTarget = Math.abs(amount);
 
     // Set margin to positive to end before the position reaches target

@@ -24,10 +24,9 @@ public class Storage extends SubsystemBase {
    */
   public static Storage getInstance() {
     if (subsystemInst == null) {
-      return new Storage();
-    } else {
-      return subsystemInst;
+      subsystemInst = new Storage();
     }
+    return subsystemInst;
   }
 
   private Storage() {
@@ -63,7 +62,7 @@ public class Storage extends SubsystemBase {
   /**
    * Get position change since last reset in encoder raw units
    */
-  public int getPositionChange() {
+  public int getPosition() {
     return motor.getSelectedSensorPosition();
   }
 
@@ -82,7 +81,7 @@ public class Storage extends SubsystemBase {
     subtable.getEntry("current").setDouble(motor.getStatorCurrent());
 
     // Log encoder val
-    subtable.getEntry("encoderPosition").setDouble(getPositionChange());
+    subtable.getEntry("encoderPosition").setDouble(getPosition());
 
   }
 

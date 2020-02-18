@@ -37,7 +37,7 @@ public final class Constants {
         /**
          * probably wrong, please correct
          */
-        public static final int encUnitsPer1Rev = 1023; // TODO: this constant is probably wrong
+        public static final int encUnitsPer1Rev = 4096; // TODO: confirm this constant
         public static final double beltToBallRatio = 2.5;
     }
 
@@ -60,11 +60,13 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int kLeftTalonId = 2;
         public static final int kRightTalonId = 6;
-        // TODO set feedback constants
-        public static /* final */ double kP = 0;
-        public static /* final */ double kI = 0;
-        public static /* final */ double kD = 0;
-        public static /* final */ double kF = 0;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
+
+        public static final double encUnitsPer1Rev = 4096;
+        public static final double gearboxRatio = 1 / 4;
 
     }
 

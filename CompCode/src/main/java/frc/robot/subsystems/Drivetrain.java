@@ -12,16 +12,17 @@ import java.util.HashMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.DriveConstants;
 
 public class Drivetrain extends SubsystemBase {
 
   final HashMap<String, TalonSRX> talons;
+  final PigeonIMU gyro;
 
   final NetworkTable subtable;
 
@@ -70,6 +71,9 @@ public class Drivetrain extends SubsystemBase {
     talons.get("backRight").setInverted(true);
     talons.get("frontRight").setInverted(true);
 
+    //setup gyro
+    gyro = new PigeonIMU(talons.get("frontLeft"));
+
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("drivetrain");
 
@@ -83,6 +87,16 @@ public class Drivetrain extends SubsystemBase {
     // feed the values to the talons
     talons.get("frontLeft").set(ControlMode.PercentOutput, leftPercent);
     talons.get("frontRight").set(ControlMode.PercentOutput, rightPercent);
+  }
+
+  public double getGyroAngle() {
+    double[] yawPitchRoll = new double[3];
+    gyro.getYawPitchRoll(yawPitchRoll);
+    return yawPitchRoll[0];
+  }
+
+  public void resetGyro() {
+    gyro.setYaw(0);
   }
 
   public void driveClosedLoop() {
@@ -102,6 +116,12 @@ public class Drivetrain extends SubsystemBase {
 
     // Log motor currents over network tables
     talons.forEach((name, talon) -> subtable.getEntry(name + "_current").setDouble(talon.getStatorCurrent()));
+
+    // Log gyro angle
+    subtable.getEntry("gyro_angle").setDouble(getGyroAngle());
+
+    //Log gyro state
+    subtable.getEntry("gyro_state").setString(gyro.getState().toString());
 
   }
 

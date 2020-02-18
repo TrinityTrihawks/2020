@@ -1,6 +1,5 @@
 package frc.robot;
 
-import static frc.robot.Constants.NetworkConstants;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
