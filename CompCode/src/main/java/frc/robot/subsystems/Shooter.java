@@ -62,6 +62,8 @@ public class Shooter extends SubsystemBase {
     left.config_kD(0, ShooterConstants.kD);
     left.config_kF(0, ShooterConstants.kF);
 
+    left.setInverted(true);
+
     // Right Talon config
     right.configFactoryDefault();
 
@@ -80,7 +82,8 @@ public class Shooter extends SubsystemBase {
     right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     right.setSensorPhase(true);
 
-    right.setInverted(true);
+    right.setInverted(false);
+
 
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
