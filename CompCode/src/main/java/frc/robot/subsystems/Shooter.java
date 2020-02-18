@@ -5,6 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+//import com.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
+//import com.trinityriverridge.athletics.robotics.students.CharlesNykamp;
+//import com.trinityriverridge.athletics.robotics.students.HunterMarble;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
