@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -191,8 +192,8 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
     // Control Mode
-    subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
-    subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
+    // subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
+    // subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
 
     // Target Velocity
     subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
@@ -212,6 +213,10 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("right_kI").setDouble(rightSlot.kI);
     subtable.getEntry("right_kD").setDouble(rightSlot.kD);
     subtable.getEntry("right_kF").setDouble(rightSlot.kF);
+
+    SmartDashboard.putNumber("left_state_a", left.getSensorCollection().getPinStateQuadA() ? 1 : 0);
+    SmartDashboard.putNumber("left_state_b", left.getSensorCollection().getPinStateQuadB() ? 1 : 0);
+
 
   }
 }
