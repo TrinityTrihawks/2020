@@ -9,6 +9,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootClosedLoop;
+import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
@@ -196,7 +197,7 @@ public class RobotContainer {
     storageForwardButton.whenHeld(storageForward);
     storageReverseButton.whileHeld(storageReverse);
     winchUnwindButton.whenHeld(winchUnwind);
-    shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.45));
+    shooterButton.whenHeld(new ShootOpenLoop(shooter, 0.45));
 
   }
 
