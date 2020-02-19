@@ -10,6 +10,7 @@ import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootClosedLoop;
 import frc.robot.commands.ShootOpenLoop;
+import frc.robot.commands.StorageIncrement;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Shooter;
@@ -18,9 +19,12 @@ import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -47,6 +51,7 @@ public class RobotContainer {
   private final Command intakeReverse;
   private final Command storageForward;
   private final Command storageReverse;
+  private final Command intakeAutoStorage;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
   private final Command winchUnwind;
@@ -107,6 +112,19 @@ public class RobotContainer {
       () -> storage.reverse(),
       () -> storage.off(),
       storage
+    );
+
+    intakeAutoStorage = new ParallelCommandGroup(
+      // Run intake and schedule storageIncrement if intake switch pressed
+      new IntakeForward(intake),
+      new SequentialCommandGroup(
+        new WaitUntilCommand(() -> storage.getIntakeSwitch()),
+        new ScheduleCommand(
+          new StorageIncrement(storage)
+          // TODO: should this iterate so that multiple StorageIncrements can occur if
+          // the switch is still pressed?
+        )
+      )
     );
 
     // Climbing
