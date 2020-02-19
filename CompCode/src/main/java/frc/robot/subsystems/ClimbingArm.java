@@ -16,7 +16,7 @@ public class ClimbingArm extends SubsystemBase {
   private final VictorSPX winch;
   private static ClimbingArm subsystemInst = null;
 
-  NetworkTable subtable;
+  private final NetworkTable subtable;
 
   /**
    * Use this method to create a drivetrain instance. This method

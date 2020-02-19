@@ -8,7 +8,10 @@ import edu.wpi.first.networktables.NetworkTable;
 public class Limelight {
     private static Limelight inst;
 
+    private final NetworkTable subtable;
+
     private Limelight() {
+        subtable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
     public static Limelight getInstance() {
@@ -46,7 +49,7 @@ public class Limelight {
      * @return limelight table
      */
     public NetworkTable getTable() {
-        return NetworkTableInstance.getDefault().getTable("limelight");
+        return subtable;
     }
 
     /**
@@ -54,9 +57,8 @@ public class Limelight {
      * @return array of table entries [tx, ty, ta, tv]
      */
     public NetworkTableEntry[] getEntries() {
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-        return new NetworkTableEntry[] {table.getEntry("tx"), table.getEntry("ty"),
-                                        table.getEntry("ta"), table.getEntry("tv")};
+        return new NetworkTableEntry[] {subtable.getEntry("tx"), subtable.getEntry("ty"),
+                                        subtable.getEntry("ta"), subtable.getEntry("tv")};
     }
 
 }
