@@ -35,7 +35,7 @@ public final class Constants {
         public static final int kMotorId = 5;
         public static final int encUnitsPer1Rev = 4096; 
         public static final int gearboxRatio = 1 / 36;
-        public static final double beltToBallRatio = 2.5;
+        public static final double ballToBeltRatio = 2.5;
     }
 
     /**

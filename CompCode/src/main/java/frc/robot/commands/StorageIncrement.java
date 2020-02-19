@@ -8,6 +8,6 @@ import frc.robot.subsystems.Storage;
 public class StorageIncrement extends SequentialCommandGroup {
 
     public StorageIncrement(Storage storage) {
-        addCommands(new StorageRotate(storage, StorageConstants.beltToBallRatio * StorageConstants.encUnitsPer1Rev));
+        addCommands(new StorageRotate(storage, StorageConstants.ballToBeltRatio * StorageConstants.encUnitsPer1Rev));
     }
 }
