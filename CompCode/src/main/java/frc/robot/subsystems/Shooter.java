@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 //import com.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
@@ -206,5 +207,22 @@ public class Shooter extends SubsystemBase {
     // Target Velocity
     subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
     subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
+
+    // PID constants
+    SlotConfiguration leftSlot = new SlotConfiguration();
+    left.getSlotConfigs(leftSlot);
+    subtable.getEntry("left_kP").setDouble(leftSlot.kP);
+    subtable.getEntry("left_kI").setDouble(leftSlot.kI);
+    subtable.getEntry("left_kD").setDouble(leftSlot.kD);
+    subtable.getEntry("left_kF").setDouble(leftSlot.kF);
+
+    SlotConfiguration rightSlot = new SlotConfiguration();
+    right.getSlotConfigs(rightSlot);
+    subtable.getEntry("right_kP").setDouble(rightSlot.kP);
+    subtable.getEntry("right_kI").setDouble(rightSlot.kI);
+    subtable.getEntry("right_kD").setDouble(rightSlot.kD);
+    subtable.getEntry("right_kF").setDouble(rightSlot.kF);
+
+
   }
 }
