@@ -55,6 +55,10 @@ public class ClimbingArm extends SubsystemBase {
     winch.set(ControlMode.PercentOutput, 1);
   } 
 
+  public void winchUnwind() {
+    winch.set(ControlMode.PercentOutput, -0.5);
+  }
+
   public void stop()
   {
     telescope.set(ControlMode.PercentOutput, 0);

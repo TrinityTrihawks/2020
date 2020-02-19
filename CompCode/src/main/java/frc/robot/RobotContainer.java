@@ -48,6 +48,7 @@ public class RobotContainer {
   private final Command storageReverse;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
+  private final Command winchUnwind;
 
 
   // Main drivetrain joystick
@@ -63,6 +64,8 @@ public class RobotContainer {
   private final JoystickButton storageForwardButton = new JoystickButton(auxGamepad, OIConstants.kStorageForwardButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
   private final JoystickButton storageReverseButton = new JoystickButton(auxGamepad,OIConstants.kStorageReverseButtonId);
+  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,9);
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,7 +82,11 @@ public class RobotContainer {
         () -> mainController.getPOV(0)
     ));
 
-
+    winchUnwind = new StartEndCommand(
+      () -> climbingArm.winchUnwind(),
+      () -> climbingArm.stop(),
+      climbingArm
+    );
 
     // Intake
     intakeReverse = new StartEndCommand(
@@ -188,7 +195,7 @@ public class RobotContainer {
     intakeReverseButton.whenHeld(intakeReverse);
     storageForwardButton.whenHeld(storageForward);
     storageReverseButton.whileHeld(storageReverse);
-
+    winchUnwindButton.whenHeld(winchUnwind);
     shooterButton.whenHeld(new ShootClosedLoop(shooter, 0.45));
 
   }
