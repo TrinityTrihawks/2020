@@ -157,16 +157,15 @@ public class RobotContainer {
       new InstantCommand(() -> storage.off(), storage)
     );
 
-    Command pIDSetupCommand = new InstantCommand(() -> {
-      SmartDashboard.putNumber("kP", ShooterConstants.kP);
-      SmartDashboard.putNumber("kF", ShooterConstants.kF);
-      SmartDashboard.putNumber("kI", ShooterConstants.kI);
-      SmartDashboard.putNumber("kD", ShooterConstants.kD);
-    });
+    // Command pIDSetupCommand = new InstantCommand(() -> {
+    //   SmartDashboard.putNumber("kP", ShooterConstants.kP);
+    //   SmartDashboard.putNumber("kF", ShooterConstants.kF);
+    //   SmartDashboard.putNumber("kI", ShooterConstants.kI);
+    //   SmartDashboard.putNumber("kD", ShooterConstants.kD);
+    // });
 
     Command combinedAuto = new SequentialCommandGroup(
-        // FIRST
-        pIDSetupCommand, unlatchIntake,
+         unlatchIntake,
         // LAST
         driveOffInitLine);
 
