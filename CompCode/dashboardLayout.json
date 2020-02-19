@@ -1,0 +1,300 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {}
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Shooter",
+              "_title": "Shooter",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/ClimbingArm",
+              "_title": "ClimbingArm",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Intake",
+              "_title": "Intake",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Storage",
+              "_title": "Storage",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Diagnostics",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 60.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "5,0": {
+            "size": [
+              4,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Drivetrain",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/frontLeft_voltage",
+                  "_title": "FL voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/frontRight_voltage",
+                  "_title": "FR voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/backLeft_voltage",
+                  "_title": "BL voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/backRight_voltage",
+                  "_title": "BR voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/gyro_state",
+                  "_title": "Gyro state"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///drivetrain/gyro_angle",
+                  "_title": "Gyro angle"
+                }
+              ]
+            }
+          },
+          "9,0": {
+            "size": [
+              4,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Shooter",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/left_voltage",
+                  "_title": "Left voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/right_voltage",
+                  "_title": "Right voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/left_controlMode",
+                  "_title": "Left ControlMode"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/right_controlMode",
+                  "_title": "Right ControlMode"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/LeftShooterVel",
+                  "_title": "Left encoder"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/RightShooterVel",
+                  "_title": "Right encoder"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/left_targetVel",
+                  "_title": "Left target"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///shooter/right_targetVel",
+                  "_title": "Right target"
+                }
+              ]
+            }
+          },
+          "13,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Storage",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///storage/voltage",
+                  "_title": "Voltage"
+                }
+              ]
+            }
+          },
+          "13,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Intake",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///intake/voltage",
+                  "_title": "Voltage"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "PID Tuning",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 60.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "6,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///pid_tuning/kP",
+              "_title": "pid_tuning/kP"
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///pid_tuning/kI",
+              "_title": "pid_tuning/kI"
+            }
+          },
+          "12,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///pid_tuning/kF",
+              "_title": "pid_tuning/kF"
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///pid_tuning/vel",
+              "_title": "pid_tuning/vel"
+            }
+          },
+          "10,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///pid_tuning/kD",
+              "_title": "pid_tuning/kD"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1366.0,
+    "height": 768.0
+  }
+}
