@@ -6,16 +6,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
 
-  static Storage subsystemInst = null;
+  private static Storage subsystemInst = null;
 
-  final NetworkTable subtable;
+  private final NetworkTable subtable;
 
-  final TalonSRX motor;
+  private final TalonSRX motor;
+
+  //DigitalInput intakeSwitch;
 
   /**
    * Use this method to create a Storage instance. This method ensures that the
@@ -37,6 +40,8 @@ public class Storage extends SubsystemBase {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("storage");
+
+    //intakeSwitch = new DigitalInput(0);
   }
 
   public void off() {
@@ -64,6 +69,13 @@ public class Storage extends SubsystemBase {
    */
   public int getPosition() {
     return motor.getSelectedSensorPosition();
+  }
+
+  public boolean getIntakeSwitch() {
+    return false;
+
+    // // Invert because of how our limit switch is currently wired. Pressed should yeild true
+    // return !intakeSwitch.get();
   }
 
   @Override
