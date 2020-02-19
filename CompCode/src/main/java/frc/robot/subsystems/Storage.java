@@ -12,11 +12,11 @@ import frc.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
 
-  static Storage subsystemInst = null;
+  private static Storage subsystemInst = null;
 
-  final NetworkTable subtable;
+  private final NetworkTable subtable;
 
-  final TalonSRX motor;
+  private final TalonSRX motor;
 
   //DigitalInput intakeSwitch;
 

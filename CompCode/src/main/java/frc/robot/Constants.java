@@ -90,6 +90,7 @@ public final class Constants {
     public static final class OIConstants {
         public static final int kMainControllerPort = 0;
         public static final int kAuxiliaryControllerPort = 1;
+        public static final int kAuxiliaryControllerPort2 = 2;
 
         public static final int kClimbUpButtonId = 4;
         public static final int kClimbDownButtonId = 2;

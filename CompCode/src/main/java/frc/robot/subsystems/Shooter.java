@@ -156,8 +156,8 @@ public class Shooter extends SubsystemBase {
    */
   public int[] getEncoderValues() {
 
-    int leftEncVel = left.getSelectedSensorVelocity();
-    int rightEncVel = right.getSelectedSensorVelocity();
+    int leftEncVel = left.getSensorCollection().getQuadratureVelocity();
+    int rightEncVel = right.getSensorCollection().getQuadratureVelocity();
 
     return new int[] { leftEncVel, rightEncVel };
   }
@@ -197,6 +197,7 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("right_voltage").setDouble(right.getMotorOutputVoltage());
 
     // Encoder Velocity
+
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
