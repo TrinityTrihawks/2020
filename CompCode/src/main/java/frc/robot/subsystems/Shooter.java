@@ -20,9 +20,9 @@ public class Shooter extends SubsystemBase {
   private final TalonSRX left;
   private final TalonSRX right;
 
-  final NetworkTable subtable;
+  private final NetworkTable subtable;
 
-  static Shooter subsystemInst = null;
+  private static Shooter subsystemInst = null;
 
   /**
    * Use this method to create a Shooter instance. This method ensures that the
