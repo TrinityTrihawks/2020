@@ -21,12 +21,12 @@ import frc.robot.Constants.DriveConstants;
 
 public class Drivetrain extends SubsystemBase {
 
-  final HashMap<String, TalonSRX> talons;
-  final PigeonIMU gyro;
+  private final HashMap<String, TalonSRX> talons;
+  private final PigeonIMU gyro;
 
-  final NetworkTable subtable;
+  private final NetworkTable subtable;
 
-  static Drivetrain subsystemInst = null;
+  private static Drivetrain subsystemInst = null;
 
   /**
    * Use this method to create a drivetrain instance. This method ensures that the

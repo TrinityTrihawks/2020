@@ -12,11 +12,11 @@ import frc.robot.Constants;
 
 public class ClimbingArm extends SubsystemBase {
 
-  final VictorSPX telescope;
-  final VictorSPX winch;
-  static ClimbingArm subsystemInst = null;
+  private final VictorSPX telescope;
+  private final VictorSPX winch;
+  private static ClimbingArm subsystemInst = null;
 
-  NetworkTable subtable;
+  private final NetworkTable subtable;
 
   /**
    * Use this method to create a drivetrain instance. This method

@@ -11,11 +11,11 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-  static Intake subsystemInst = null;
+  private static Intake subsystemInst = null;
 
-  final NetworkTable subtable;
+  private final NetworkTable subtable;
 
-  final VictorSPX motor;
+  private final VictorSPX motor;
 
   /**
    * Use this method to create a intake instance. This method ensures that the
