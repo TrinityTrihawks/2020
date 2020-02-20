@@ -4,19 +4,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.IntakeForward;
-import frc.robot.commands.JoystickDrive;
-import frc.robot.commands.ShootClosedLoop;
-import frc.robot.commands.ShootOpenLoop;
-import frc.robot.commands.StorageIncrement;
-import frc.robot.commands.TunePIDFromDashboard;
-import frc.robot.subsystems.ClimbingArm;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Storage;
-import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -26,7 +13,17 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import static frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IntakeForward;
+import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.ShootOpenLoop;
+import frc.robot.commands.StorageIncrement;
+import frc.robot.commands.TunePIDFromDashboard;
+import frc.robot.subsystems.ClimbingArm;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Storage;
 
 /**
  * This class is where the bulk of the robot should be declared. Since

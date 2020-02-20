@@ -18,7 +18,7 @@ public class Storage extends SubsystemBase {
 
   private final TalonSRX motor;
 
-  //DigitalInput intakeSwitch;
+  // DigitalInput intakeSwitch;
 
   /**
    * Use this method to create a Storage instance. This method ensures that the
@@ -41,7 +41,7 @@ public class Storage extends SubsystemBase {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("storage");
 
-    //intakeSwitch = new DigitalInput(0);
+    // intakeSwitch = new DigitalInput(0);
   }
 
   public void off() {
@@ -74,7 +74,8 @@ public class Storage extends SubsystemBase {
   public boolean getIntakeSwitch() {
     return false;
 
-    // // Invert because of how our limit switch is currently wired. Pressed should yeild true
+    // Invert because of how our limit switch is currently wired. Pressed should
+    // yield true
     // return !intakeSwitch.get();
   }
 
