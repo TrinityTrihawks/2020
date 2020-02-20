@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+// seriously?
 //import org.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
 //import org.trinityriverridge.athletics.robotics.students.CharlesNykamp;
 //import org.trinityriverridge.athletics.robotics.students.HunterMarble;
