@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -58,7 +59,6 @@ public class Shooter extends SubsystemBase {
     left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
     left.setSensorPhase(true);
 
-
     left.setInverted(true);
 
     // Right Talon config
@@ -76,13 +76,8 @@ public class Shooter extends SubsystemBase {
 
     right.setInverted(false);
 
-
     // Initial PID constants
-    updatePIDConstants(ShooterConstants.kP,
-                      ShooterConstants.kI,
-                      ShooterConstants.kD,
-                      ShooterConstants.kF
-    );
+    updatePIDConstants(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD, ShooterConstants.kF);
 
     // Setup NetworkTables subtable
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -109,14 +104,10 @@ public class Shooter extends SubsystemBase {
    */
   public void shootClosedLoop(double left, double right) {
 
-    left = ShooterConstants.encUnitsPer1Rev
-        * ShooterConstants.gearboxRatio
-        * limitOutputValue(left);
+    left = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(left);
     this.left.set(ControlMode.Velocity, left);
 
-    right = ShooterConstants.encUnitsPer1Rev
-        * ShooterConstants.gearboxRatio
-        * limitOutputValue(right);
+    right = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(right);
     this.right.set(ControlMode.Velocity, right);
   }
 
@@ -146,7 +137,7 @@ public class Shooter extends SubsystemBase {
 
   /**
    * stops the shooter
-   */ 
+   */
   public void off() {
     left.set(ControlMode.PercentOutput, 0);
     right.set(ControlMode.PercentOutput, 0);
@@ -157,8 +148,8 @@ public class Shooter extends SubsystemBase {
    */
   public int[] getEncoderValues() {
 
-    //int leftEncVel = left.getSensorCollection().getQuadratureVelocity();
-    //int rightEncVel = right.getSensorCollection().getQuadratureVelocity();
+    // int leftEncVel = left.getSensorCollection().getQuadratureVelocity();
+    // int rightEncVel = right.getSensorCollection().getQuadratureVelocity();
     int leftEncVel = left.getSensorCollection().getPulseWidthVelocity();
     int rightEncVel = right.getSensorCollection().getPulseWidthVelocity();
 
@@ -193,7 +184,6 @@ public class Shooter extends SubsystemBase {
     return encoderVelocity > 1.0 ? 1.0 : (encoderVelocity < -1.0 ? -1.0 : encoderVelocity);
   }
 
-
   public void logToNetworkTables() {
     // Voltage
     subtable.getEntry("left_voltage").setDouble(left.getMotorOutputVoltage());
@@ -205,12 +195,12 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
     // Control Mode
-    subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
-    subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
+    // subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
+    // subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
 
     // Target Velocity
-    //subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
-    //subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
+    // subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
+    // subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
 
     // PID constants
     SlotConfiguration leftSlot = new SlotConfiguration();
@@ -227,6 +217,8 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("right_kD").setDouble(rightSlot.kD);
     subtable.getEntry("right_kF").setDouble(rightSlot.kF);
 
+    SmartDashboard.putNumber("left_state_a", left.getSensorCollection().getPinStateQuadA() ? 1 : 0);
+    SmartDashboard.putNumber("left_state_b", left.getSensorCollection().getPinStateQuadB() ? 1 : 0);
 
   }
 }
