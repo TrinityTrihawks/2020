@@ -6,9 +6,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-// import com.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
-// import com.trinityriverridge.athletics.robotics.students.CharlesNykamp;
-// import com.trinityriverridge.athletics.robotics.students.HunterMarble;
+// seriously?
+//import org.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
+//import org.trinityriverridge.athletics.robotics.students.CharlesNykamp;
+//import org.trinityriverridge.athletics.robotics.students.HunterMarble;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
