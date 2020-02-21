@@ -14,6 +14,10 @@ public class Limelight {
         subtable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
+    /**
+     * <p>gets the <code>Limelight</code> instance
+     * @return the <code>Limelight</code> instance
+     */
     public static Limelight getInstance() {
         if (inst == null)
             return inst = new Limelight();
@@ -22,14 +26,15 @@ public class Limelight {
     }
 
     /**
-     * logs limelight data to the shuffleboard
+     * <p>logs limelight data to the shuffleboard
+     * 
      * @return void, so don't use it in an expression!
      */
     public void logToShuffleboard() {
-        NetworkTableEntry tx = getEntries()[0];
-        NetworkTableEntry ty = getEntries()[1];
-        NetworkTableEntry ta = getEntries()[2];
-        NetworkTableEntry tv = getEntries()[3];
+        NetworkTableEntry tx = getEntry("tx");
+        NetworkTableEntry ty = getEntry("ty");
+        NetworkTableEntry ta = getEntry("ta");
+        NetworkTableEntry tv = getEntry("tv");
 
         // read values periodically
         double x = tx.getDouble(0.0);
@@ -45,7 +50,7 @@ public class Limelight {
     }
 
     /**
-     * 
+     * <p>gets the limelight network table
      * @return limelight table
      */
     public NetworkTable getTable() {
@@ -53,12 +58,51 @@ public class Limelight {
     }
 
     /**
+     * <p>gets four entries from the limelight network table
+     * <p>edit <code>getEntry(String)</code> to access more values than provided
      * 
      * @return array of table entries [tx, ty, ta, tv]
      */
     public NetworkTableEntry[] getEntries() {
-        return new NetworkTableEntry[] {subtable.getEntry("tx"), subtable.getEntry("ty"),
-                                        subtable.getEntry("ta"), subtable.getEntry("tv")};
+        return new NetworkTableEntry[] { subtable.getEntry("tx"), subtable.getEntry("ty"), subtable.getEntry("ta"),
+                subtable.getEntry("tv") };
+    }
+
+    /**
+     * <p>gets an entry from the limelight network table
+     * 
+     * <p><em>use THIS NOT ANYTHING ELSE if you want to access more properties than the 4 already implemented</em>
+     * 
+     * @param entry String specifying table entry
+     * @return the entry: NetworkTableEntry
+     */
+    public NetworkTableEntry getEntry(String entry) {
+        switch (entry) {
+        case "tx":
+            break;
+        case "ty":
+            break;
+        case "ta":
+            break;
+        case "tv":
+            break;
+        default:
+            return null;
+        }
+
+        return subtable.getEntry(entry);
+    }
+
+    /**
+     * <p>gets an entry from the limelight network table
+     * <p>edit <code>getEntry(String)</code> if you need more values than those already implemented
+     * 
+     * @param entry int representing the entry
+     * @return the entry: NetworkTableEntry
+     */
+    public NetworkTableEntry getEntry(int entry) {
+        if(entry < 0 || entry > 3) return null;
+        return getEntries()[entry];
     }
 
 }
