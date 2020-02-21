@@ -79,9 +79,9 @@ public final class Constants {
      * IP Addresses and related info
      */
     public static final class NetworkConstants {
-        public static final String kIntakeCameraIPAddress = "10.42.15.11";
-        // TODO: set targeting cam (limelight) IP address
-        public static final String kLimelightIPAddress = "10.42.15.XX";
+        public static final String kIntakeCameraIPAddress = "10.42.15.37";
+        // set targeting cam (limelight) IP address (not sure if it is .11)
+        public static final String kLimelightIPAddress = "10.42.15.11";
     }
 
     /**
@@ -94,7 +94,7 @@ public final class Constants {
 
         public static final int kClimbUpButtonId = 4;
         public static final int kClimbDownButtonId = 2;
-        public static final int kShooterButtonId = 1; //X, change
+        public static final int kShooterButtonId = 1; //X, change - are you sure?
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
         public static final int kStorageForwardButtonId = 6;
@@ -107,6 +107,6 @@ public final class Constants {
      */
     public static final class LimelightConstants {
         // angle above horizantal
-        public static final double limelightMountAngle = 0;
+        public static final double limelightMountAngle = 0.0;
     }
 }
