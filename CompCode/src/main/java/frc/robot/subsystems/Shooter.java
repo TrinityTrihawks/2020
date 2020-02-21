@@ -20,7 +20,7 @@ public class Shooter extends SubsystemBase {
 
   private final TalonSRX left;
   private final TalonSRX right;
-
+ 
   private final NetworkTable subtable;
 
   private static Shooter subsystemInst = null;
