@@ -1,6 +1,6 @@
 package frc.robot;
 
-/**
+/**<p>
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
  * purpose. All constants should be declared globally (i.e. public static). Do
@@ -8,7 +8,7 @@ package frc.robot;
  *
  * <p>
  * It is advised to statically import this class (or one of its inner classes)
- * wherever the constants are needed, to reduce verbosity.
+ * wherever the constants are needed, to reduce verbosity. (<em>statically</em>, Anthony)
  */
 public final class Constants {
     /**
@@ -94,7 +94,7 @@ public final class Constants {
 
         public static final int kClimbUpButtonId = 4;
         public static final int kClimbDownButtonId = 2;
-        public static final int kShooterButtonId = 1; //X, change
+        public static final int kShooterButtonId = 1; //X, change - are you sure?
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
         public static final int kStorageForwardButtonId = 6;
@@ -107,6 +107,6 @@ public final class Constants {
      */
     public static final class LimelightConstants {
         // angle above horizantal
-        public static final double limelightMountAngle = 0;
+        public static final double limelightMountAngle = 0.0;
     }
 }
