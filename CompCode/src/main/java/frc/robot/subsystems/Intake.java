@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void vacuum() {
-    motor.set(ControlMode.PercentOutput, -0.5);
+    motor.set(ControlMode.PercentOutput, -0.7);
   }
 
   public void intakeByPower(double power) {
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
 
   // perhaps useful for un-jamming power cells
   public void spit() {
-    motor.set(ControlMode.PercentOutput, 0.5);
+    motor.set(ControlMode.PercentOutput, 0.8);
   }
 
   @Override
