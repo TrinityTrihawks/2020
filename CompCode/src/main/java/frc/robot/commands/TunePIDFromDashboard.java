@@ -39,6 +39,8 @@ public class TunePIDFromDashboard extends CommandBase {
     double f = subtable.getEntry("kF").getDouble(ShooterConstants.kF);
     double vel = subtable.getEntry("vel").getDouble(0);
 
+    System.out.println("Tuning pid");
+
     shooter.updatePIDConstants(p, i, d, f);
 
     shooter.shootClosedLoop(vel);
