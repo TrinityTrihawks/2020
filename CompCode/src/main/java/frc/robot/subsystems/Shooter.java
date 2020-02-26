@@ -34,11 +34,9 @@ public class Shooter extends SubsystemBase {
    */
   public static Shooter getInstance() {
     if (subsystemInst == null) {
-      return subsystemInst = new Shooter(); // assigns AND returns the shooter instance:
-                                            // the expression value of the '=' operator is the value assigned
-    } else {
-      return subsystemInst;
+      subsystemInst = new Shooter();
     }
+    return subsystemInst;
   }
 
   private Shooter() {
@@ -85,21 +83,15 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter at the specified target<br>
-   * ***closed feedback loop ONLY***<br>
-   * 
-   * @param target -1, 1
+   * Run shooter at specified velocity (raw units / 100ms)
    */
   public void shootClosedLoop(double target) {
-    shootClosedLoop(target, target);
+    shootClosedLoop(target, target );
   }
 
   /**
-   * runs the shooter wheels at the specified targets ***closed feedback loop
-   * ONLY***
-   * 
-   * @param left  -1, 1
-   * @param right -1, 1
+   * Run shooter at specified velocity (raw units / 100ms)
+   * Use this one for individual control of the wheels
    */
   public void shootClosedLoop(double left, double right) {
 
@@ -108,14 +100,10 @@ public class Shooter extends SubsystemBase {
 
     // right = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(right);
     this.right.set(ControlMode.Velocity, right);
-
-    System.out.println("Closed loop: "+ left + " " + right);
   }
 
   /**
-   * runs the shooter at the specified target<br>
-   * ***NO feedback loop***<br>
-   * 
+   * Run shooter at specified voltage percentage. No feedback loop
    * @param target [-1, 1]
    */
   public void shootOpenLoop(double target) {
@@ -123,8 +111,8 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * runs the shooter wheels at the specified targets ***NO feedback loop***
-   * 
+   * Run shooter at specified voltage percentage. No feedback loop.
+   * Use this one for individual control of the wheels
    * @param left  [-1, 1]
    * @param right [-1, 1]
    */

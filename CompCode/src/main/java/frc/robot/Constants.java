@@ -94,11 +94,22 @@ public final class Constants {
 
         public static final int kClimbUpButtonId = 4;
         public static final int kClimbDownButtonId = 2;
+        public static final int kWinchUnwindButtonId = 9;
+
         public static final int kShooterButtonId = 1; //X, change - are you sure?
+
         public static final int kIntakeRunButtonId = 7;
         public static final int kIntakeReverseButtonId = 5;
+
         public static final int kStorageForwardButtonId = 6;
         public static final int kStorageReverseButtonId = 3;
+
+        public static final int kSlowLeftTurnButtonId = 3;
+        public static final int kSlowRightTurnButtonId = 4;
+        public static final int kPovId = 0;
+
+
+
 
     }
 

@@ -50,7 +50,9 @@ public class Intake extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, power * -0.7);
   }
 
-  // perhaps useful for un-jamming power cells
+  /**
+   * Useful for unjamming power cells
+   */
   public void spit() {
     motor.set(ControlMode.PercentOutput, 0.8);
   }
@@ -59,7 +61,6 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     logToNetworkTables();
-    System.out.println("Intake voltage: " + motor.getMotorOutputVoltage());
 
   }
 

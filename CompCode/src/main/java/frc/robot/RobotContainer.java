@@ -67,7 +67,7 @@ public class RobotContainer {
   private final JoystickButton storageForwardButton = new JoystickButton(auxGamepad, OIConstants.kStorageForwardButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
   private final JoystickButton storageReverseButton = new JoystickButton(auxGamepad,OIConstants.kStorageReverseButtonId);
-  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,9);
+  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,OIConstants.kWinchUnwindButtonId);
 
 
   /**
@@ -80,18 +80,13 @@ public class RobotContainer {
         drivetrain,
         () -> mainController.getY(),
         () -> mainController.getTwist(),
-        () -> mainController.getRawButton(3),
-        () -> mainController.getRawButton(4),
-        () -> mainController.getPOV(0)
+        () -> mainController.getRawButton(OIConstants.kSlowLeftTurnButtonId),
+        () -> mainController.getRawButton(OIConstants.kSlowRightTurnButtonId),
+        () -> mainController.getPOV(OIConstants.kPovId)
     ));
 
-    winchUnwind = new StartEndCommand(
-      () -> climbingArm.winchUnwind(),
-      () -> climbingArm.stop(),
-      climbingArm
-    );
 
-    // Intake
+    // Intake (intake forward is its own file)
     intakeReverse = new StartEndCommand(
       () -> intake.spit(),
       () -> intake.off(),
@@ -137,10 +132,16 @@ public class RobotContainer {
       climbingArm
     );
 
+    winchUnwind = new StartEndCommand(
+      () -> climbingArm.winchUnwind(),
+      () -> climbingArm.stop(),
+      climbingArm
+    );
+
 
     // Shooter
     shooterAdjust = new StartEndCommand(
-      // TODO: should this be on the XBOX controller?
+      //unused should this be on the XBOX controller?
       () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
       // throttle is [-1, 1] for BOTH
       () -> shooter.off(),
@@ -190,7 +191,7 @@ public class RobotContainer {
 
 
     shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
-
+ 
 
     // Configure the button bindings
     configureButtonBindings();

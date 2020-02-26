@@ -19,17 +19,16 @@ public class ClimbingArm extends SubsystemBase {
   private final NetworkTable subtable;
 
   /**
-   * Use this method to create a drivetrain instance. This method
-   * ensures that the drivetrain class is a singleton, aka, that
-   * only one drivetrain object ever gets created
+   * Use this method to create a climbing arm instance. This method
+   * ensures that the climbing arm class is a singleton, aka, that
+   * only one climbing arm object ever gets created
    * @return
    */
   public static ClimbingArm getInstance() {
     if (subsystemInst == null) {
-      return new ClimbingArm();
-    } else {
-      return subsystemInst;
+      subsystemInst = new ClimbingArm();
     }
+    return subsystemInst;
   }
 
 
