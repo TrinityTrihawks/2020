@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
     left.configPeakOutputReverse(-1);
 
     left.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    left.setSensorPhase(true);
+    left.setSensorPhase(false);
 
     left.setInverted(true);
 
@@ -71,7 +71,7 @@ public class Shooter extends SubsystemBase {
     right.configPeakOutputReverse(-1);
 
     right.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    right.setSensorPhase(true);
+    right.setSensorPhase(false);
 
     right.setInverted(false);
 
@@ -103,11 +103,13 @@ public class Shooter extends SubsystemBase {
    */
   public void shootClosedLoop(double left, double right) {
 
-    left = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(left);
+    // left = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(left);
     this.left.set(ControlMode.Velocity, left);
 
-    right = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(right);
+    // right = ShooterConstants.encUnitsPer1Rev * ShooterConstants.gearboxRatio * limitOutputValue(right);
     this.right.set(ControlMode.Velocity, right);
+
+    System.out.println("Closed loop: "+ left + " " + right);
   }
 
   /**
@@ -147,10 +149,10 @@ public class Shooter extends SubsystemBase {
    */
   public int[] getEncoderValues() {
 
-    // int leftEncVel = left.getSensorCollection().getQuadratureVelocity();
-    // int rightEncVel = right.getSensorCollection().getQuadratureVelocity();
-    int leftEncVel = left.getSensorCollection().getPulseWidthVelocity();
-    int rightEncVel = right.getSensorCollection().getPulseWidthVelocity();
+    int leftEncVel = left.getSelectedSensorVelocity();
+    int rightEncVel = right.getSelectedSensorVelocity();
+    // int leftEncVel = left.getSensorCollection().getPulseWidthVelocity();
+    // int rightEncVel = right.getSensorCollection().getPulseWidthVelocity();
 
     return new int[] { leftEncVel, rightEncVel };
   }
@@ -193,13 +195,16 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
+    subtable.getEntry("left_error").setDouble(left.getClosedLoopError());
+    subtable.getEntry("right_error").setDouble(right.getClosedLoopError());
+
     // Control Mode
-    // subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
-    // subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
+    subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
+    subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
 
     // Target Velocity
-    // subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
-    // subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
+    subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
+    subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
 
     // PID constants
     SlotConfiguration leftSlot = new SlotConfiguration();
