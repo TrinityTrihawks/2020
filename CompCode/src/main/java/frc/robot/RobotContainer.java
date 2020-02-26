@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageIncrement;
+import frc.robot.commands.StorageManual;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
@@ -43,15 +45,12 @@ public class RobotContainer {
 
   // Commands
   private final Command autoCommand;
-  private final Command climbingArmUp;
-  private final Command climbingArmDown;
   private final Command intakeReverse;
-  private final Command storageForward;
-  private final Command storageReverse;
   private final Command intakeAutoStorage;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
   private final Command winchUnwind;
+  private final Command endgameCommand;
 
 
   // Main drivetrain joystick
@@ -59,15 +58,12 @@ public class RobotContainer {
 
   // Auxiliary arm joystick and buttons
   private final Joystick auxGamepad = new Joystick(OIConstants.kAuxiliaryControllerPort);
- 
-  private final JoystickButton climbUpButton = new JoystickButton(auxGamepad, OIConstants.kClimbUpButtonId);
-  private final JoystickButton climbDownButton = new JoystickButton(auxGamepad, OIConstants.kClimbDownButtonId);
+
   private final JoystickButton shooterButton = new JoystickButton(auxGamepad, OIConstants.kShooterButtonId);
   private final JoystickButton intakeRunButton = new JoystickButton(auxGamepad, OIConstants.kIntakeRunButtonId);
-  private final JoystickButton storageForwardButton = new JoystickButton(auxGamepad, OIConstants.kStorageForwardButtonId);
   private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
-  private final JoystickButton storageReverseButton = new JoystickButton(auxGamepad,OIConstants.kStorageReverseButtonId);
-  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,OIConstants.kWinchUnwindButtonId);
+  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,9);
+  private final JoystickButton endgameButton = new JoystickButton(auxGamepad,OIConstants.kEndgameButtonId);
 
 
   /**
@@ -94,17 +90,10 @@ public class RobotContainer {
     );
 
     //Storage
-    storageForward = new StartEndCommand(
-      () -> storage.forward(),
-      () -> storage.off(),
-      storage
-    );
-
-    storageReverse = new StartEndCommand(
-      () -> storage.reverse(),
-      () -> storage.off(),
-      storage
-    );
+    storage.setDefaultCommand(new StorageManual(
+      storage,
+      () -> mainController.getPOV(0)
+    ));
 
     intakeAutoStorage = new ParallelCommandGroup(
       // Run intake and schedule storageIncrement if intake switch pressed
@@ -119,25 +108,11 @@ public class RobotContainer {
       )
     );
 
-    // Climbing
-    climbingArmUp = new StartEndCommand(
-      () -> climbingArm.moveUp(),
-      () -> climbingArm.stop(),
-      climbingArm
-    );
-
-    climbingArmDown = new StartEndCommand(
-      () -> climbingArm.moveDown(),
-      () -> climbingArm.stop(),
-      climbingArm
-    );
-
     winchUnwind = new StartEndCommand(
       () -> climbingArm.winchUnwind(),
       () -> climbingArm.stop(),
       climbingArm
     );
-
 
     // Shooter
     shooterAdjust = new StartEndCommand(
@@ -154,6 +129,21 @@ public class RobotContainer {
       () -> shooter.off()
     );
 
+    // Endgame (Climbing & Winch)
+    endgameCommand = new ParallelCommandGroup(
+
+      new ClimbingArmManual(
+        climbingArm,
+        () -> mainController.getPOV(0)
+      ),
+
+      // This command suspends the Normal controls which Endgame replaces.
+      new StartEndCommand(
+        () -> storage.off(),
+        () -> storage.off(),
+        storage)
+    );
+    // TODO: add winch to endgame command
 
 
 
@@ -205,14 +195,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    climbUpButton.whenHeld(climbingArmUp);
-    climbDownButton.whenHeld(climbingArmDown);
     intakeRunButton.whenHeld(new IntakeForward(intake));
     intakeReverseButton.whenHeld(intakeReverse);
-    storageForwardButton.whenHeld(storageForward);
-    storageReverseButton.whileHeld(storageReverse);
     winchUnwindButton.whenHeld(winchUnwind);
     shooterButton.whenHeld(new ShootOpenLoop(shooter, 0.45));
+    endgameButton.whileHeld(endgameCommand);
 
   }
 

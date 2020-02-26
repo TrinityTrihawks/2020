@@ -92,17 +92,21 @@ public final class Constants {
         public static final int kAuxiliaryControllerPort = 1;
         public static final int kAuxiliaryControllerPort2 = 2;
 
-        public static final int kClimbUpButtonId = 4;
-        public static final int kClimbDownButtonId = 2;
-        public static final int kWinchUnwindButtonId = 9;
+        // Normal
+        public static final int kShooterAndBeltButtonId = 1; // X
+        public static final int kShooterButtonId = 8;        // RT
+        public static final int kShooterReverseButtonId = 6; // RB
+        public static final int kIntakeRunButtonId = 2;      // A
+        public static final int kIntakeReverseButtonId = 4;  // Y
+        public static final int kStorageForwardPOVId = 0;    // POV up
+        public static final int kStorageReversePOVId = 180;  // POV down
 
-        public static final int kShooterButtonId = 1; //X, change - are you sure?
-
-        public static final int kIntakeRunButtonId = 7;
-        public static final int kIntakeReverseButtonId = 5;
-
-        public static final int kStorageForwardButtonId = 6;
-        public static final int kStorageReverseButtonId = 3;
+        // Endgame (used when endgame button pressed)
+        public static final int kEndgameButtonId = 5;      // LB
+        public static final int kWinchButtonId = 3;        // B
+        public static final int kWinchReverseButtonId = 9; // back
+        public static final int kClimbUpPOVId = 0;         // POV up
+        public static final int kClimbDownPOVId = 180;     // POV down
 
         public static final int kSlowLeftTurnButtonId = 3;
         public static final int kSlowRightTurnButtonId = 4;
