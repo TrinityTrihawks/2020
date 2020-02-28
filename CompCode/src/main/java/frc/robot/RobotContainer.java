@@ -70,7 +70,13 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
+    // Button mappings for auxiliary gamepad
     auxMap = new Constants.XboxMap();
+
+
+    /////////////////////////////////////////////
+    // Single-subsystem commands ////////////////
+    ////////////////////////////////////////////
 
     // Intake (intake forward is its own file)
     intakeReverse = new StartEndCommand(
@@ -80,7 +86,6 @@ public class RobotContainer {
     );
 
     //Storage
-
     storageForward = new StartEndCommand(
       () -> storage.forward(),
       () -> storage.off(),
@@ -92,22 +97,6 @@ public class RobotContainer {
       () -> storage.off(),
       storage
     );
-
-    
-
-    intakeAutoStorage = new ParallelCommandGroup(
-      // Run intake and schedule storageIncrement if intake switch pressed
-      new IntakeForward(intake),
-      new SequentialCommandGroup(
-        new WaitUntilCommand(() -> storage.getIntakeSwitch()),
-        new ScheduleCommand(
-          new StorageIncrement(storage)
-          // TODO: should this iterate so that multiple StorageIncrements can occur if
-          // the switch is still pressed?
-        )
-      )
-    );
-
 
     // Shooter
     shootReverse = new StartEndCommand(
@@ -124,14 +113,13 @@ public class RobotContainer {
       shooter
     );
 
-
     closedShooterAdjust = new StartEndCommand(
       () -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
       () -> shooter.off()
     );
 
-    // Endgame (Climbing & Winch)
 
+    // Endgame (Climbing & Winch)
     endgameCommand = new ClimbingArmManual(
       climbingArm,
       () -> auxGamepad.getRawAxis(auxMap.endgame()),
@@ -139,11 +127,32 @@ public class RobotContainer {
       () -> auxGamepad.getRawButton(auxMap.winchReverse())
     );
 
+
+
+    //////////////////////////////////////////////
+    // Multi-subystem commands /////////////////////////
+    /////////////////////////////////////////////
+
+    intakeAutoStorage = new ParallelCommandGroup(
+      // Run intake and schedule storageIncrement if intake switch pressed
+      new IntakeForward(intake),
+      new SequentialCommandGroup(
+        new WaitUntilCommand(() -> storage.getIntakeSwitch()),
+        new ScheduleCommand(
+          new StorageIncrement(storage)
+          // TODO: should this iterate so that multiple StorageIncrements can occur if
+          // the switch is still pressed?
+        )
+      )
+    );
+
     xboxQuestion = new PrintCommand("Xbox command was triggered");
 
 
 
-    // *** Autonomous Commands ***
+    ////////////////////////////////////////////////////
+    // Autonomous-specific Commands ////////////////////
+    ////////////////////////////////////////////////////
 
     Command driveOffInitLine = new SequentialCommandGroup(
       // Drive backwards for 2 seconds
@@ -159,15 +168,10 @@ public class RobotContainer {
       new InstantCommand(() -> storage.off(), storage)
     );
 
-    Command combinedAuto = new SequentialCommandGroup(
-         unlatchIntake,
-        // LAST
-        driveOffInitLine);
-
-
-
-    autoCommand = combinedAuto;
-
+    autoCommand = new SequentialCommandGroup(
+      unlatchIntake,
+      driveOffInitLine
+    );
 
  
     configureDefaultCommands();
@@ -209,21 +213,25 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    // Intake
     new JoystickButton(auxGamepad, auxMap.intake())
       .whenHeld(new IntakeForward(intake));
 
     new JoystickButton(auxGamepad, auxMap.intakeSpit())
       .whenHeld(intakeReverse);
 
+    // Endgame
     new JoystickButton(auxGamepad, auxMap.endgame())
-      .whileHeld(endgameCommand);
+      .whenHeld(endgameCommand);
 
+    // Shooter
     new JoystickButton(auxGamepad, auxMap.shootReverse())
-      .whileHeld(shootReverse);
+      .whenHeld(shootReverse);
 
     new Trigger(() -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 )
       .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
 
+    // Storage Belt
     new PovUpTrigger(auxGamepad)
       .whileActiveOnce(storageForward);
 
