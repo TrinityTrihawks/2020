@@ -20,6 +20,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.ShootClosedLoop;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageIncrement;
 import frc.robot.commands.TunePIDFromDashboard;
@@ -51,6 +52,7 @@ public class RobotContainer {
   private final Command intakeAutoStorage;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
+  private final Command smartShoot;
   private final Command endgameCommand;
   private final Command xboxQuestion;
   private final Command shootReverse;
@@ -118,11 +120,16 @@ public class RobotContainer {
       () -> shooter.off()
     );
 
+    smartShoot = new ParallelCommandGroup(
+      // TODO: smarter shoot and storage velocity
+      new ShootClosedLoop(shooter, 200),
+      storageForward
+    );
 
     // Endgame (Climbing & Winch)
     endgameCommand = new ClimbingArmManual(
       climbingArm,
-      () -> auxGamepad.getRawAxis(auxMap.endgame()),
+      () -> auxGamepad.getRawAxis(auxMap.telescope()),
       () -> auxGamepad.getRawButton(auxMap.winch()),
       () -> auxGamepad.getRawButton(auxMap.winchReverse())
     );
@@ -230,6 +237,9 @@ public class RobotContainer {
 
     new Trigger(() -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 )
       .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
+
+    new JoystickButton(auxGamepad, auxMap.smartShoot())
+      .whenHeld(smartShoot);
 
     // Storage Belt
     new PovUpTrigger(auxGamepad)
