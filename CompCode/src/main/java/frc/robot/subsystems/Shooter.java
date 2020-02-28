@@ -124,12 +124,15 @@ public class Shooter extends SubsystemBase {
     this.right.set(ControlMode.PercentOutput, right);
   }
 
+  public void reverse() {
+    shootOpenLoop(-0.4);
+  }
+
   /**
    * stops the shooter
    */
   public void off() {
-    left.set(ControlMode.PercentOutput, 0);
-    right.set(ControlMode.PercentOutput, 0);
+    shootOpenLoop(0);
   }
 
   /**

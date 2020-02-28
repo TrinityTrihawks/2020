@@ -100,7 +100,7 @@ public class RobotContainer {
 
     // Shooter
     shootReverse = new StartEndCommand(
-      () -> shooter.shootClosedLoop(-0.4),
+      () -> shooter.reverse(),
       () -> shooter.off(),
       shooter
     );
