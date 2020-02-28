@@ -12,6 +12,10 @@ import frc.robot.Constants;
 
 public class ClimbingArm extends SubsystemBase {
 
+  // For telescope arm
+  private final double kUpwardsPowerScalar = 0.5;
+  private final double kDownwardsPowerScalar = 0.5;
+
   private final VictorSPX telescope;
   private final VictorSPX winch;
   private static ClimbingArm subsystemInst = null;
@@ -43,16 +47,41 @@ public class ClimbingArm extends SubsystemBase {
   }
  
 
-  public void moveUp()
-  {
+  public void telescopeUp() {
     telescope.set(ControlMode.PercentOutput, -0.3);
   }
 
-  public void moveDown()
-  {
+  public void telescopeDown() {
     telescope.set(ControlMode.PercentOutput, 0.3);
+  }
+
+  public void telescopeMove(double power) {
+    if(Math.abs(power) > 1) {
+      power = Math.signum(power);
+    }
+
+    if(power > 0) {
+      power = power * kUpwardsPowerScalar;
+    } else {
+      power = power * kDownwardsPowerScalar;
+    }
+
+    telescope.set(ControlMode.PercentOutput, power);
+  }
+
+  public void telescopeOff() {
+    telescope.set(ControlMode.PercentOutput, 0);
+  }
+
+
+
+  public void winchOn() {
     winch.set(ControlMode.PercentOutput, 1);
-  } 
+  }
+
+  public void winchOff() {
+    winch.set(ControlMode.PercentOutput, 0);
+  }
 
   public void winchUnwind() {
     winch.set(ControlMode.PercentOutput, -0.5);
@@ -63,6 +92,7 @@ public class ClimbingArm extends SubsystemBase {
     telescope.set(ControlMode.PercentOutput, 0);
     winch.set(ControlMode.PercentOutput, 0);
   }
+
 
   public void logToNetworkTables(){
     subtable.getEntry("telescope_voltage").setDouble(telescope.getMotorOutputVoltage());

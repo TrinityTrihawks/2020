@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.IntSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -15,8 +17,8 @@ public class StorageManual extends CommandBase {
  
   private final IntSupplier povAngle;
 
-  private final int storageForwardAngle = OIConstants.kStorageForwardPOVId;
-  private final int storageReverseAngle = OIConstants.kStorageReversePOVId;
+  private final List<Integer> storageForwardAngles = toIntList(OIConstants.kStorageForwardPOVId);
+  private final List<Integer> storageReverseAngles = toIntList(OIConstants.kStorageReversePOVId);
 
 
   // Creates a new StorageManual command
@@ -35,10 +37,10 @@ public class StorageManual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(povAngle.getAsInt() == storageForwardAngle) {
+    if(storageForwardAngles.contains(povAngle.getAsInt())) {
         storage.forward();
     }
-    else if(povAngle.getAsInt() == storageReverseAngle) {
+    else if(storageReverseAngles.contains(povAngle.getAsInt())) {
         storage.reverse();
     }
     else {
@@ -50,6 +52,15 @@ public class StorageManual extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     storage.off();
+  }
+
+  private List<Integer> toIntList(int[] ints) {
+    List<Integer> intList = new ArrayList<Integer>(ints.length);
+    for (int i : ints)
+    {
+        intList.add(i);
+    }
+    return intList;
   }
 
 }

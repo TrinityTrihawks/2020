@@ -84,6 +84,51 @@ public final class Constants {
         public static final String kLimelightIPAddress = "10.42.15.XX";
     }
 
+
+    public interface AuxGamepadMap {
+        public int intake();        // A
+        public int intakeSpit();    // Y
+        public int shoot();         // RT
+        public int smartShoot();    // X
+        public int shootReverse();  // RB
+        public int endgame();       // LB
+        public int telescope();     // LA
+        public int winch();         // B
+        public int winchReverse();  // small left button
+        // Does not include belt because belt is POV
+    }
+
+    public static class XboxMap implements AuxGamepadMap {
+        //Note: Logitech controller on X mode is the same
+        //Buttons
+        public int intake() {       return 1;   }
+        public int intakeSpit() {   return 4;   }
+        public int smartShoot() {   return 3;   }
+        public int shootReverse() { return 6;   }
+        public int endgame() {      return 5;   }
+        public int winch() {        return 2;   }
+        public int winchReverse() { return 7;   }
+        //Axes
+        public int shoot() {        return 3;   }
+        public int telescope() {    return 1;   }
+    }
+
+    public static class LogitechDualModeMap implements AuxGamepadMap {
+        //For Logitech controller on D mode
+        // If using X mode, use XboxMap
+        //Buttons
+        public int intake() {       return 2;   }
+        public int intakeSpit() {   return 4;   }
+        public int shoot() {        return 8;   }
+        public int smartShoot() {   return 1;   }
+        public int shootReverse() { return 6;   }
+        public int endgame() {      return 5;   }
+        public int winch() {        return 3;   }
+        public int winchReverse() { return 9;   }
+        //Axes
+        public int telescope() { return 1;}
+    }
+
     /**
      * Joystick Ports
      */
@@ -92,28 +137,12 @@ public final class Constants {
         public static final int kAuxiliaryControllerPort = 1;
         public static final int kAuxiliaryControllerPort2 = 2;
 
-        // Normal
-        public static final int kShooterAndBeltButtonId = 1; // X
-        public static final int kShooterButtonId = 8;        // RT
-        public static final int kShooterReverseButtonId = 6; // RB
-        public static final int kIntakeRunButtonId = 2;      // A
-        public static final int kIntakeReverseButtonId = 4;  // Y
-        public static final int kStorageForwardPOVId = 0;    // POV up
-        public static final int kStorageReversePOVId = 180;  // POV down
-
-        // Endgame (used when endgame button pressed)
-        public static final int kEndgameButtonId = 5;      // LB
-        public static final int kWinchButtonId = 3;        // B
-        public static final int kWinchReverseButtonId = 9; // back
-        public static final int kClimbUpPOVId = 0;         // POV up
-        public static final int kClimbDownPOVId = 180;     // POV down
+        public static final int[]  kStorageForwardPOVId = {0, 315, 45};    // POV up, up-left, up-right
+        public static final int[] kStorageReversePOVId = {180, 225, 135};  // POV down, down-left, down-right
 
         public static final int kSlowLeftTurnButtonId = 3;
         public static final int kSlowRightTurnButtonId = 4;
         public static final int kPovId = 0;
-
-
-
 
     }
 

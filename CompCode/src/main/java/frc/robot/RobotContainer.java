@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.AuxGamepadMap;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
@@ -51,25 +53,22 @@ public class RobotContainer {
   private final Command closedShooterAdjust;
   private final Command winchUnwind;
   private final Command endgameCommand;
+  private final Command xboxQuestion;
 
+  AuxGamepadMap auxMap;
 
   // Main drivetrain joystick
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
-
   // Auxiliary arm joystick and buttons
   private final Joystick auxGamepad = new Joystick(OIConstants.kAuxiliaryControllerPort);
-
-  private final JoystickButton shooterButton = new JoystickButton(auxGamepad, OIConstants.kShooterButtonId);
-  private final JoystickButton intakeRunButton = new JoystickButton(auxGamepad, OIConstants.kIntakeRunButtonId);
-  private final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad,OIConstants.kIntakeReverseButtonId);
-  private final JoystickButton winchUnwindButton = new JoystickButton(auxGamepad,9);
-  private final JoystickButton endgameButton = new JoystickButton(auxGamepad,OIConstants.kEndgameButtonId);
 
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    auxMap = new Constants.XboxMap();
 
     // Drivetrain Command
     drivetrain.setDefaultCommand(new JoystickDrive(
@@ -92,7 +91,7 @@ public class RobotContainer {
     //Storage
     storage.setDefaultCommand(new StorageManual(
       storage,
-      () -> mainController.getPOV(0)
+      () -> auxGamepad.getPOV()
     ));
 
     intakeAutoStorage = new ParallelCommandGroup(
@@ -134,7 +133,7 @@ public class RobotContainer {
 
       new ClimbingArmManual(
         climbingArm,
-        () -> mainController.getPOV(0)
+        () -> auxGamepad.getPOV()
       ),
 
       // This command suspends the Normal controls which Endgame replaces.
@@ -144,6 +143,8 @@ public class RobotContainer {
         storage)
     );
     // TODO: add winch to endgame command
+
+    xboxQuestion = new PrintCommand("Xbox command was triggered");
 
 
 
@@ -185,6 +186,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
   }
 
   /**
@@ -195,11 +197,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    intakeRunButton.whenHeld(new IntakeForward(intake));
-    intakeReverseButton.whenHeld(intakeReverse);
-    winchUnwindButton.whenHeld(winchUnwind);
-    shooterButton.whenHeld(new ShootOpenLoop(shooter, 0.45));
-    endgameButton.whileHeld(endgameCommand);
+    new JoystickButton(auxGamepad, auxMap.intake())
+      .whenHeld(new IntakeForward(intake));
+
+    new JoystickButton(auxGamepad, auxMap.intakeSpit())
+      .whenHeld(intakeReverse);
+
+    new JoystickButton(auxGamepad, auxMap.endgame())
+      .whileHeld(endgameCommand);
+
+    new JoystickButton(auxGamepad, auxMap.shoot())
+      .whenHeld(new ShootOpenLoop(shooter, 0.45));
 
   }
 
