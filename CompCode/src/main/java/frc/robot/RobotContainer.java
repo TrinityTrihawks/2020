@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AuxGamepadMap;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
@@ -21,7 +22,6 @@ import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageIncrement;
-import frc.robot.commands.StorageManual;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
@@ -51,9 +51,11 @@ public class RobotContainer {
   private final Command intakeAutoStorage;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
-  private final Command winchUnwind;
   private final Command endgameCommand;
   private final Command xboxQuestion;
+  private final Command shootReverse;
+  private final Command storageForward;
+  private final Command storageReverse;
 
   AuxGamepadMap auxMap;
 
@@ -70,17 +72,6 @@ public class RobotContainer {
 
     auxMap = new Constants.XboxMap();
 
-    // Drivetrain Command
-    drivetrain.setDefaultCommand(new JoystickDrive(
-        drivetrain,
-        () -> mainController.getY(),
-        () -> mainController.getTwist(),
-        () -> mainController.getRawButton(OIConstants.kSlowLeftTurnButtonId),
-        () -> mainController.getRawButton(OIConstants.kSlowRightTurnButtonId),
-        () -> mainController.getPOV(OIConstants.kPovId)
-    ));
-
-
     // Intake (intake forward is its own file)
     intakeReverse = new StartEndCommand(
       () -> intake.spit(),
@@ -89,10 +80,20 @@ public class RobotContainer {
     );
 
     //Storage
-    storage.setDefaultCommand(new StorageManual(
-      storage,
-      () -> auxGamepad.getPOV()
-    ));
+
+    storageForward = new StartEndCommand(
+      () -> storage.forward(),
+      () -> storage.off(),
+      storage
+    );
+
+    storageReverse = new StartEndCommand(
+      () -> storage.reverse(),
+      () -> storage.off(),
+      storage
+    );
+
+    
 
     intakeAutoStorage = new ParallelCommandGroup(
       // Run intake and schedule storageIncrement if intake switch pressed
@@ -107,13 +108,14 @@ public class RobotContainer {
       )
     );
 
-    winchUnwind = new StartEndCommand(
-      () -> climbingArm.winchUnwind(),
-      () -> climbingArm.stop(),
-      climbingArm
-    );
 
     // Shooter
+    shootReverse = new StartEndCommand(
+      () -> shooter.shootClosedLoop(-0.4),
+      () -> shooter.off(),
+      shooter
+    );
+
     shooterAdjust = new StartEndCommand(
       //unused should this be on the XBOX controller?
       () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
@@ -129,20 +131,13 @@ public class RobotContainer {
     );
 
     // Endgame (Climbing & Winch)
-    endgameCommand = new ParallelCommandGroup(
 
-      new ClimbingArmManual(
-        climbingArm,
-        () -> auxGamepad.getPOV()
-      ),
-
-      // This command suspends the Normal controls which Endgame replaces.
-      new StartEndCommand(
-        () -> storage.off(),
-        () -> storage.off(),
-        storage)
+    endgameCommand = new ClimbingArmManual(
+      climbingArm,
+      () -> auxGamepad.getRawAxis(auxMap.endgame()),
+      () -> auxGamepad.getRawButton(auxMap.winch()),
+      () -> auxGamepad.getRawButton(auxMap.winchReverse())
     );
-    // TODO: add winch to endgame command
 
     xboxQuestion = new PrintCommand("Xbox command was triggered");
 
@@ -164,13 +159,6 @@ public class RobotContainer {
       new InstantCommand(() -> storage.off(), storage)
     );
 
-    // Command pIDSetupCommand = new InstantCommand(() -> {
-    //   SmartDashboard.putNumber("kP", ShooterConstants.kP);
-    //   SmartDashboard.putNumber("kF", ShooterConstants.kF);
-    //   SmartDashboard.putNumber("kI", ShooterConstants.kI);
-    //   SmartDashboard.putNumber("kD", ShooterConstants.kD);
-    // });
-
     Command combinedAuto = new SequentialCommandGroup(
          unlatchIntake,
         // LAST
@@ -181,11 +169,35 @@ public class RobotContainer {
     autoCommand = combinedAuto;
 
 
-    shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
  
+    configureDefaultCommands();
 
     // Configure the button bindings
     configureButtonBindings();
+
+  }
+
+
+  private void configureDefaultCommands() {
+    // Drivetrain default
+    drivetrain.setDefaultCommand(new JoystickDrive(
+      drivetrain,
+      () -> mainController.getY(),
+      () -> mainController.getTwist(),
+      () -> mainController.getRawButton(OIConstants.kSlowLeftTurnButtonId),
+      () -> mainController.getRawButton(OIConstants.kSlowRightTurnButtonId),
+      () -> mainController.getPOV(OIConstants.kPovId)
+    ));
+
+    // Shooter default
+    shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
+
+    // Storage default    
+    // storage.setDefaultCommand(new StorageManual(
+    //   storage,
+    //   () -> auxGamepad.getPOV()
+    // ));
+
 
   }
 
@@ -206,8 +218,17 @@ public class RobotContainer {
     new JoystickButton(auxGamepad, auxMap.endgame())
       .whileHeld(endgameCommand);
 
-    new JoystickButton(auxGamepad, auxMap.shoot())
-      .whenHeld(new ShootOpenLoop(shooter, 0.45));
+    new JoystickButton(auxGamepad, auxMap.shootReverse())
+      .whileHeld(shootReverse);
+
+    new Trigger(() -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 )
+      .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
+
+    new PovUpTrigger(auxGamepad)
+      .whileActiveOnce(storageForward);
+
+    new PovDownTrigger(auxGamepad)
+      .whileActiveOnce(storageReverse);
 
   }
 
