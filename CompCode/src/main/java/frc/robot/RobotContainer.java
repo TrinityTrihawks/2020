@@ -48,7 +48,7 @@ public class RobotContainer {
   // Commands
   private final Command autoCommand;
   private final Command intakeReverse;
-  private final Command intakeAutoStorage;
+  // private final Command intakeAutoStorage;
   private final Command shooterAdjust;
   private final Command closedShooterAdjust;
   private final Command endgameCommand;
@@ -133,18 +133,18 @@ public class RobotContainer {
     // Multi-subystem commands /////////////////////////
     /////////////////////////////////////////////
 
-    intakeAutoStorage = new ParallelCommandGroup(
-      // Run intake and schedule storageIncrement if intake switch pressed
-      new IntakeForward(intake),
-      new SequentialCommandGroup(
-        new WaitUntilCommand(() -> storage.getIntakeSwitch()),
-        new ScheduleCommand(
-          new StorageIncrement(storage)
-          // TODO: should this iterate so that multiple StorageIncrements can occur if
-          // the switch is still pressed?
-        )
-      )
-    );
+    // intakeAutoStorage = new ParallelCommandGroup(
+    //   // Run intake and schedule storageIncrement if intake switch pressed
+    //   new IntakeForward(intake),
+    //   new SequentialCommandGroup(
+    //     new WaitUntilCommand(() -> storage.getIntakeSwitch()),
+    //     new ScheduleCommand(
+    //       new StorageIncrement(storage)
+    //       // TODO: should this iterate so that multiple StorageIncrements can occur if
+    //       // the switch is still pressed?
+    //     )
+    //   )
+    // );
 
     xboxQuestion = new PrintCommand("Xbox command was triggered");
 
@@ -194,7 +194,7 @@ public class RobotContainer {
     ));
 
     // Shooter default
-    shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
+    // shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
 
     // Storage default    
     // storage.setDefaultCommand(new StorageManual(
@@ -228,12 +228,19 @@ public class RobotContainer {
     new JoystickButton(auxGamepad, auxMap.shootReverse())
       .whenHeld(shootReverse);
 
+    new JoystickButton(auxGamepad, auxMap.smartShoot())
+      .whenHeld(new TunePIDFromDashboard(shooter));
+
     new Trigger(() -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 )
       .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
 
     // Storage Belt
     new PovUpTrigger(auxGamepad)
-      .whileActiveOnce(storageForward);
+      .whileActiveOnce(new StartEndCommand(
+        () -> storage.forward(),
+        () -> storage.off(),
+        storage
+      ));
 
     new PovDownTrigger(auxGamepad)
       .whileActiveOnce(storageReverse);

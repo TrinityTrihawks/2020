@@ -165,6 +165,17 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     logToNetworkTables();
 
+    if( left.getControlMode() == ControlMode.Velocity) {
+      subtable.getEntry("left_error").setDouble(left.getClosedLoopError());
+      subtable.getEntry("right_error").setDouble(right.getClosedLoopError());
+
+         // Target Velocity
+      subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
+      subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
+
+
+    }
+
   }
 
   /**
@@ -186,34 +197,29 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
-    subtable.getEntry("left_error").setDouble(left.getClosedLoopError());
-    subtable.getEntry("right_error").setDouble(right.getClosedLoopError());
-
+    
     // Control Mode
     subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
     subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
 
-    // Target Velocity
-    subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
-    subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
-
+ 
     // PID constants
-    SlotConfiguration leftSlot = new SlotConfiguration();
-    left.getSlotConfigs(leftSlot);
-    subtable.getEntry("left_kP").setDouble(leftSlot.kP);
-    subtable.getEntry("left_kI").setDouble(leftSlot.kI);
-    subtable.getEntry("left_kD").setDouble(leftSlot.kD);
-    subtable.getEntry("left_kF").setDouble(leftSlot.kF);
+    // SlotConfiguration leftSlot = new SlotConfiguration();
+    // left.getSlotConfigs(leftSlot);
+    // subtable.getEntry("left_kP").setDouble(leftSlot.kP);
+    // subtable.getEntry("left_kI").setDouble(leftSlot.kI);
+    // subtable.getEntry("left_kD").setDouble(leftSlot.kD);
+    // subtable.getEntry("left_kF").setDouble(leftSlot.kF);
 
-    SlotConfiguration rightSlot = new SlotConfiguration();
-    right.getSlotConfigs(rightSlot);
-    subtable.getEntry("right_kP").setDouble(rightSlot.kP);
-    subtable.getEntry("right_kI").setDouble(rightSlot.kI);
-    subtable.getEntry("right_kD").setDouble(rightSlot.kD);
-    subtable.getEntry("right_kF").setDouble(rightSlot.kF);
+    // SlotConfiguration rightSlot = new SlotConfiguration();
+    // right.getSlotConfigs(rightSlot);
+    // subtable.getEntry("right_kP").setDouble(rightSlot.kP);
+    // subtable.getEntry("right_kI").setDouble(rightSlot.kI);
+    // subtable.getEntry("right_kD").setDouble(rightSlot.kD);
+    // subtable.getEntry("right_kF").setDouble(rightSlot.kF);
 
-    SmartDashboard.putNumber("left_state_a", left.getSensorCollection().getPinStateQuadA() ? 1 : 0);
-    SmartDashboard.putNumber("left_state_b", left.getSensorCollection().getPinStateQuadB() ? 1 : 0);
+    // SmartDashboard.putNumber("left_state_a", left.getSensorCollection().getPinStateQuadA() ? 1 : 0);
+    // SmartDashboard.putNumber("left_state_b", left.getSensorCollection().getPinStateQuadB() ? 1 : 0);
 
   }
 }

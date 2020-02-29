@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void vacuum() {
-    motor.set(ControlMode.PercentOutput, -0.7);
+    motor.set(ControlMode.PercentOutput, -0.4);
   }
 
   public void intakeByPower(double power) {
