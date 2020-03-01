@@ -40,6 +40,7 @@ public class Storage extends SubsystemBase {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("storage");
+    subtable.getEntry("should_log").setBoolean(false);
 
     // intakeSwitch = new DigitalInput(0);
   }
@@ -91,14 +92,16 @@ public class Storage extends SubsystemBase {
   }
 
   private void logToNetworkTables() {
-    // Log motor voltage over network tables
-    subtable.getEntry("voltage").setDouble(motor.getMotorOutputVoltage());
+    if(subtable.getEntry("should_log").getBoolean(false)) {
 
-    // Log motor current over network tables
-    subtable.getEntry("current").setDouble(motor.getStatorCurrent());
-
-    // Log encoder val
-    subtable.getEntry("encoderPosition").setDouble(getPosition());
+      // Log motor voltage over network tables
+      subtable.getEntry("voltage").setDouble(motor.getMotorOutputVoltage());
+      // Log motor current over network tables
+      subtable.getEntry("current").setDouble(motor.getStatorCurrent());
+      // Log encoder val
+      subtable.getEntry("encoderPosition").setDouble(getPosition());
+    }
+    
 
   }
 

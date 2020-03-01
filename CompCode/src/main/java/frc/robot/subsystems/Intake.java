@@ -36,6 +36,7 @@ public class Intake extends SubsystemBase {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("intake");
+    subtable.getEntry("should_log").setBoolean(false);
   }
 
   public void off() {
@@ -73,9 +74,10 @@ public class Intake extends SubsystemBase {
   }
 
   private void logToNetworkTables() {
-    // Log motor voltage over network tables
-    subtable.getEntry("voltage").setDouble(motor.getMotorOutputVoltage());
-
+    if (subtable.getEntry("should_log").getBoolean(false)) {
+      // Log motor voltage over network tables
+      subtable.getEntry("voltage").setDouble(motor.getMotorOutputVoltage());
+    }
   }
 
 }

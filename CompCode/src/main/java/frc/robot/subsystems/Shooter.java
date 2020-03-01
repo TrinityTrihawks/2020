@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 //import org.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
@@ -77,6 +78,7 @@ public class Shooter extends SubsystemBase {
     // Setup NetworkTables subtable
     final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("shooter");
+    subtable.getEntry("should_log").setBoolean(false);
 
   }
 
@@ -167,16 +169,6 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     logToNetworkTables();
 
-    if( left.getControlMode() == ControlMode.Velocity) {
-      subtable.getEntry("left_error").setDouble(left.getClosedLoopError());
-      subtable.getEntry("right_error").setDouble(right.getClosedLoopError());
-
-         // Target Velocity
-      subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
-      subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
-
-
-    }
 
   }
 
@@ -190,37 +182,52 @@ public class Shooter extends SubsystemBase {
   }
 
   public void logToNetworkTables() {
-    // Voltage
-    subtable.getEntry("left_voltage").setDouble(left.getMotorOutputVoltage());
-    subtable.getEntry("right_voltage").setDouble(right.getMotorOutputVoltage());
+    if(subtable.getEntry("should_log").getBoolean(false)) {
+      // Voltage
+      subtable.getEntry("left_voltage").setDouble(left.getMotorOutputVoltage());
+      subtable.getEntry("right_voltage").setDouble(right.getMotorOutputVoltage());
 
-    // Encoder Velocity
-    subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
-    subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
+      // Encoder Velocity
+      subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
+      subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
+      
+      // Control Mode
+      subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
+      subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
+  
+      // PID constants
+      SlotConfiguration leftSlot = new SlotConfiguration();
+      left.getSlotConfigs(leftSlot);
+      subtable.getEntry("left_kP").setDouble(leftSlot.kP);
+      subtable.getEntry("left_kI").setDouble(leftSlot.kI);
+      subtable.getEntry("left_kD").setDouble(leftSlot.kD);
+      subtable.getEntry("left_kF").setDouble(leftSlot.kF);
 
+      SlotConfiguration rightSlot = new SlotConfiguration();
+      right.getSlotConfigs(rightSlot);
+      subtable.getEntry("right_kP").setDouble(rightSlot.kP);
+      subtable.getEntry("right_kI").setDouble(rightSlot.kI);
+      subtable.getEntry("right_kD").setDouble(rightSlot.kD);
+      subtable.getEntry("right_kF").setDouble(rightSlot.kF);
+
+      
+      if( left.getControlMode() == ControlMode.Velocity) {
+        subtable.getEntry("left_error").setDouble(left.getClosedLoopError());
+        subtable.getEntry("right_error").setDouble(right.getClosedLoopError());
+
+          // Target Velocity
+        subtable.getEntry("left_targetVel").setDouble(left.getClosedLoopTarget());
+        subtable.getEntry("right_targetVel").setDouble(right.getClosedLoopTarget());
+      } else {
+
+        subtable.getEntry("left_error").setDouble(0);
+        subtable.getEntry("right_error").setDouble(0);
+        subtable.getEntry("left_targetVel").setDouble(0);
+        subtable.getEntry("right_targetVel").setDouble(0);
+
+      }
+
+    }
     
-    // Control Mode
-    subtable.getEntry("left_controlMode").setString(left.getControlMode().toString());
-    subtable.getEntry("right_controlMode").setString(right.getControlMode().toString());
-
- 
-    // PID constants
-    // SlotConfiguration leftSlot = new SlotConfiguration();
-    // left.getSlotConfigs(leftSlot);
-    // subtable.getEntry("left_kP").setDouble(leftSlot.kP);
-    // subtable.getEntry("left_kI").setDouble(leftSlot.kI);
-    // subtable.getEntry("left_kD").setDouble(leftSlot.kD);
-    // subtable.getEntry("left_kF").setDouble(leftSlot.kF);
-
-    // SlotConfiguration rightSlot = new SlotConfiguration();
-    // right.getSlotConfigs(rightSlot);
-    // subtable.getEntry("right_kP").setDouble(rightSlot.kP);
-    // subtable.getEntry("right_kI").setDouble(rightSlot.kI);
-    // subtable.getEntry("right_kD").setDouble(rightSlot.kD);
-    // subtable.getEntry("right_kF").setDouble(rightSlot.kF);
-
-    // SmartDashboard.putNumber("left_state_a", left.getSensorCollection().getPinStateQuadA() ? 1 : 0);
-    // SmartDashboard.putNumber("left_state_b", left.getSensorCollection().getPinStateQuadB() ? 1 : 0);
-
   }
 }

@@ -77,6 +77,7 @@ public class Drivetrain extends SubsystemBase {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     subtable = inst.getTable("drivetrain");
+    subtable.getEntry("should_log").setBoolean(false);
 
   }
 
@@ -107,23 +108,24 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // logToNetworkTables();
+    logToNetworkTables();
 
   }
 
   private void logToNetworkTables() {
-    // Log motor voltages over network tables
-    talons.forEach((name, talon) -> subtable.getEntry(name + "_voltage").setDouble(talon.getMotorOutputVoltage()));
+    if(subtable.getEntry("should_log").getBoolean(false)) {
+      // Log motor voltages over network tables
+      talons.forEach((name, talon) -> subtable.getEntry(name + "_voltage").setDouble(talon.getMotorOutputVoltage()));
 
-    // Log motor currents over network tables
-    talons.forEach((name, talon) -> subtable.getEntry(name + "_current").setDouble(talon.getStatorCurrent()));
+      // Log motor currents over network tables
+      talons.forEach((name, talon) -> subtable.getEntry(name + "_current").setDouble(talon.getStatorCurrent()));
 
-    // Log gyro angle
-    subtable.getEntry("gyro_angle").setDouble(getGyroAngle());
+      // Log gyro angle
+      subtable.getEntry("gyro_angle").setDouble(getGyroAngle());
 
-    //Log gyro state
-    subtable.getEntry("gyro_state").setString(gyro.getState().toString());
-
+      //Log gyro state
+      subtable.getEntry("gyro_state").setString(gyro.getState().toString());
+    }
   }
 
   /**

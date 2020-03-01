@@ -44,6 +44,7 @@ public class ClimbingArm extends SubsystemBase {
     winch = new VictorSPX(Constants.ClimbingConstants.WinchId);
 
     subtable = NetworkTableInstance.getDefault().getTable("climbing");
+    subtable.getEntry("should_log").setBoolean(false);
   }
  
 
@@ -94,17 +95,19 @@ public class ClimbingArm extends SubsystemBase {
   }
 
 
-  public void logToNetworkTables(){
-    subtable.getEntry("telescope_voltage").setDouble(telescope.getMotorOutputVoltage());
-    subtable.getEntry("winch_voltage").setDouble(winch.getMotorOutputVoltage());
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // logToNetworkTables();
-
+    logToNetworkTables();
   }
 
+
+  private void logToNetworkTables() {
+    if(subtable.getEntry("should_log").getBoolean(false)) {
+
+      subtable.getEntry("telescope_voltage").setDouble(telescope.getMotorOutputVoltage());
+      subtable.getEntry("winch_voltage").setDouble(winch.getMotorOutputVoltage());
+    }
+  }
 
 }
