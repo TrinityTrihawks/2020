@@ -346,7 +346,7 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "2,0": {
+          "5,0": {
             "size": [
               2,
               2
@@ -357,7 +357,7 @@
               "_title": "pid_tuning/kP"
             }
           },
-          "4,0": {
+          "7,0": {
             "size": [
               2,
               2
@@ -368,7 +368,7 @@
               "_title": "pid_tuning/kI"
             }
           },
-          "4,2": {
+          "11,0": {
             "size": [
               2,
               2
@@ -379,7 +379,7 @@
               "_title": "pid_tuning/kF"
             }
           },
-          "0,0": {
+          "3,0": {
             "size": [
               2,
               2
@@ -390,7 +390,7 @@
               "_title": "pid_tuning/vel"
             }
           },
-          "2,2": {
+          "9,0": {
             "size": [
               2,
               2
@@ -399,6 +399,82 @@
               "_type": "Text View",
               "_source0": "network_table:///pid_tuning/kD",
               "_title": "pid_tuning/kD"
+            }
+          },
+          "7,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///shooter/LeftShooterVel",
+              "_title": "shooter/LeftShooterVel"
+            }
+          },
+          "9,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///shooter/RightShooterVel",
+              "_title": "shooter/RightShooterVel"
+            }
+          },
+          "11,2": {
+            "size": [
+              5,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///shooter/right_error",
+              "_title": "shooter/right_error",
+              "Graph/Visible time": 30.0,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/shooter/right_error": true
+            }
+          },
+          "2,2": {
+            "size": [
+              5,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///shooter/left_error",
+              "_title": "shooter/left_error",
+              "Graph/Visible time": 30.0,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/shooter/left_error": true
+            }
+          },
+          "7,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///shooter/left_targetVel",
+              "_title": "shooter/left_targetVel"
+            }
+          },
+          "9,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///shooter/right_targetVel",
+              "_title": "shooter/right_targetVel"
             }
           }
         }
