@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -7,12 +8,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AuxGamepadMap;
@@ -22,7 +20,7 @@ import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootClosedLoop;
 import frc.robot.commands.ShootOpenLoop;
-import frc.robot.commands.StorageIncrement;
+import frc.robot.commands.StorageForward;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
@@ -48,29 +46,29 @@ public class RobotContainer {
 
   // Commands
   private final Command autoCommand;
-  private final Command intakeReverse;
+  private final Command intakeForwardBoost, intakeReverse, intakeReverseBoost;
   // private final Command intakeAutoStorage;
-  private final Command shooterAdjust;
-  private final Command closedShooterAdjust;
+  private final Command shootReverse, shootReverseBoost,
+                        shooterAdjust, closedShooterAdjust;
   private final Command smartShoot;
   private final Command endgameCommand;
-  private final Command xboxQuestion;
-  private final Command shootReverse;
-  private final Command storageForward;
-  private final Command storageReverse;
+  private final Command storageForwardBoost, storageReverse, storageReverseBoost;
 
-  AuxGamepadMap auxMap;
 
-  // Main drivetrain joystick
+  // Main drivetrain joystick and  auxiliary arm joystick/buttons
   private final Joystick mainController = new Joystick(OIConstants.kMainControllerPort);
-  // Auxiliary arm joystick and buttons
   private final Joystick auxGamepad = new Joystick(OIConstants.kAuxiliaryControllerPort);
+  private final AuxGamepadMap auxMap;
+
+  final NetworkTable subtable;
 
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    subtable  = NetworkTableInstance.getDefault().getTable("RobotContainer");
 
     // Button mappings for auxiliary gamepad
     auxMap = new Constants.XboxMap();
@@ -81,15 +79,27 @@ public class RobotContainer {
     ////////////////////////////////////////////
 
     // Intake (intake forward is its own file)
+    intakeForwardBoost = new StartEndCommand(
+      () -> intake.vacuumBoost(),
+      () -> intake.off(),
+      intake
+    );
+
     intakeReverse = new StartEndCommand(
       () -> intake.spit(),
       () -> intake.off(),
       intake
     );
 
-    //Storage
-    storageForward = new StartEndCommand(
-      () -> storage.forward(),
+    intakeReverseBoost = new StartEndCommand(
+      () -> intake.spitBoost(),
+      () -> intake.off(),
+      intake
+    );
+
+    //Storage (storage forward is its own file)
+    storageForwardBoost = new StartEndCommand(
+      () -> storage.forwardBoost(),
       () -> storage.off(),
       storage
     );
@@ -100,9 +110,21 @@ public class RobotContainer {
       storage
     );
 
+    storageReverseBoost = new StartEndCommand(
+      () -> storage.reverseBoost(),
+      () -> storage.off(),
+      storage
+    );
+
     // Shooter
     shootReverse = new StartEndCommand(
       () -> shooter.reverse(),
+      () -> shooter.off(),
+      shooter
+    );
+
+    shootReverseBoost = new StartEndCommand(
+      () -> shooter.reverseBoost(),
       () -> shooter.off(),
       shooter
     );
@@ -118,12 +140,6 @@ public class RobotContainer {
     closedShooterAdjust = new StartEndCommand(
       () -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
       () -> shooter.off()
-    );
-
-    smartShoot = new ParallelCommandGroup(
-      // TODO: smarter shoot and storage velocity
-      new ShootClosedLoop(shooter, 200),
-      storageForward
     );
 
     // Endgame (Climbing & Winch)
@@ -153,7 +169,11 @@ public class RobotContainer {
     //   )
     // );
 
-    xboxQuestion = new PrintCommand("Xbox command was triggered");
+    smartShoot = new ParallelCommandGroup(
+      // TODO: smarter shoot and storage velocity
+      new ShootClosedLoop(shooter, 200),
+      new StorageForward(storage)
+    );
 
 
 
@@ -161,14 +181,14 @@ public class RobotContainer {
     // Autonomous-specific Commands ////////////////////
     ////////////////////////////////////////////////////
 
-    Command driveOffInitLine = new SequentialCommandGroup(
+    final Command driveOffInitLine = new SequentialCommandGroup(
       // Drive backwards for 2 seconds
       new InstantCommand(() -> drivetrain.driveOpenLoop(.3, .3), drivetrain),
       new WaitCommand(2),
       new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain)
     );
 
-    Command unlatchIntake = new SequentialCommandGroup(
+    final Command unlatchIntake = new SequentialCommandGroup(
       // Reverse storage belt for 1 second
       new InstantCommand(() -> storage.reverse(), storage),
       new WaitCommand(1),
@@ -220,48 +240,70 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // Intake
-    new JoystickButton(auxGamepad, auxMap.intake())
-      .whenHeld(new IntakeForward(intake));
+    final JoystickButton boost = new JoystickButton(auxGamepad, auxMap.boost());
 
-    new JoystickButton(auxGamepad, auxMap.intakeSpit())
-      .whenHeld(intakeReverse);
+    // Intake
+    final JoystickButton intakeForwardButton = new JoystickButton(auxGamepad, auxMap.intake());
+    final JoystickButton intakeReverseButton = new JoystickButton(auxGamepad, auxMap.intakeSpit());
+    
+    intakeForwardButton.and(boost)
+      .whileActiveOnce(intakeForwardBoost);
+
+    intakeForwardButton.and(boost.negate())
+      .whileActiveOnce(new IntakeForward(intake));
+
+    intakeReverseButton.and(boost)
+      .whileActiveOnce(intakeReverseBoost);
+
+    intakeReverseButton.and(boost.negate())
+      .whileActiveOnce(intakeReverse);
+
 
     // Endgame
     new JoystickButton(auxGamepad, auxMap.endgame())
       .whenHeld(endgameCommand);
 
     // Shooter
-    new JoystickButton(auxGamepad, auxMap.shootReverse())
-      .whenHeld(shootReverse);
+    final Trigger shootButton = new Trigger( () -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 );
+    final JoystickButton smartShootButton = new JoystickButton(auxGamepad, auxMap.smartShoot());
+    final JoystickButton shootReverseButton = new JoystickButton(auxGamepad, auxMap.shootReverse());
 
-    new JoystickButton(auxGamepad, auxMap.smartShoot())
-      .whenHeld(new TunePIDFromDashboard(shooter));
-
-    new Trigger(() -> auxGamepad.getRawAxis(auxMap.shoot()) > 0.9 )
+    shootButton.and(boost)
+      .whileActiveOnce(new ShootOpenLoop(shooter, 0.7));
+    
+    shootButton.and(boost.negate())
       .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
 
-    new JoystickButton(auxGamepad, auxMap.smartShoot())
-      .whenHeld(smartShoot);
+    shootReverseButton.and(boost)
+      .whileActiveOnce(shootReverseBoost);
+
+    shootReverseButton.and(boost.negate())
+      .whileActiveOnce(shootReverse);
+
+    smartShootButton.whileActiveOnce(new TunePIDFromDashboard(shooter));
 
     // Storage Belt
-    new PovUpTrigger(auxGamepad)
-      .whileActiveOnce(new StartEndCommand(
-        () -> storage.forward(),
-        () -> storage.off(),
-        storage
-      ));
+    final PovUpTrigger storageUpTrigger = new PovUpTrigger(auxGamepad);
+    final PovDownTrigger storageDownTrigger = new PovDownTrigger(auxGamepad);
 
-    new PovDownTrigger(auxGamepad)
+    storageUpTrigger.and(boost)
+    .whileActiveOnce(storageForwardBoost);
+
+    storageUpTrigger.and(boost.negate())
+      .whileActiveOnce(new StorageForward(storage));
+
+    storageDownTrigger.and(boost)
+      .whileActiveOnce(storageReverseBoost);
+    
+    storageDownTrigger.and(boost.negate())
       .whileActiveOnce(storageReverse);
 
   }
 
   public void logData() {
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    inst.getEntry("RobotContainer/MainController/Throttle").setDouble(mainController.getThrottle());
-    inst.getEntry("RobotContainer/MainController/Twist").setDouble(mainController.getTwist());
-    inst.getEntry("RobotContainer/MainController/Y").setDouble(mainController.getY());
+    subtable.getEntry("MainController/Throttle").setDouble(mainController.getThrottle());
+    subtable.getEntry("MainController/Twist").setDouble(mainController.getTwist());
+    subtable.getEntry("MainController/Y").setDouble(mainController.getY());
 
   }
 

@@ -46,6 +46,10 @@ public class Intake extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, -0.4);
   }
 
+  public void vacuumBoost() {
+    motor.set(ControlMode.PercentOutput, -0.8);
+  }
+
   public void intakeByPower(double power) {
     motor.set(ControlMode.PercentOutput, power * -0.7);
   }
@@ -55,6 +59,10 @@ public class Intake extends SubsystemBase {
    */
   public void spit() {
     motor.set(ControlMode.PercentOutput, 0.8);
+  }
+
+  public void spitBoost() {
+    motor.set(ControlMode.PercentOutput, 1);
   }
 
   @Override

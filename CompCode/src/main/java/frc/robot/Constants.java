@@ -95,6 +95,7 @@ public final class Constants {
         public int telescope();     // LA
         public int winch();         // B
         public int winchReverse();  // small left button
+        public int boost();         // LT
         // Does not include belt because belt is POV
     }
 
@@ -111,6 +112,7 @@ public final class Constants {
         //Axes
         public int shoot() {        return 3;   }
         public int telescope() {    return 1;   }
+        public int boost() {        return 2;   }
     }
 
     public static class LogitechDualModeMap implements AuxGamepadMap {
@@ -125,6 +127,7 @@ public final class Constants {
         public int endgame() {      return 5;   }
         public int winch() {        return 3;   }
         public int winchReverse() { return 9;   }
+        public int boost() {        return 7;   }
         //Axes
         public int telescope() { return 1;}
     }

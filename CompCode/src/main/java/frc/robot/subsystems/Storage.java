@@ -52,12 +52,16 @@ public class Storage extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, -0.3);
   }
 
-  public void forwardSlow() {
-    motor.set(ControlMode.PercentOutput, -0.15);
+  public void forwardBoost() {
+    motor.set(ControlMode.PercentOutput, -0.6);
   }
 
   public void reverse() {
     motor.set(ControlMode.PercentOutput, 0.3);
+  }
+
+  public void reverseBoost() {
+    motor.set(ControlMode.PercentOutput, 0.6);
   }
 
   public void resetPosition() {

@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 //import org.trinityriverridge.athletics.robotics.mentors.DouglasErickson;
@@ -12,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants;
 
@@ -128,6 +126,10 @@ public class Shooter extends SubsystemBase {
     shootOpenLoop(-0.4);
   }
 
+  public void reverseBoost() {
+    shootOpenLoop(-0.8);
+  }
+
   /**
    * stops the shooter
    */
@@ -193,7 +195,6 @@ public class Shooter extends SubsystemBase {
     subtable.getEntry("right_voltage").setDouble(right.getMotorOutputVoltage());
 
     // Encoder Velocity
-
     subtable.getEntry("LeftShooterVel").setNumber(getEncoderValues()[0]);
     subtable.getEntry("RightShooterVel").setNumber(getEncoderValues()[1]);
 
