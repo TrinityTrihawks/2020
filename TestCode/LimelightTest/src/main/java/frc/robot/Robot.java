@@ -69,8 +69,8 @@ public class Robot extends TimedRobot {
     double tx = table.getEntry("tx").getDouble(0.0);
     double ty = table.getEntry("ty").getDouble(0.0);
     SmartDashboard.putBoolean("ty val", (ty == 1.0) ? true : false);
-    double d  = (h2 - h1)/Math.tan(a1 + ty);
-    double df = d*Math.cos(tx); // distance to target in forward direction
+    double d  = (h2 - h1)/Math.tan(Math.toRadians(a1 + ty));
+    double df = d*Math.cos(Math.toRadians(tx)); // distance to target in forward direction
     SmartDashboard.putNumber("D", d );
     SmartDashboard.putNumber("DF", df );
     SmartDashboard.putNumber("RoboTY", ty);
