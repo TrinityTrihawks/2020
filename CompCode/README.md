@@ -5,4 +5,4 @@
 # 2020 Competition Code
 FRC Team 4215 competition code for 2020 season
 ****
-This code is the VSCode project which will go on the actual bot in the competition. The [TestCode](../TestCode/) VSCode project is for developing/testing code.
+The code in this folder will go on the actual bot in the competition. The [TestCode](../TestCode/) project is for developing/testing code.
