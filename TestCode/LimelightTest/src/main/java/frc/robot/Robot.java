@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    double tx = table.getEntry("tx").getDouble(0.0);
     double ty = table.getEntry("ty").getDouble(0.0);
     SmartDashboard.putBoolean("ty val", (ty == 1.0) ? true : false);
     double d  = (h2 - h1)/Math.tan(a1 + ty);
