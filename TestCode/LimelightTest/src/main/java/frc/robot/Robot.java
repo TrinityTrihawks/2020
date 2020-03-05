@@ -67,11 +67,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     double ty = table.getEntry("ty").getDouble(0.0);
+    double tx = table.getEntry("tx").getDouble(0.0);
     if (ty == 0 ) {
       System.out.println("TY ZERO !!!!!!!!!!!!!!!!!!!!!!");
     }
     double d  = (h2 - h1)/Math.tan(a1 + ty);
+    double df = d*Math.cos(tx); // distance to target in forward direction
     SmartDashboard.putNumber("D", d );
+    SmartDashboard.putNumber("DF", df );
     SmartDashboard.putNumber("RoboTY", ty);
   }
 
