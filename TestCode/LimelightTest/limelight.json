@@ -65,7 +65,7 @@
               "_title": "/limelight/ta"
             }
           },
-          "4,0": {
+          "7,2": {
             "size": [
               1,
               1
@@ -76,7 +76,7 @@
               "_title": "/limelight/tv"
             }
           },
-          "5,0": {
+          "6,2": {
             "size": [
               1,
               1
@@ -98,7 +98,7 @@
               "_title": "/limelight/ty"
             }
           },
-          "3,0": {
+          "2,2": {
             "size": [
               1,
               1
@@ -144,7 +144,7 @@
               "_title": "Y"
             }
           },
-          "3,1": {
+          "6,1": {
             "size": [
               1,
               1
@@ -155,7 +155,7 @@
               "_title": "Area"
             }
           },
-          "4,1": {
+          "7,1": {
             "size": [
               1,
               1
@@ -164,6 +164,49 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/RoboTY",
               "_title": "RoboTY"
+            }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ty val",
+              "_title": "ty val",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://limelight",
+              "_title": "limelight",
+              "Crosshair/Show crosshair": false,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": false,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DF",
+              "_title": "DF"
             }
           }
         }

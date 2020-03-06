@@ -74,6 +74,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("D", d );
     SmartDashboard.putNumber("DF", df );
     SmartDashboard.putNumber("RoboTY", ty);
+
+
+    int targetFoundint = (int)Math.floor(table.getEntry("tv").getDouble(0.0));
+    boolean targetFound = (targetFoundint==1) ? true : false;
+
+    double ta = table.getEntry("ta").getDouble(0.0);
+    SmartDashboard.putBoolean("Valid Target", targetFound);
+    SmartDashboard.putNumber("X", tx);
+    SmartDashboard.putNumber("Y", ty);
+    SmartDashboard.putNumber("Area", ta);
+
   }
 
   /**
@@ -115,21 +126,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    int targetFoundint = (int)Math.floor(table.getEntry("tv").getDouble(0.0));
-    boolean targetFound = (targetFoundint==1) ? true : false;
-
-    double ta = table.getEntry("ta").getDouble(0.0);
-    double tx = table.getEntry("tx").getDouble(0.0);
-    double ty = table.getEntry("ty").getDouble(0.0);
-    
-    SmartDashboard.putBoolean("Valid Target", targetFound);
-    SmartDashboard.putNumber("X", tx);
-    SmartDashboard.putNumber("Y", ty);
-    SmartDashboard.putNumber("Area", ta);
-
-    if (targetFound) {
-
-    }
 
  
   }
