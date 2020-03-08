@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Storage;
 
 /**
- * Storage forward for a specified amount of time
+ * Storage forward for a specified number of seconds
  */
 public class StorageTimed extends WaitCommand {
 

@@ -100,6 +100,6 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
 
     boolean limitPressed = !limitSwitch.get();
-   SmartDashboard.putBoolean("LS", limitPressed);
+    SmartDashboard.putBoolean("LS", limitPressed);
   }
 }

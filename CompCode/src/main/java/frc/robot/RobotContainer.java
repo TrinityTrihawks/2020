@@ -188,15 +188,19 @@ public class RobotContainer {
       new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain)
     );
 
-    final Command unlatchIntake = new SequentialCommandGroup(
+    final Command unlatchIntakeUsingTime = new SequentialCommandGroup(
       // Reverse storage belt for 1 second
       new InstantCommand(() -> storage.reverse(), storage),
       new WaitCommand(1),
       new InstantCommand(() -> storage.off(), storage)
     );
 
+    final Command unlatchIntakeUsingEncoder = new SequentialCommandGroup(
+      
+    );
+
     autoCommand = new SequentialCommandGroup(
-      unlatchIntake,
+      unlatchIntakeUsingTime,
       driveOffInitLine
     );
 
