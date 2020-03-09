@@ -5,9 +5,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -19,9 +24,13 @@ import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootClosedLoop;
+import frc.robot.commands.ShootClosedLoopWithConstants;
+import frc.robot.commands.ShootFromInitLine;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageForward;
+import frc.robot.commands.StorageTimed;
 import frc.robot.commands.TunePIDFromDashboard;
+import frc.robot.commands.UnlatchIntakeUsingTime;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -69,6 +78,14 @@ public class RobotContainer {
   public RobotContainer() {
 
     subtable  = NetworkTableInstance.getDefault().getTable("RobotContainer");
+
+    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+    CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
+        "Command initialized", command.getName(), EventImportance.kNormal));
+    CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker(
+        "Command interrupted", command.getName(), EventImportance.kNormal));
+    CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker(
+        "Command finished", command.getName(), EventImportance.kNormal));
 
     // Button mappings for auxiliary gamepad
     auxMap = new Constants.XboxMap();
@@ -170,8 +187,7 @@ public class RobotContainer {
     // );
 
     smartShoot = new ParallelCommandGroup(
-      // TODO: smarter shoot and storage velocity
-      new ShootClosedLoop(shooter, 200),
+      new ShootFromInitLine(shooter),
       new StorageForward(storage)
     );
 
@@ -188,21 +204,17 @@ public class RobotContainer {
       new InstantCommand(() -> drivetrain.driveOpenLoop(0, 0), drivetrain)
     );
 
-    final Command unlatchIntakeUsingTime = new SequentialCommandGroup(
-      // Reverse storage belt for 1 second
-      new InstantCommand(() -> storage.reverse(), storage),
-      new WaitCommand(1),
-      new InstantCommand(() -> storage.off(), storage)
-    );
 
-    final Command unlatchIntakeUsingEncoder = new SequentialCommandGroup(
-      
-    );
-
-    autoCommand = new SequentialCommandGroup(
-      unlatchIntakeUsingTime,
+    final Command threeBallAutoFromInit = new SequentialCommandGroup(
+      new UnlatchIntakeUsingTime(storage),
+      new ParallelRaceGroup(
+        new ShootFromInitLine(shooter),
+        new StorageForward(storage)
+      ).withTimeout(8),
       driveOffInitLine
     );
+
+    autoCommand = threeBallAutoFromInit;
 
  
     configureDefaultCommands();
