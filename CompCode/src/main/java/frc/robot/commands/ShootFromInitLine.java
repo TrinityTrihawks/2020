@@ -8,8 +8,7 @@ public class ShootFromInitLine extends SequentialCommandGroup {
 
     public ShootFromInitLine(Shooter shooter) {
         addCommands(
-            new ShooterSetConstants(shooter, 8, 0, 0, 2),
-            new ShootClosedLoop(shooter, 250)
+            new ShootClosedLoop(shooter, 250, 8, 0, 0, 2)
         );
     }
 }

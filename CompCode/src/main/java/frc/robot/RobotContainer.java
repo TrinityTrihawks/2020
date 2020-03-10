@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -22,7 +20,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
-import frc.robot.commands.ShootFromInitLine;
+import frc.robot.commands.ShootFromInitLineAndLoad;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageForward;
 import frc.robot.commands.TunePIDFromDashboard;
@@ -55,7 +53,6 @@ public class RobotContainer {
   // private final Command intakeAutoStorage;
   private final Command shootReverse, shootReverseBoost,
                         shooterAdjust, closedShooterAdjust;
-  private final Command smartShoot;
   private final Command endgameCommand;
   private final Command storageForwardBoost, storageReverse, storageReverseBoost;
 
@@ -182,11 +179,6 @@ public class RobotContainer {
     //   )
     // );
 
-    smartShoot = new ParallelCommandGroup(
-      new ShootFromInitLine(shooter),
-      new StorageForward(storage)
-    );
-
 
 
     ////////////////////////////////////////////////////
@@ -203,10 +195,8 @@ public class RobotContainer {
 
     final Command threeBallAutoFromInit = new SequentialCommandGroup(
       new UnlatchIntakeUsingTime(storage),
-      new ParallelRaceGroup(
-        new ShootFromInitLine(shooter),
-        new StorageForward(storage)
-      ).withTimeout(8),
+      new ShootFromInitLineAndLoad(shooter, storage)
+        .withTimeout(8),
       driveOffInitLine
     );
 
@@ -292,7 +282,12 @@ public class RobotContainer {
     shootReverseButton.and(boost.negate())
       .whileActiveOnce(shootReverse);
 
-    smartShootButton.whileActiveOnce(new TunePIDFromDashboard(shooter));
+    smartShootButton.and(boost)
+      .whileActiveOnce(new ShootFromInitLineAndLoad(shooter, storage));
+
+    smartShootButton.and(boost.negate())
+      .whileActiveOnce(new TunePIDFromDashboard(shooter));
+    
 
     // Storage Belt
     final PovUpTrigger storageUpTrigger = new PovUpTrigger(auxGamepad);
