@@ -19,7 +19,7 @@ import frc.robot.Constants.AuxGamepadMap;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
-import frc.robot.commands.ShootFromInitLineAndLoad;
+import frc.robot.commands.ShootInitLineAndLoad;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.ShootOpenLoop;
 import frc.robot.commands.shooter.TunePIDFromDashboard;
@@ -182,7 +182,7 @@ public class RobotContainer {
 
     final Command threeBallAutoFromInit = new SequentialCommandGroup(
       new UnlatchIntakeUsingTime(storage),
-      new ShootFromInitLineAndLoad(shooter, storage)
+      new ShootInitLineAndLoad(shooter, storage)
         .withTimeout(8),
       driveOffInitLine
     );
@@ -270,7 +270,7 @@ public class RobotContainer {
       .whileActiveOnce(shootReverse);
 
     smartShootButton.and(boost)
-      .whileActiveOnce(new ShootFromInitLineAndLoad(shooter, storage));
+      .whileActiveOnce(new ShootInitLineAndLoad(shooter, storage));
 
     smartShootButton.and(boost.negate())
       .whileActiveOnce(new TunePIDFromDashboard(shooter));
