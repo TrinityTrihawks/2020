@@ -9,7 +9,6 @@ import frc.robot.subsystems.Storage;
 public class UnlatchIntakeUsingTime extends WaitCommand {
 
   private final Storage storage;
-  private double velocity;
 
   private static final double duration = 1; //second
 

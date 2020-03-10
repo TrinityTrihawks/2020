@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -23,12 +22,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.JoystickDrive;
-import frc.robot.commands.ShootClosedLoop;
-import frc.robot.commands.ShootClosedLoopWithConstants;
 import frc.robot.commands.ShootFromInitLine;
 import frc.robot.commands.ShootOpenLoop;
 import frc.robot.commands.StorageForward;
-import frc.robot.commands.StorageTimed;
 import frc.robot.commands.TunePIDFromDashboard;
 import frc.robot.commands.UnlatchIntakeUsingTime;
 import frc.robot.subsystems.ClimbingArm;
@@ -314,6 +310,11 @@ public class RobotContainer {
     storageDownTrigger.and(boost.negate())
       .whileActiveOnce(storageReverse);
 
+    // Cancel all commands
+    final JoystickButton cancelCommandsButton = new JoystickButton(mainController, OIConstants.cancelCommandsButton);
+    cancelCommandsButton.whenPressed(
+      () -> CommandScheduler.getInstance().cancelAll()
+    );
   }
 
   public void logData() {

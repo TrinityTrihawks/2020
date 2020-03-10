@@ -147,6 +147,9 @@ public final class Constants {
         public static final int kSlowRightTurnButtonId = 4;
         public static final int kPovId = 0;
 
+        //TODO: decide on cancel commands button on main joystick
+        public static final int cancelCommandsButton = 10;
+
     }
 
     /**
