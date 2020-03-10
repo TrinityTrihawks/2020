@@ -258,10 +258,17 @@ public class RobotContainer {
     final JoystickButton shootReverseButton = new JoystickButton(auxGamepad, auxMap.shootReverse());
 
     shootButton.and(boost)
-      .whileActiveOnce(new ShootOpenLoop(shooter, 0.7));
+      .whileActiveOnce(new ShootOpenLoop(
+        shooter, 
+        () -> auxGamepad.getRawAxis(auxMap.shootAdjust()),
+        0.7
+      ));
     
     shootButton.and(boost.negate())
-      .whileActiveOnce(new ShootOpenLoop(shooter, 0.45));
+      .whileActiveOnce(new ShootOpenLoop(shooter,
+        () -> auxGamepad.getRawAxis(auxMap.shootAdjust()),
+        0.45
+      ));
 
     shootReverseButton.and(boost)
       .whileActiveOnce(shootReverseBoost);
@@ -270,7 +277,11 @@ public class RobotContainer {
       .whileActiveOnce(shootReverse);
 
     smartShootButton.and(boost)
-      .whileActiveOnce(new ShootInitLineAndLoad(shooter, storage));
+      .whileActiveOnce(new ShootInitLineAndLoad(
+        shooter,
+        storage,
+        () -> auxGamepad.getRawAxis(auxMap.shootAdjust())
+      ));
 
     smartShootButton.and(boost.negate())
       .whileActiveOnce(new TunePIDFromDashboard(shooter));
