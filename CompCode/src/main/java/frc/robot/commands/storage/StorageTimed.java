@@ -1,15 +1,21 @@
-package frc.robot.commands;
+package frc.robot.commands.storage;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Storage;
 
+/**
+ * Storage forward for a specified number of seconds
+ */
+public class StorageTimed extends WaitCommand {
 
-public class StorageForward extends CommandBase {
   private final Storage storage;
- 
-  // Creates a new StorageForward command
-  public StorageForward(Storage storage) {
+
+  // Creates a new StorageManual command
+  public StorageTimed(Storage storage, double duration) {
+    // add duration to wait command
+    super(duration);
     this.storage = storage;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(storage);
   }
@@ -20,11 +26,6 @@ public class StorageForward extends CommandBase {
     storage.forward();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-  }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -32,4 +33,3 @@ public class StorageForward extends CommandBase {
   }
 
 }
-

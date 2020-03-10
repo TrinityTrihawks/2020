@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.shooter;
 
 import java.util.function.DoubleSupplier;
 
@@ -19,7 +19,7 @@ public class ShootClosedLoopAdjustVelocityOnly extends CommandBase {
   private final double adjustmentScalar = 5;
  
 
-  public ShootClosedLoopAdjustVelocityOnly(Shooter shooter, double velocity, DoubleSupplier adjustment) {
+  public ShootClosedLoopAdjustVelocityOnly(Shooter shooter, DoubleSupplier adjustment, double velocity) {
     this.shooter = shooter;
     this.velocity = velocity;
     this.adjustment = adjustment;

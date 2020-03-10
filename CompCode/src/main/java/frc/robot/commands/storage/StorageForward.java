@@ -1,23 +1,15 @@
-package frc.robot.commands;
+package frc.robot.commands.storage;
 
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Storage;
 
-/**
- * Reverse storage for a second to unlatch intake
- */
-public class UnlatchIntakeUsingTime extends WaitCommand {
 
+public class StorageForward extends CommandBase {
   private final Storage storage;
-
-  private static final double duration = 1; //second
-
-  // Creates a new StorageManual command
-  public UnlatchIntakeUsingTime(Storage storage) {
-    // add duration to wait command
-    super(duration);
+ 
+  // Creates a new StorageForward command
+  public StorageForward(Storage storage) {
     this.storage = storage;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(storage);
   }
@@ -25,7 +17,12 @@ public class UnlatchIntakeUsingTime extends WaitCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    storage.reverse();
+    storage.forward();
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
   }
 
   // Called once the command ends or is interrupted.
@@ -35,3 +32,4 @@ public class UnlatchIntakeUsingTime extends WaitCommand {
   }
 
 }
+

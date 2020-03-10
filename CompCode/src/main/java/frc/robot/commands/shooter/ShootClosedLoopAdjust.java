@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.shooter;
 
 import java.util.function.DoubleSupplier;
 
@@ -11,11 +11,11 @@ import frc.robot.subsystems.Shooter;
  */
 public class ShootClosedLoopAdjust extends SequentialCommandGroup {
 
-    public ShootClosedLoopAdjust(Shooter shooter, double vel, DoubleSupplier adjustment,
+    public ShootClosedLoopAdjust(Shooter shooter, DoubleSupplier adjustment, double vel, 
                             double p, double i, double d, double f) {
         addCommands(
             new ShooterSetConstants(shooter, p, i, d, f),
-            new ShootClosedLoopAdjustVelocityOnly(shooter, vel, adjustment)
+            new ShootClosedLoopAdjustVelocityOnly(shooter, adjustment, vel)
         );
     }
 }

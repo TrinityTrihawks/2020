@@ -19,12 +19,12 @@ import frc.robot.Constants.AuxGamepadMap;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbingArmManual;
 import frc.robot.commands.IntakeForward;
-import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ShootFromInitLineAndLoad;
-import frc.robot.commands.ShootOpenLoop;
-import frc.robot.commands.StorageForward;
-import frc.robot.commands.TunePIDFromDashboard;
-import frc.robot.commands.UnlatchIntakeUsingTime;
+import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.shooter.ShootOpenLoop;
+import frc.robot.commands.shooter.TunePIDFromDashboard;
+import frc.robot.commands.storage.StorageForward;
+import frc.robot.commands.storage.UnlatchIntakeUsingTime;
 import frc.robot.subsystems.ClimbingArm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -51,8 +51,7 @@ public class RobotContainer {
   private final Command autoCommand;
   private final Command intakeForwardBoost, intakeReverse, intakeReverseBoost;
   // private final Command intakeAutoStorage;
-  private final Command shootReverse, shootReverseBoost,
-                        shooterAdjust, closedShooterAdjust;
+  private final Command shootReverse, shootReverseBoost;
   private final Command endgameCommand;
   private final Command storageForwardBoost, storageReverse, storageReverseBoost;
 
@@ -139,18 +138,6 @@ public class RobotContainer {
       shooter
     );
 
-    shooterAdjust = new StartEndCommand(
-      //unused should this be on the XBOX controller?
-      () -> shooter.shootOpenLoop(.5 + 1 / 2 * mainController.getThrottle()),
-      // throttle is [-1, 1] for BOTH
-      () -> shooter.off(),
-      shooter
-    );
-
-    closedShooterAdjust = new StartEndCommand(
-      () -> shooter.shootClosedLoop(.5 + 1 / 2 * mainController.getThrottle()),
-      () -> shooter.off()
-    );
 
     // Endgame (Climbing & Winch)
     endgameCommand = new ClimbingArmManual(
