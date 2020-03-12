@@ -107,7 +107,7 @@
           "3,0": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Camera Stream",
@@ -517,7 +517,7 @@
     }
   ],
   "windowGeometry": {
-    "x": -5.0,
+    "x": -7.0,
     "y": 0.0,
     "width": 1378.0,
     "height": 539.0
