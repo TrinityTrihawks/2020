@@ -100,6 +100,20 @@ public final class Constants {
         // Does not include belt because belt is POV
     }
 
+    //The Xbox controller button bindings currently are (afaik)
+    // # | XInput | Direct
+    //   |        |
+    // 1 | A      | X
+    // 2 | B      | A
+    // 3 | X      | B
+    // 4 | Y      | Y
+    // 5 | LB     | LB
+    // 6 | RB     | RB
+    // 7 | back   | LT
+    // 8 | start  | RT
+    // 9 | LThumb | back
+    // 10| RThumb | 
+
     public static class XboxMap implements AuxGamepadMap {
         //Note: Logitech controller on X mode is the same
         //Buttons
