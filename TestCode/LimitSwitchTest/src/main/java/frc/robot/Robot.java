@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
 
   /**
    * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * used for any initialization code. 🙂🙂🙂🙂🙂🙂
    */
   @Override
   public void robotInit() {
@@ -96,9 +96,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   
-    boolean lowerLimitPressed  = !lowerLimitSwitch.get();
-    boolean midLimitPressed    = !midLimitSwitch.get();
-    boolean higherLimitPressed = !higherLimitSwitch.get();
+    boolean lowerLimitPressed  = lowerLimitSwitch.get();
+    boolean midLimitPressed    = midLimitSwitch.get();
+    boolean higherLimitPressed = higherLimitSwitch.get();
 
     SmartDashboard.putBoolean("Lower Beam", lowerLimitPressed);
     SmartDashboard.putBoolean("Mid Beam", midLimitPressed);
