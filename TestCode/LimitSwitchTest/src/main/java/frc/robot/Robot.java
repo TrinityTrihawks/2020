@@ -25,7 +25,9 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  DigitalInput limitSwitch;
+  DigitalInput lowerLimitSwitch;
+  DigitalInput higherLimitSwitch;
+  DigitalInput midLimitSwitch;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -37,7 +39,9 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    limitSwitch = new DigitalInput(0);
+    lowerLimitSwitch  = new DigitalInput(0);
+    midLimitSwitch    = new DigitalInput(1);
+    higherLimitSwitch = new DigitalInput(2);
   }
 
   /**
@@ -99,7 +103,12 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
-    boolean limitPressed = !limitSwitch.get();
-    SmartDashboard.putBoolean("LS", limitPressed);
+    boolean lowerLimitPressed  = !lowerLimitSwitch.get();
+    boolean midLimitPressed    = !midLimitSwitch.get();
+    boolean higherLimitPressed = !higherLimitSwitch.get();
+
+    SmartDashboard.putBoolean("Lower Beam", lowerLimitPressed);
+    SmartDashboard.putBoolean("Mid Beam", midLimitPressed);
+    SmartDashboard.putBoolean("High Beam", higherLimitPressed);
   }
 }
