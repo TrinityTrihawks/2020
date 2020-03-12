@@ -95,14 +95,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  }
-
-  /**
-   * This function is called periodically during test mode.
-   */
-  @Override
-  public void testPeriodic() {
-
+  
     boolean lowerLimitPressed  = !lowerLimitSwitch.get();
     boolean midLimitPressed    = !midLimitSwitch.get();
     boolean higherLimitPressed = !higherLimitSwitch.get();
@@ -110,5 +103,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Lower Beam", lowerLimitPressed);
     SmartDashboard.putBoolean("Mid Beam", midLimitPressed);
     SmartDashboard.putBoolean("High Beam", higherLimitPressed);
+  }
+
+  /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
   }
 }
