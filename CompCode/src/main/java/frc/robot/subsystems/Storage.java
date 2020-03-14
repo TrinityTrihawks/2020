@@ -19,11 +19,13 @@ public class Storage extends SubsystemBase {
 
   private final TalonSRX motor;
 
-  DigitalInput lowerLimitSwitch;
-  DigitalInput higherLimitSwitch;
+  DigitalInput lowLimitSwitch;
   DigitalInput midLimitSwitch;
-
-  // DigitalInput intakeSwitch;
+  DigitalInput highLimitSwitch;
+  
+  public static enum SwitchSelector {
+    low, mid, high
+  }
 
   /**
    * Use this method to create a Storage instance. This method ensures that the
@@ -49,15 +51,14 @@ public class Storage extends SubsystemBase {
 
     subtable.getEntry("beltSpeed").setDouble(-0.3);
 
-    lowerLimitSwitch  = new DigitalInput(0);
-    midLimitSwitch    = new DigitalInput(1);
-    higherLimitSwitch = new DigitalInput(2);
+    lowLimitSwitch  = new DigitalInput(0);
+    midLimitSwitch  = new DigitalInput(1);
+    highLimitSwitch = new DigitalInput(2);
 
-    // intakeSwitch = new DigitalInput(0);
   }
 
-  public void setPowerByNetworkTables() {
-    motor.set(ControlMode.PercentOutput, subtable.getEntry("beltSpeed").getDouble(-0.3));
+  public void autoForward() {
+    motor.set(ControlMode.PercentOutput, -0.7);
   }
 
   public void off() {
@@ -80,16 +81,29 @@ public class Storage extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0.6);
   }
 
-  public boolean lowerTriggered() {
-    return !lowerLimitSwitch.get();
-  }
+  //public boolean lowerTriggered() {
+  //  return !lowerLimitSwitch.get();
+  //}
 
-  public boolean middleTriggered() {
-    return !midLimitSwitch.get();
-  }
+  //public boolean middleTriggered() {
+  //  return !midLimitSwitch.get();
+  //}
 
-  public boolean highTriggered() {
-    return !higherLimitSwitch.get();
+  //public boolean highTriggered() {
+  //  return !higherLimitSwitch.get();
+  //}
+
+  public boolean getBeamTrigger(SwitchSelector selector) {
+    switch (selector) {
+      case low:
+      return !lowLimitSwitch.get();
+      case mid:
+      return !midLimitSwitch.get();
+      case high:
+      return !highLimitSwitch.get();
+      default:
+      throw new IllegalArgumentException();
+    }
   }
 
   
@@ -104,13 +118,6 @@ public class Storage extends SubsystemBase {
     return motor.getSelectedSensorPosition();
   }
 
-  public boolean getIntakeSwitch() {
-    return false;
-
-    // Invert because of how our limit switch is currently wired. Pressed should
-    // yield true
-    // return !intakeSwitch.get();
-  }
 
   @Override
   public void periodic() {
@@ -130,9 +137,9 @@ public class Storage extends SubsystemBase {
       subtable.getEntry("encoderPosition").setDouble(getPosition());
 
 
-      subtable.getEntry("lowerBeam").setBoolean(lowerTriggered());
-      subtable.getEntry("middleBeam").setBoolean(middleTriggered());
-      subtable.getEntry("highBeam").setBoolean(highTriggered());
+      subtable.getEntry("IRBeamLow").setBoolean(getBeamTrigger(SwitchSelector.low));
+      subtable.getEntry("IRBeamMid").setBoolean(getBeamTrigger(SwitchSelector.mid));
+      subtable.getEntry("IRBeamHigh").setBoolean(getBeamTrigger(SwitchSelector.high));
 
 
     }
