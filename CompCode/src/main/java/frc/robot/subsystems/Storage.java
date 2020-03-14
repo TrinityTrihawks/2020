@@ -22,7 +22,7 @@ public class Storage extends SubsystemBase {
   DigitalInput lowLimitSwitch;
   DigitalInput midLimitSwitch;
   DigitalInput highLimitSwitch;
-  
+
   public static enum SwitchSelector {
     low, mid, high
   }
@@ -51,8 +51,8 @@ public class Storage extends SubsystemBase {
 
     subtable.getEntry("beltSpeed").setDouble(-0.3);
 
-    lowLimitSwitch  = new DigitalInput(0);
-    midLimitSwitch  = new DigitalInput(1);
+    lowLimitSwitch = new DigitalInput(0);
+    midLimitSwitch = new DigitalInput(1);
     highLimitSwitch = new DigitalInput(2);
 
   }
@@ -81,32 +81,31 @@ public class Storage extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0.6);
   }
 
-  //public boolean lowerTriggered() {
-  //  return !lowerLimitSwitch.get();
-  //}
+  // public boolean lowerTriggered() {
+  // return !lowerLimitSwitch.get();
+  // }
 
-  //public boolean middleTriggered() {
-  //  return !midLimitSwitch.get();
-  //}
+  // public boolean middleTriggered() {
+  // return !midLimitSwitch.get();
+  // }
 
-  //public boolean highTriggered() {
-  //  return !higherLimitSwitch.get();
-  //}
+  // public boolean highTriggered() {
+  // return !higherLimitSwitch.get();
+  // }
 
   public boolean getBeamTrigger(SwitchSelector selector) {
     switch (selector) {
-      case low:
+    case low:
       return !lowLimitSwitch.get();
-      case mid:
+    case mid:
       return !midLimitSwitch.get();
-      case high:
+    case high:
       return !highLimitSwitch.get();
-      default:
+    default:
       throw new IllegalArgumentException();
     }
   }
 
-  
   public void resetPosition() {
     motor.setSelectedSensorPosition(0);
   }
@@ -118,7 +117,6 @@ public class Storage extends SubsystemBase {
     return motor.getSelectedSensorPosition();
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -127,7 +125,7 @@ public class Storage extends SubsystemBase {
   }
 
   private void logToNetworkTables() {
-    if(subtable.getEntry("should_log").getBoolean(false)) {
+    if (subtable.getEntry("should_log").getBoolean(false)) {
 
       // Log motor voltage over network tables
       subtable.getEntry("voltage").setDouble(motor.getMotorOutputVoltage());
@@ -136,14 +134,11 @@ public class Storage extends SubsystemBase {
       // Log encoder val
       subtable.getEntry("encoderPosition").setDouble(getPosition());
 
-
       subtable.getEntry("IRBeamLow").setBoolean(getBeamTrigger(SwitchSelector.low));
       subtable.getEntry("IRBeamMid").setBoolean(getBeamTrigger(SwitchSelector.mid));
       subtable.getEntry("IRBeamHigh").setBoolean(getBeamTrigger(SwitchSelector.high));
 
-
     }
-    
 
   }
 
