@@ -23,6 +23,7 @@ import frc.robot.commands.ShootInitLineAndLoad;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.ShootOpenLoop;
 import frc.robot.commands.shooter.TunePIDFromDashboard;
+import frc.robot.commands.storage.AutomaticStorage;
 import frc.robot.commands.storage.StorageForward;
 import frc.robot.commands.storage.UnlatchIntakeUsingTime;
 import frc.robot.subsystems.ClimbingArm;
@@ -213,11 +214,7 @@ public class RobotContainer {
     // shooter.setDefaultCommand(new TunePIDFromDashboard(shooter));
 
     // Storage default    
-    // storage.setDefaultCommand(new StorageManual(
-    //   storage,
-    //   () -> auxGamepad.getPOV()
-    // ));
-
+    storage.setDefaultCommand(new AutomaticStorage(storage));
 
   }
 
@@ -229,7 +226,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    final JoystickButton boost = new JoystickButton(auxGamepad, auxMap.boost());
+    final Trigger boost = new Trigger( () -> auxGamepad.getRawAxis(auxMap.boost()) > 0.9);
 
     // Intake
     final JoystickButton intakeForwardButton = new JoystickButton(auxGamepad, auxMap.intake());
@@ -314,6 +311,10 @@ public class RobotContainer {
     subtable.getEntry("MainController/Throttle").setDouble(mainController.getThrottle());
     subtable.getEntry("MainController/Twist").setDouble(mainController.getTwist());
     subtable.getEntry("MainController/Y").setDouble(mainController.getY());
+
+    System.out.println("X button " + auxGamepad.getRawButton(auxMap.smartShoot()));
+    System.out.println("Boost button " + auxGamepad.getRawAxis(auxMap.boost()));
+    System.out.println("Shooter adjust " + auxGamepad.getRawAxis(auxMap.shootAdjust()));
 
   }
 

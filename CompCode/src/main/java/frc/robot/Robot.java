@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    // m_robotContainer.logData();
+    
   }
 
   /**
@@ -118,6 +120,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     // Log joystick values to Network Tables
-    m_robotContainer.logData();
   }
 }

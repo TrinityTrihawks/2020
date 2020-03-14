@@ -6,7 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
- //import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+//import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.StorageConstants;
 
@@ -17,6 +18,10 @@ public class Storage extends SubsystemBase {
   private final NetworkTable subtable;
 
   private final TalonSRX motor;
+
+  DigitalInput lowerLimitSwitch;
+  DigitalInput higherLimitSwitch;
+  DigitalInput midLimitSwitch;
 
   // DigitalInput intakeSwitch;
 
@@ -42,7 +47,17 @@ public class Storage extends SubsystemBase {
     subtable = inst.getTable("storage");
     subtable.getEntry("should_log").setBoolean(false);
 
+    subtable.getEntry("beltSpeed").setDouble(-0.3);
+
+    lowerLimitSwitch  = new DigitalInput(0);
+    midLimitSwitch    = new DigitalInput(1);
+    higherLimitSwitch = new DigitalInput(2);
+
     // intakeSwitch = new DigitalInput(0);
+  }
+
+  public void setPowerByNetworkTables() {
+    motor.set(ControlMode.PercentOutput, subtable.getEntry("beltSpeed").getDouble(-0.3));
   }
 
   public void off() {
@@ -65,6 +80,19 @@ public class Storage extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0.6);
   }
 
+  public boolean lowerTriggered() {
+    return !lowerLimitSwitch.get();
+  }
+
+  public boolean middleTriggered() {
+    return !midLimitSwitch.get();
+  }
+
+  public boolean highTriggered() {
+    return !higherLimitSwitch.get();
+  }
+
+  
   public void resetPosition() {
     motor.setSelectedSensorPosition(0);
   }
@@ -100,6 +128,13 @@ public class Storage extends SubsystemBase {
       subtable.getEntry("current").setDouble(motor.getStatorCurrent());
       // Log encoder val
       subtable.getEntry("encoderPosition").setDouble(getPosition());
+
+
+      subtable.getEntry("lowerBeam").setBoolean(lowerTriggered());
+      subtable.getEntry("middleBeam").setBoolean(middleTriggered());
+      subtable.getEntry("highBeam").setBoolean(highTriggered());
+
+
     }
     
 

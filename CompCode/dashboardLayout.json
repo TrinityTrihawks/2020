@@ -146,6 +146,17 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///storage/should_log",
+              "_title": "storage/should_log"
+            }
           }
         }
       }
@@ -224,6 +235,32 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[2]/Value",
+              "_title": "Ungrouped/DigitalInput[2]/Value",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[1]/Value",
+              "_title": "Ungrouped/DigitalInput[1]/Value",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -248,6 +285,11 @@
               "_title": "Drivetrain",
               "Layout/Label position": "LEFT",
               "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///drivetrain/should_log",
+                  "_title": "drivetrain/should_log"
+                },
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///drivetrain/frontLeft_voltage",
@@ -284,13 +326,18 @@
           "9,0": {
             "size": [
               4,
-              5
+              6
             ],
             "content": {
               "_type": "Subsystem Layout",
               "_title": "Shooter",
               "Layout/Label position": "LEFT",
               "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///shooter/should_log",
+                  "_title": "shooter/should_log"
+                },
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///shooter/left_voltage",
@@ -337,7 +384,7 @@
           "13,0": {
             "size": [
               4,
-              2
+              3
             ],
             "content": {
               "_type": "Subsystem Layout",
@@ -348,6 +395,27 @@
                   "_type": "Text View",
                   "_source0": "network_table:///storage/voltage",
                   "_title": "Voltage"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///storage/highBeam",
+                  "_title": "storage/highBeam",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///storage/middleBeam",
+                  "_title": "storage/middleBeam",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///storage/lowerBeam",
+                  "_title": "storage/lowerBeam",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
                 }
               ]
             }
@@ -363,11 +431,27 @@
               "Layout/Label position": "LEFT",
               "_children": [
                 {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///intake/should_log",
+                  "_title": "intake/should_log"
+                },
+                {
                   "_type": "Text View",
                   "_source0": "network_table:///intake/voltage",
                   "_title": "Voltage"
                 }
               ]
+            }
+          },
+          "3,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///storage/beltSpeed",
+              "_title": "storage/beltSpeed"
             }
           }
         }
@@ -472,7 +556,8 @@
               "Graph/Visible time": 30.0,
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/shooter/right_error": true
             }
           },
           "2,2": {
@@ -487,7 +572,8 @@
               "Graph/Visible time": 30.0,
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/shooter/left_error": true
             }
           },
           "7,4": {
@@ -520,6 +606,6 @@
     "x": -7.0,
     "y": 0.0,
     "width": 1378.0,
-    "height": 539.0
+    "height": 575.0
   }
 }

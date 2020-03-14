@@ -129,7 +129,7 @@ public final class Constants {
         public int telescope() {    return 1;   }
         public int boost() {        return 2;   }
         //TODO: confirm right axis id num for Xbox
-        public int shootAdjust() {  return 4;   }
+        public int shootAdjust() {  return 5;   }
     }
 
     public static class LogitechDualModeMap implements AuxGamepadMap {
